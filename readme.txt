@@ -4,7 +4,7 @@ Tags: translation, locale, language, i18n, community
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,6 +58,9 @@ Some translation repositories provide both formal and informal variants. Formal 
 The plugin calculates git blob SHA hashes of your local .mo files and compares them with the remote repository. Only genuinely changed files trigger an update notification.
 
 == Changelog ==
+
+= 1.0.2 =
+* Add fresh POT file and Hungarian (hu_HU) translation
 
 = 1.0.1 =
 * Remove redundant "Up to date" label from Actions column

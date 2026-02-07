@@ -1,0 +1,306 @@
+# Copyright (C) 2026 LW Plugins
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: LW Translate 1.0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/lwplugins/lw-translate/issues\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LW Plugins <info@lwplugins.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-02-07T08:43:29+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: lw-translate\n"
+
+#. Plugin Name of the plugin
+#: lw-translate.php
+msgid "LW Translate"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: lw-translate.php
+msgid "https://github.com/lwplugins/lw-translate"
+msgstr ""
+
+#. Description of the plugin
+#: lw-translate.php
+msgid "Manage WordPress translations from community repositories."
+msgstr ""
+
+#. Author of the plugin
+#: lw-translate.php
+#: includes/Admin/ParentPage.php:104
+#: includes/Admin/ParentPage.php:105
+#: includes/Admin/ParentPage.php:126
+msgid "LW Plugins"
+msgstr ""
+
+#. Author URI of the plugin
+#: lw-translate.php
+msgid "https://lwplugins.com"
+msgstr ""
+
+#: includes/Admin/ParentPage.php:127
+msgid "Lightweight plugins for WordPress - minimal footprint, maximum impact."
+msgstr ""
+
+#: includes/Admin/ParentPage.php:180
+msgid "Active"
+msgstr ""
+
+#: includes/Admin/ParentPage.php:187
+msgid "Settings"
+msgstr ""
+
+#: includes/Admin/ParentPage.php:191
+msgid "Get Plugin"
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:34
+msgid "General"
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:53
+msgid "Translation Settings"
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:56
+msgid "Configure the translation source and caching."
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:62
+msgid "Tone"
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:70
+msgid "Formal (magázó)"
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:71
+msgid "Informal (tegező)"
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:73
+msgid "Choose between formal and informal translation tone."
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:81
+msgid "Locale"
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:91
+msgid "Target language for translations."
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:99
+msgid "Cache TTL"
+msgstr ""
+
+#: includes/Admin/Settings/TabGeneral.php:108
+msgid "Cache duration in seconds. Default: 43200 (12 hours)."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:59
+#: includes/Admin/SettingsPage.php:60
+msgid "Translate Settings"
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:43
+#: includes/Admin/TranslationsPage.php:114
+msgid "Translations"
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:44
+msgid "Translate"
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:89
+msgid "Installing..."
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:90
+msgid "Deleting..."
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:91
+msgid "Done!"
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:92
+msgid "Error occurred."
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:93
+msgid "Delete this translation?"
+msgstr ""
+
+#. translators: 1: tone label, 2: locale code
+#: includes/Admin/TranslationsPage.php:121
+#, php-format
+msgid "Source: %1$s / %2$s"
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:122
+msgid "Formal"
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:122
+msgid "Informal"
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:129
+msgid "Refresh Cache"
+msgstr ""
+
+#: includes/Admin/TranslationsPage.php:137
+msgid "Search"
+msgstr ""
+
+#. translators: %d: HTTP status code
+#: includes/Api/GitHubClient.php:79
+#, php-format
+msgid "GitHub API returned status %d."
+msgstr ""
+
+#: includes/Api/GitHubClient.php:86
+msgid "Invalid tree response."
+msgstr ""
+
+#. translators: 1: file path, 2: HTTP status code
+#: includes/Api/GitHubClient.php:125
+#, php-format
+msgid "Failed to download %1$s (HTTP %2$d)."
+msgstr ""
+
+#: includes/Installer/FileInstaller.php:54
+msgid "No translation files found for this item."
+msgstr ""
+
+#: includes/Installer/FileInstaller.php:119
+msgid "Could not determine local path."
+msgstr ""
+
+#. translators: %s: local file path
+#: includes/Installer/FileInstaller.php:128
+#, php-format
+msgid "Could not write file: %s"
+msgstr ""
+
+#: includes/Installer/FileInstaller.php:165
+msgid "Could not initialize filesystem."
+msgstr ""
+
+#: includes/ListTable/TranslationColumns.php:38
+msgid "Theme"
+msgstr ""
+
+#: includes/ListTable/TranslationColumns.php:39
+msgid "Plugin"
+msgstr ""
+
+#: includes/ListTable/TranslationColumns.php:57
+msgid "Up to date"
+msgstr ""
+
+#: includes/ListTable/TranslationColumns.php:61
+msgid "Update available"
+msgstr ""
+
+#: includes/ListTable/TranslationColumns.php:65
+msgid "Not installed"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:57
+msgid "Name"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:58
+msgid "Type"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:59
+msgid "Status"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:60
+msgid "Files"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:61
+msgid "Local Date"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:62
+msgid "Actions"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:87
+msgid "Install/Update Selected"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:88
+msgid "Delete Selected"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:116
+msgid "Install"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:120
+msgid "Update"
+msgstr ""
+
+#: includes/ListTable/TranslationListTable.php:122
+#: includes/ListTable/TranslationListTable.php:126
+msgid "Delete"
+msgstr ""
+
+#: includes/ListTable/TranslationViews.php:34
+msgid "All"
+msgstr ""
+
+#: includes/ListTable/TranslationViews.php:40
+msgid "Plugins"
+msgstr ""
+
+#: includes/ListTable/TranslationViews.php:41
+msgid "Themes"
+msgstr ""
+
+#: includes/ListTable/TranslationViews.php:42
+msgid "Updates Available"
+msgstr ""
+
+#: includes/ListTable/TranslationViews.php:43
+msgid "Not Installed"
+msgstr ""
+
+#: includes/Plugin.php:69
+#: includes/Plugin.php:100
+#: includes/Plugin.php:142
+#: includes/Plugin.php:169
+msgid "Insufficient permissions."
+msgstr ""
+
+#: includes/Plugin.php:76
+#: includes/Plugin.php:149
+msgid "Missing parameters."
+msgstr ""
+
+#: includes/Plugin.php:88
+msgid "Translation installed successfully."
+msgstr ""
+
+#: includes/Plugin.php:106
+msgid "No items selected."
+msgstr ""
+
+#: includes/Plugin.php:157
+msgid "Translation deleted."
+msgstr ""
+
+#: includes/Plugin.php:175
+msgid "Cache cleared."
+msgstr ""

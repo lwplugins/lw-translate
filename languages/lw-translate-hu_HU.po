@@ -1,0 +1,301 @@
+# Copyright (C) 2026 LW Plugins
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: LW Translate 1.0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/lwplugins/lw-translate/issues\n"
+"POT-Creation-Date: 2026-02-07T08:43:29+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LW Plugins <info@lwplugins.com>\n"
+"Language: hu_HU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: lw-translate\n"
+"X-Generator: WP-CLI 2.12.0\n"
+
+#. Plugin Name of the plugin
+#: lw-translate.php
+msgid "LW Translate"
+msgstr "LW Translate"
+
+#. Plugin URI of the plugin
+#: lw-translate.php
+msgid "https://github.com/lwplugins/lw-translate"
+msgstr "https://github.com/lwplugins/lw-translate"
+
+#. Description of the plugin
+#: lw-translate.php
+msgid "Manage WordPress translations from community repositories."
+msgstr "WordPress-fordítások kezelése közösségi repókból."
+
+#. Author of the plugin
+#: lw-translate.php includes/Admin/ParentPage.php:104
+#: includes/Admin/ParentPage.php:105 includes/Admin/ParentPage.php:126
+msgid "LW Plugins"
+msgstr "LW Plugins"
+
+#. Author URI of the plugin
+#: lw-translate.php
+msgid "https://lwplugins.com"
+msgstr "https://lwplugins.com"
+
+#: includes/Admin/ParentPage.php:127
+msgid "Lightweight plugins for WordPress - minimal footprint, maximum impact."
+msgstr "Könnyű WordPress bővítmények – minimális terhelés, maximális hatás."
+
+#: includes/Admin/ParentPage.php:180
+msgid "Active"
+msgstr "Aktív"
+
+#: includes/Admin/ParentPage.php:187
+msgid "Settings"
+msgstr "Beállítások"
+
+#: includes/Admin/ParentPage.php:191
+msgid "Get Plugin"
+msgstr "Bővítmény beszerzése"
+
+#: includes/Admin/Settings/TabGeneral.php:34
+msgid "General"
+msgstr "Általános"
+
+#: includes/Admin/Settings/TabGeneral.php:53
+msgid "Translation Settings"
+msgstr "Fordítási beállítások"
+
+#: includes/Admin/Settings/TabGeneral.php:56
+msgid "Configure the translation source and caching."
+msgstr "Állítsd be a fordítás forrását és a gyorsítótárazást."
+
+#: includes/Admin/Settings/TabGeneral.php:62
+msgid "Tone"
+msgstr "Hangnem"
+
+#: includes/Admin/Settings/TabGeneral.php:70
+msgid "Formal (magázó)"
+msgstr "Formális (magázó)"
+
+#: includes/Admin/Settings/TabGeneral.php:71
+msgid "Informal (tegező)"
+msgstr "Informális (tegező)"
+
+#: includes/Admin/Settings/TabGeneral.php:73
+msgid "Choose between formal and informal translation tone."
+msgstr "Válassz a formális és az informális fordítási hangnem között."
+
+#: includes/Admin/Settings/TabGeneral.php:81
+msgid "Locale"
+msgstr "Területi beállítás"
+
+#: includes/Admin/Settings/TabGeneral.php:91
+msgid "Target language for translations."
+msgstr "A fordítások cél nyelve."
+
+#: includes/Admin/Settings/TabGeneral.php:99
+msgid "Cache TTL"
+msgstr "Cache TTL"
+
+#: includes/Admin/Settings/TabGeneral.php:108
+msgid "Cache duration in seconds. Default: 43200 (12 hours)."
+msgstr "Gyorsítótár időtartama másodpercben. Alapértelmezett: 43200 (12 óra)."
+
+#: includes/Admin/SettingsPage.php:59 includes/Admin/SettingsPage.php:60
+msgid "Translate Settings"
+msgstr "Fordítási beállítások"
+
+#: includes/Admin/TranslationsPage.php:43
+#: includes/Admin/TranslationsPage.php:114
+msgid "Translations"
+msgstr "Fordítások"
+
+#: includes/Admin/TranslationsPage.php:44
+msgid "Translate"
+msgstr "Fordítás"
+
+#: includes/Admin/TranslationsPage.php:89
+msgid "Installing..."
+msgstr "Telepítés..."
+
+#: includes/Admin/TranslationsPage.php:90
+msgid "Deleting..."
+msgstr "Törlés..."
+
+#: includes/Admin/TranslationsPage.php:91
+msgid "Done!"
+msgstr "Kész!"
+
+#: includes/Admin/TranslationsPage.php:92
+msgid "Error occurred."
+msgstr "Hiba történt."
+
+#: includes/Admin/TranslationsPage.php:93
+msgid "Delete this translation?"
+msgstr "Törlöd ezt a fordítást?"
+
+#. translators: 1: tone label, 2: locale code
+#: includes/Admin/TranslationsPage.php:121
+#, php-format
+msgid "Source: %1$s / %2$s"
+msgstr "Forrás: %1$s / %2$s"
+
+#: includes/Admin/TranslationsPage.php:122
+msgid "Formal"
+msgstr "Formális"
+
+#: includes/Admin/TranslationsPage.php:122
+msgid "Informal"
+msgstr "Informális"
+
+#: includes/Admin/TranslationsPage.php:129
+msgid "Refresh Cache"
+msgstr "Gyorsítótár frissítése"
+
+#: includes/Admin/TranslationsPage.php:137
+msgid "Search"
+msgstr "Keresés"
+
+#. translators: %d: HTTP status code
+#: includes/Api/GitHubClient.php:79
+#, php-format
+msgid "GitHub API returned status %d."
+msgstr "A GitHub API %d státuszt adott vissza."
+
+#: includes/Api/GitHubClient.php:86
+msgid "Invalid tree response."
+msgstr "Érvénytelen tree válasz."
+
+#. translators: 1: file path, 2: HTTP status code
+#: includes/Api/GitHubClient.php:125
+#, php-format
+msgid "Failed to download %1$s (HTTP %2$d)."
+msgstr "Nem sikerült letölteni: %1$s (HTTP %2$d)."
+
+#: includes/Installer/FileInstaller.php:54
+msgid "No translation files found for this item."
+msgstr "Nem találhatók fordítási fájlok ehhez az elemhez."
+
+#: includes/Installer/FileInstaller.php:119
+msgid "Could not determine local path."
+msgstr "Nem sikerült meghatározni a helyi elérési utat."
+
+#. translators: %s: local file path
+#: includes/Installer/FileInstaller.php:128
+#, php-format
+msgid "Could not write file: %s"
+msgstr "Nem sikerült fájlt írni: %s"
+
+#: includes/Installer/FileInstaller.php:165
+msgid "Could not initialize filesystem."
+msgstr "Nem sikerült inicializálni a fájlrendszert."
+
+#: includes/ListTable/TranslationColumns.php:38
+msgid "Theme"
+msgstr "Sablon"
+
+#: includes/ListTable/TranslationColumns.php:39
+msgid "Plugin"
+msgstr "Bővítmény"
+
+#: includes/ListTable/TranslationColumns.php:57
+msgid "Up to date"
+msgstr "Naprakész"
+
+#: includes/ListTable/TranslationColumns.php:61
+msgid "Update available"
+msgstr "Frissítés elérhető"
+
+#: includes/ListTable/TranslationColumns.php:65
+msgid "Not installed"
+msgstr "Nincs telepítve"
+
+#: includes/ListTable/TranslationListTable.php:57
+msgid "Name"
+msgstr "Név"
+
+#: includes/ListTable/TranslationListTable.php:58
+msgid "Type"
+msgstr "Típus"
+
+#: includes/ListTable/TranslationListTable.php:59
+msgid "Status"
+msgstr "Állapot"
+
+#: includes/ListTable/TranslationListTable.php:60
+msgid "Files"
+msgstr "Fájlok"
+
+#: includes/ListTable/TranslationListTable.php:61
+msgid "Local Date"
+msgstr "Helyi dátum"
+
+#: includes/ListTable/TranslationListTable.php:62
+msgid "Actions"
+msgstr "Műveletek"
+
+#: includes/ListTable/TranslationListTable.php:87
+msgid "Install/Update Selected"
+msgstr "Kijelöltek telepítése/frissítése"
+
+#: includes/ListTable/TranslationListTable.php:88
+msgid "Delete Selected"
+msgstr "Kijelöltek törlése"
+
+#: includes/ListTable/TranslationListTable.php:116
+msgid "Install"
+msgstr "Telepítés"
+
+#: includes/ListTable/TranslationListTable.php:120
+msgid "Update"
+msgstr "Frissítés"
+
+#: includes/ListTable/TranslationListTable.php:122
+#: includes/ListTable/TranslationListTable.php:126
+msgid "Delete"
+msgstr "Törlés"
+
+#: includes/ListTable/TranslationViews.php:34
+msgid "All"
+msgstr "Összes"
+
+#: includes/ListTable/TranslationViews.php:40
+msgid "Plugins"
+msgstr "Bővítmények"
+
+#: includes/ListTable/TranslationViews.php:41
+msgid "Themes"
+msgstr "Sablonok"
+
+#: includes/ListTable/TranslationViews.php:42
+msgid "Updates Available"
+msgstr "Elérhető frissítések"
+
+#: includes/ListTable/TranslationViews.php:43
+msgid "Not Installed"
+msgstr "Nincs telepítve"
+
+#: includes/Plugin.php:69 includes/Plugin.php:100 includes/Plugin.php:142
+#: includes/Plugin.php:169
+msgid "Insufficient permissions."
+msgstr "Nincs megfelelő jogosultságod."
+
+#: includes/Plugin.php:76 includes/Plugin.php:149
+msgid "Missing parameters."
+msgstr "Hiányzó paraméterek."
+
+#: includes/Plugin.php:88
+msgid "Translation installed successfully."
+msgstr "A fordítás sikeresen telepítve."
+
+#: includes/Plugin.php:106
+msgid "No items selected."
+msgstr "Nincs kijelölve elem."
+
+#: includes/Plugin.php:157
+msgid "Translation deleted."
+msgstr "A fordítás törölve."
+
+#: includes/Plugin.php:175
+msgid "Cache cleared."
+msgstr "Gyorsítótár törölve."
