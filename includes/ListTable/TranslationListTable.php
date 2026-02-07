@@ -122,9 +122,7 @@ final class TranslationListTable extends WP_List_Table {
 					. $data . '>' . esc_html__( 'Delete', 'lw-translate' ) . '</button>';
 
 			default:
-				return '<span class="lw-translate-uptodate">'
-					. esc_html__( 'Up to date', 'lw-translate' ) . '</span>'
-					. ' <button type="button" class="button lw-translate-delete" '
+				return '<button type="button" class="button lw-translate-delete" '
 					. $data . '>' . esc_html__( 'Delete', 'lw-translate' ) . '</button>';
 		}
 	}
