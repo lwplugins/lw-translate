@@ -11,6 +11,7 @@ namespace LightweightPlugins\Translate;
 
 use LightweightPlugins\Translate\Admin\SettingsPage;
 use LightweightPlugins\Translate\Admin\TranslationsPage;
+use LightweightPlugins\Translate\CLI\Commands as CLICommands;
 use LightweightPlugins\Translate\Installer\FileInstaller;
 
 /**
@@ -32,6 +33,8 @@ final class Plugin {
 	 */
 	private function init_hooks(): void {
 		add_action( 'init', [ $this, 'load_textdomain' ] );
+
+		CLICommands::register();
 
 		if ( is_admin() ) {
 			new SettingsPage();
