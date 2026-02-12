@@ -4,6 +4,8 @@ Manage WordPress translations from community repositories — directly from your
 
 LW Translate connects to GitHub-hosted translation repositories (like [hellowpio/wordpress-translations](https://github.com/hellowpio/wordpress-translations)) and lets you browse, install, update, and delete translations for your installed plugins and themes with a single click.
 
+![LW Translate](.github/screenshot.png)
+
 ## Features
 
 - **Translation browser** — WP_List_Table with search, sort, filter, and pagination
