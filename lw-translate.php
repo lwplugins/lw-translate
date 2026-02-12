@@ -2,8 +2,8 @@
 /**
  * Plugin Name:       LW Translate
  * Plugin URI:        https://github.com/lwplugins/lw-translate
- * Description:       Manage WordPress translations from community repositories.
- * Version:           1.0.5
+ * Description:       Lightweight translate — manage WordPress translations from community repositories.
+ * Version:           1.0.6
  * Requires at least: 6.0
  * Requires PHP:      8.1
  * Author:            LW Plugins
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants.
-define( 'LW_TRANSLATE_VERSION', '1.0.5' );
+define( 'LW_TRANSLATE_VERSION', '1.0.6' );
 define( 'LW_TRANSLATE_FILE', __FILE__ );
 define( 'LW_TRANSLATE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'LW_TRANSLATE_URL', plugin_dir_url( __FILE__ ) );

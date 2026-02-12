@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace LightweightPlugins\Translate;
 
 use LightweightPlugins\Translate\Admin\SettingsPage;
-use LightweightPlugins\Translate\Admin\TranslationsPage;
 use LightweightPlugins\Translate\CLI\Commands as CLICommands;
 use LightweightPlugins\Translate\Installer\FileInstaller;
 
@@ -38,7 +37,6 @@ final class Plugin {
 
 		if ( is_admin() ) {
 			new SettingsPage();
-			new TranslationsPage();
 
 			add_action( 'wp_ajax_lw_translate_install', [ $this, 'ajax_install' ] );
 			add_action( 'wp_ajax_lw_translate_bulk_install', [ $this, 'ajax_bulk_install' ] );

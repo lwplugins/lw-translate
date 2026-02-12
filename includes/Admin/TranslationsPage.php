@@ -111,7 +111,11 @@ final class TranslationsPage {
 
 		?>
 		<div class="wrap">
-			<h1 class="wp-heading-inline"><?php esc_html_e( 'Translations', 'lw-translate' ); ?></h1>
+			<h1 class="wp-heading-inline">
+				<img src="<?php echo esc_url( LW_TRANSLATE_URL . 'assets/img/title-icon.svg' ); ?>" alt="" class="lw-title-icon" />
+				<?php esc_html_e( 'Translations', 'lw-translate' ); ?>
+				<span style="font-size: 13px; font-weight: 400; color: #888;">(<?php echo esc_html( LW_TRANSLATE_VERSION ); ?>)</span>
+			</h1>
 
 			<div class="lw-translate-toolbar">
 				<span class="lw-translate-toolbar-info">
