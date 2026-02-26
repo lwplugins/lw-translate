@@ -86,3 +86,12 @@ composer phpcbf
 ## License
 
 GPL-2.0-or-later — see [LICENSE](https://www.gnu.org/licenses/gpl-2.0.html)
+
+
+## Sponsor
+
+<a href="https://sinann.io/">
+  <img src="https://sinann.io/favicon.svg" alt="Sinann" width="40">
+</a>
+
+Supported by [Sinann](https://sinann.io/)
