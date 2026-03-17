@@ -3,7 +3,7 @@
  * Plugin Name:       LW Translate
  * Plugin URI:        https://github.com/lwplugins/lw-translate
  * Description:       Lightweight translate — manage WordPress translations from community repositories.
- * Version:           1.0.7
+ * Version:           1.0.8
  * Requires at least: 6.0
  * Requires PHP:      8.1
  * Author:            LW Plugins
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants.
-define( 'LW_TRANSLATE_VERSION', '1.0.7' );
+define( 'LW_TRANSLATE_VERSION', '1.0.8' );
 define( 'LW_TRANSLATE_FILE', __FILE__ );
 define( 'LW_TRANSLATE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'LW_TRANSLATE_URL', plugin_dir_url( __FILE__ ) );
@@ -34,6 +34,17 @@ define( 'LW_TRANSLATE_URL', plugin_dir_url( __FILE__ ) );
 // Autoloader (required for PSR-4 class loading).
 if ( file_exists( LW_TRANSLATE_PATH . 'vendor/autoload.php' ) ) {
 	require_once LW_TRANSLATE_PATH . 'vendor/autoload.php';
+} else {
+	add_action(
+		'admin_notices',
+		static function (): void {
+			printf(
+				'<div class="notice notice-error"><p><strong>LW Translate:</strong> %s</p></div>',
+				esc_html__( 'Autoloader not found. Please run "composer install" in the plugin directory, or re-install the plugin from a release ZIP.', 'lw-translate' )
+			);
+		}
+	);
+	return;
 }
 
 // Activation hook.
