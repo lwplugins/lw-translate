@@ -4,7 +4,7 @@ Tags: translation, locale, language, i18n, community
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 1.0.9
+Stable tag: 1.0.10
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,6 +58,14 @@ Some translation repositories provide both formal and informal variants. Formal 
 The plugin calculates git blob SHA hashes of your local .mo files and compares them with the remote repository. Only genuinely changed files trigger an update notification.
 
 == Changelog ==
+
+= 1.0.10 =
+* New: LW Site Manager integration - translation abilities for AI agents
+* New: lw-translate/list-translations - list installed translations
+* New: lw-translate/get-options - get translation settings
+* New: lw-translate/install-translation - install a translation
+* New: lw-translate/update-translations - update all translations
+* Fix: list-translations input schema accepts empty requests
 
 = 1.0.9 =
 * Fix: Smarter autoloader fallback - supports root Composer dependency installs

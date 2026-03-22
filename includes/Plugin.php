@@ -12,6 +12,7 @@ namespace LightweightPlugins\Translate;
 use LightweightPlugins\Translate\Admin\SettingsPage;
 use LightweightPlugins\Translate\CLI\Commands as CLICommands;
 use LightweightPlugins\Translate\Installer\FileInstaller;
+use LightweightPlugins\Translate\SiteManager\Integration as SiteManagerIntegration;
 
 /**
  * Main plugin class.
@@ -23,6 +24,7 @@ final class Plugin {
 	 */
 	public function __construct() {
 		$this->init_hooks();
+		$this->init_site_manager();
 	}
 
 	/**
@@ -174,6 +176,17 @@ final class Plugin {
 		self::clear_comparison_cache();
 
 		wp_send_json_success( [ 'message' => __( 'Cache cleared.', 'lw-translate' ) ] );
+	}
+
+	/**
+	 * Initialize LW Site Manager integration.
+	 *
+	 * No-op if Site Manager is not active.
+	 *
+	 * @return void
+	 */
+	private function init_site_manager(): void {
+		SiteManagerIntegration::init();
 	}
 
 	/**
