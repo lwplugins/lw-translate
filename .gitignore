@@ -7,3 +7,6 @@ composer.lock
 .phpcs.cache
 .phpunit.cache/
 .phpunit.result.cache
+
+# Internal working notes (agent reports, review packages)
+/.superpowers/

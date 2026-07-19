@@ -73,6 +73,12 @@ final class FileMatcher {
 				continue;
 			}
 
+			// A NUL byte would satisfy the suffix check below while making the
+			// eventual fopen() throw. Real git tree paths cannot contain one.
+			if ( str_contains( $path, "\0" ) ) {
+				continue;
+			}
+
 			if ( ! str_starts_with( $path, $prefix ) ) {
 				continue;
 			}

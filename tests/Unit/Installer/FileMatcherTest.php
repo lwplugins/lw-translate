@@ -205,6 +205,24 @@ final class FileMatcherTest extends MonkeyTestCase {
 	}
 
 	/**
+	 * A NUL byte satisfies the suffix check while making the eventual fopen()
+	 * throw an uncaught ValueError. Git tree paths cannot contain one, so such
+	 * an entry is malformed input and must be skipped, not written.
+	 */
+	public function test_get_remote_paths_from_tree_rejects_a_path_containing_a_null_byte(): void {
+		$this->given_saved_options( [ 'tone' => 'formal', 'locale' => 'hu_HU' ] );
+
+		$tree = [
+			[
+				'type' => 'blob',
+				'path' => "formal/plugins/hu_HU/woocommerce/evil.php\0.mo",
+			],
+		];
+
+		$this->assertSame( [], FileMatcher::get_remote_paths_from_tree( 'woocommerce', 'plugin', $tree ) );
+	}
+
+	/**
 	 * The extension check must match the path's end, not a naive
 	 * pathinfo(PATHINFO_EXTENSION) read: that would see only "php" for
 	 * "woocommerce-hu_HU.l10n.php" and either wrongly reject it (extension

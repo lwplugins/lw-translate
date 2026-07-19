@@ -49,6 +49,10 @@ LW Translate provides an easy way to install and manage community translations f
 
 The plugin uses the [hellowpio/wordpress-translations](https://github.com/hellowpio/wordpress-translations) GitHub repository which contains 393+ plugin and 9 theme translations.
 
+= Is it safe to point this at any repository? =
+
+Only use a repository you trust. Since WordPress 6.5 a translation can be a PHP file (.l10n.php), which WordPress loads and executes like any other PHP file. The plugin only installs real translation formats (.po, .mo, .l10n.php, .json) and never writes outside wp-content/languages, but it cannot tell a genuine translation from a hostile one. Installing translations therefore trusts the configured repository with code execution on your site — the same trust you place in any plugin you install.
+
 = What is the difference between formal and informal tone? =
 
 Some translation repositories provide both formal and informal variants. Formal uses polite forms while informal uses familiar forms (e.g. in Hungarian: magázó vs. tegező).
