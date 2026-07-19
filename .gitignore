@@ -4,3 +4,6 @@
 /builds/
 composer.lock
 *.log
+.phpcs.cache
+.phpunit.cache/
+.phpunit.result.cache

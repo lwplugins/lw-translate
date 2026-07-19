@@ -1,0 +1,32 @@
+includes:
+	- phpstan-baseline.neon
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+	level: 5
+
+	# The plugin supports PHP 8.0 upwards, so analyse against the lowest
+	# supported version — anything newer would let 8.1+ syntax slip through.
+	# PHPCompatibility 9.x has no 8.1+ sniffs and silently passes constructs
+	# like `readonly` properties or `never` return types, so phpcs alone
+	# cannot enforce the 8.0 floor; this phpVersion pin is what actually does.
+	phpVersion:
+		min: 80000
+		max: 80599
+
+	paths:
+		- lw-translate.php
+		- includes/
+
+	excludePaths:
+		- tests/
+		- vendor/
+
+	# Declare the plugin's runtime-defined constants for static analysis.
+	bootstrapFiles:
+		- phpstan-bootstrap.php
+
+	# Third-party APIs the plugin integrates with. WordPress core stubs come
+	# from the szepeviktor/phpstan-wordpress extension above.
+	scanFiles:
+		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
