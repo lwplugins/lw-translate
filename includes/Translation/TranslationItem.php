@@ -11,6 +11,10 @@ namespace LightweightPlugins\Translate\Translation;
 
 /**
  * Represents a single translation item (plugin or theme).
+ *
+ * Treat the properties as immutable: they are only ever set by the constructor
+ * and read afterwards. They are not declared `readonly` because that is PHP 8.1
+ * syntax and this plugin supports 8.0.
  */
 final class TranslationItem {
 
@@ -33,13 +37,13 @@ final class TranslationItem {
 	 * @param array<string,string> $files      Remote files with SHA hashes.
 	 */
 	public function __construct(
-		public readonly string $slug,
-		public readonly string $name,
-		public readonly string $type,
-		public readonly string $status,
-		public readonly int $file_count,
-		public readonly string $local_date,
-		public readonly array $files,
+		public string $slug,
+		public string $name,
+		public string $type,
+		public string $status,
+		public int $file_count,
+		public string $local_date,
+		public array $files,
 	) {
 	}
 
