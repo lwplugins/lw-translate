@@ -28,5 +28,12 @@ parameters:
 
 	# Third-party APIs the plugin integrates with. WordPress core stubs come
 	# from the szepeviktor/phpstan-wordpress extension above.
+	#
+	# wp-cli-tools-stubs.php declares cli\progress\Bar (returned by
+	# WP_CLI\Utils\make_progress_bar()) — that class is provided by the
+	# wp-cli/php-cli-tools package WP-CLI bundles at runtime, and this stub
+	# file (shipped inside php-stubs/wp-cli-stubs, already a dev dependency)
+	# is what lets PHPStan resolve tick()/finish() on it.
 	scanFiles:
 		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+		- vendor/php-stubs/wp-cli-stubs/wp-cli-tools-stubs.php

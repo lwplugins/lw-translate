@@ -66,4 +66,9 @@ function lw_translate(): Plugin {
 }
 
 // Initialize the plugin.
-add_action( 'plugins_loaded', __NAMESPACE__ . '\\lw_translate' );
+add_action(
+	'plugins_loaded',
+	static function (): void {
+		lw_translate();
+	}
+);
