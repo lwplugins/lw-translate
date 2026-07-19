@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0] - 2026-07-19
+
+### Fixed
+- The installer only matched remote files by their folder path, so a repository entry with any filename — including one that is not a translation file — was downloaded and written into `wp-content/languages/`. Only the known translation extensions (`.po`, `.mo`, `.l10n.php`, `.json`) are accepted now, from a single shared list.
+- A malformed repository response whose entry path was not a string raised a fatal TypeError instead of being skipped.
+
+### Changed
+- Minimum PHP requirement lowered from 8.1 to 8.0.
+
+### Added
+- Test suite (PHPUnit + Brain Monkey), PHPStan level 5 with an empty baseline, and a CI workflow running code style, static analysis and tests on PHP 8.1–8.5.
+
 ## [1.0.10] - 2026-03-22
 
 ### Added
