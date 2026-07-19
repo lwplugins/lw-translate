@@ -16,4 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', __DIR__ . '/' );
 }
 
+// Never touched by unit tests (no real filesystem I/O is performed against
+// it), but FileMatcher/FileInstaller/LocalScanner reference the constant
+// when building path strings, so it must exist.
+if ( ! defined( 'WP_LANG_DIR' ) ) {
+	define( 'WP_LANG_DIR', '/tmp/lw-translate-tests/languages' );
+}
+
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
