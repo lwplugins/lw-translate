@@ -138,6 +138,34 @@ final class TreeParserTest extends TestCase {
 	}
 
 	/**
+	 * Remote (GitHub API) data is untrusted: a hand-crafted or malformed
+	 * response can carry a scalar or array in the "path" slot instead of a
+	 * string. str_starts_with() requires a string argument under
+	 * strict_types, so without a guard this throws an uncaught TypeError
+	 * instead of simply skipping the malformed entry.
+	 *
+	 * @dataProvider provide_non_string_paths
+	 */
+	public function test_parse_skips_an_entry_whose_path_is_not_a_string( mixed $path ): void {
+		$tree = [
+			[ 'type' => 'blob', 'path' => $path, 'sha' => 'x' ],
+		];
+
+		$this->assertSame( [], TreeParser::parse( $tree, 'formal', 'hu_HU' ) );
+	}
+
+	/**
+	 * @return array<string, array{0: mixed}>
+	 */
+	public static function provide_non_string_paths(): array {
+		return [
+			'integer path' => [ 12345 ],
+			'boolean path' => [ true ],
+			'array path'   => [ [ 'formal', 'plugins' ] ],
+		];
+	}
+
+	/**
 	 * Nested path segments beyond the slug are folded into the "filename" key
 	 * verbatim (explode(..., 2) only splits off the first segment as the
 	 * slug). Documented here as current behaviour, not asserted as desirable.
@@ -178,6 +206,21 @@ final class TreeParserTest extends TestCase {
 		];
 
 		$this->assertSame( [ 'hu_HU' ], TreeParser::get_available_locales( $tree, 'formal' ) );
+	}
+
+	/**
+	 * Same untrusted-remote-data concern as parse(): get_available_locales()
+	 * runs its own str_starts_with() call on "path", so a non-string value
+	 * there must be skipped rather than fatal.
+	 *
+	 * @dataProvider provide_non_string_paths
+	 */
+	public function test_get_available_locales_skips_an_entry_whose_path_is_not_a_string( mixed $path ): void {
+		$tree = [
+			[ 'type' => 'tree', 'path' => $path ],
+		];
+
+		$this->assertSame( [], TreeParser::get_available_locales( $tree, 'formal' ) );
 	}
 
 	/**

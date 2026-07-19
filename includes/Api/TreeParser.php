@@ -28,9 +28,11 @@ final class TreeParser {
 	 *
 	 * Returns an array keyed by slug, containing type and file entries.
 	 *
-	 * @param array<int, array<string, string>> $tree   Raw tree from GitHub API.
-	 * @param string                            $tone   Translation tone (formal/informal).
-	 * @param string                            $locale Target locale (e.g. hu_HU).
+	 * @param array<int, array{type?: string, path?: mixed, sha?: string}> $tree   Raw tree from GitHub API. "path" is
+	 *                                                                             untrusted remote input and is not
+	 *                                                                             guaranteed to be a string.
+	 * @param string                                                       $tone   Translation tone (formal/informal).
+	 * @param string                                                       $locale Target locale (e.g. hu_HU).
 	 * @return array<string, array{type: string, files: array<string, string>}>
 	 */
 	public static function parse( array $tree, string $tone, string $locale ): array {
@@ -45,6 +47,10 @@ final class TreeParser {
 				}
 
 				$path = $entry['path'] ?? '';
+
+				if ( ! is_string( $path ) ) {
+					continue;
+				}
 
 				if ( ! str_starts_with( $path, $prefix ) ) {
 					continue;
@@ -81,8 +87,9 @@ final class TreeParser {
 	/**
 	 * Extract available locales from the tree.
 	 *
-	 * @param array<int, array<string, string>> $tree Raw tree from GitHub API.
-	 * @param string                            $tone Translation tone.
+	 * @param array<int, array{type?: string, path?: mixed}> $tree Raw tree from GitHub API. "path" is untrusted
+	 *                                                              remote input and is not guaranteed to be a string.
+	 * @param string                                         $tone Translation tone.
 	 * @return array<string>
 	 */
 	public static function get_available_locales( array $tree, string $tone ): array {
@@ -94,6 +101,10 @@ final class TreeParser {
 			}
 
 			$path = $entry['path'] ?? '';
+
+			if ( ! is_string( $path ) ) {
+				continue;
+			}
 
 			if ( ! str_starts_with( $path, $tone . '/plugins/' ) && ! str_starts_with( $path, $tone . '/themes/' ) ) {
 				continue;

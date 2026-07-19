@@ -49,9 +49,10 @@ final class FileMatcher {
 	/**
 	 * Get remote paths from cached tree data for a slug.
 	 *
-	 * @param string                            $slug Plugin or theme slug.
-	 * @param string                            $type Type: 'plugin' or 'theme'.
-	 * @param array<int, array<string, string>> $tree Full tree data.
+	 * @param string                                         $slug Plugin or theme slug.
+	 * @param string                                         $type Type: 'plugin' or 'theme'.
+	 * @param array<int, array{type?: string, path?: mixed}> $tree Full tree data. "path" is untrusted remote input
+	 *                                                              and is not guaranteed to be a string.
 	 * @return array<string> Matching remote file paths.
 	 */
 	public static function get_remote_paths_from_tree( string $slug, string $type, array $tree ): array {
@@ -67,6 +68,10 @@ final class FileMatcher {
 			}
 
 			$path = $entry['path'] ?? '';
+
+			if ( ! is_string( $path ) ) {
+				continue;
+			}
 
 			if ( ! str_starts_with( $path, $prefix ) ) {
 				continue;

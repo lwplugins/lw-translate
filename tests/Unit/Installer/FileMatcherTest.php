@@ -110,6 +110,36 @@ final class FileMatcherTest extends MonkeyTestCase {
 	}
 
 	/**
+	 * Remote (GitHub API) data is untrusted: a hand-crafted or malformed
+	 * response can carry a scalar or array in the "path" slot instead of a
+	 * string. str_starts_with() requires a string argument under
+	 * strict_types, so without a guard this throws an uncaught TypeError
+	 * instead of simply skipping the malformed entry.
+	 *
+	 * @dataProvider provide_non_string_paths
+	 */
+	public function test_get_remote_paths_from_tree_skips_an_entry_whose_path_is_not_a_string( mixed $path ): void {
+		$this->given_saved_options( [ 'tone' => 'formal', 'locale' => 'hu_HU' ] );
+
+		$tree = [
+			[ 'type' => 'blob', 'path' => $path ],
+		];
+
+		$this->assertSame( [], FileMatcher::get_remote_paths_from_tree( 'woocommerce', 'plugin', $tree ) );
+	}
+
+	/**
+	 * @return array<string, array{0: mixed}>
+	 */
+	public static function provide_non_string_paths(): array {
+		return [
+			'integer path' => [ 12345 ],
+			'boolean path' => [ true ],
+			'array path'   => [ [ 'formal', 'plugins' ] ],
+		];
+	}
+
+	/**
 	 * "woo" must not match a "woocommerce" directory: the trailing "/"
 	 * appended after the slug in the prefix template is what prevents a
 	 * slug that is a textual prefix of another slug from cross-matching.
