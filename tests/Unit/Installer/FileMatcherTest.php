@@ -154,24 +154,55 @@ final class FileMatcherTest extends MonkeyTestCase {
 	}
 
 	/**
-	 * TODO: gyanús viselkedés -- szándékos? Unlike TreeParser::parse(), this
-	 * method applies no file-extension whitelist at all: any blob under the
-	 * matching prefix is returned, regardless of extension. A malicious or
-	 * compromised upstream tree entry such as
-	 * "formal/plugins/hu_HU/woocommerce/evil.php" passes through untouched.
-	 * See the report's security-probe section for the full trace into
-	 * FileInstaller::download_and_save(), which writes whatever bytes come
-	 * back with no content/type validation either.
+	 * Regression test for a fixed vulnerability: get_remote_paths_from_tree()
+	 * used to apply no file-extension whitelist at all, so any blob under
+	 * the matching prefix -- including something like
+	 * "formal/plugins/hu_HU/woocommerce/evil.php" -- passed through
+	 * untouched into FileInstaller::download_and_save(), which writes
+	 * whatever bytes come back straight into the web-accessible
+	 * wp-content/languages/ directory. Fixed by whitelisting on
+	 * TreeParser::EXTENSIONS, the same list TreeParser::parse() already
+	 * enforced.
 	 */
-	public function test_get_remote_paths_from_tree_matches_blobs_of_any_extension(): void {
+	public function test_get_remote_paths_from_tree_rejects_an_entry_with_an_unknown_extension(): void {
 		$this->given_saved_options( [ 'tone' => 'formal', 'locale' => 'hu_HU' ] );
 
 		$tree = [
 			[ 'type' => 'blob', 'path' => 'formal/plugins/hu_HU/woocommerce/evil.php' ],
 		];
 
+		$this->assertSame( [], FileMatcher::get_remote_paths_from_tree( 'woocommerce', 'plugin', $tree ) );
+	}
+
+	/**
+	 * The extension check must match the path's end, not a naive
+	 * pathinfo(PATHINFO_EXTENSION) read: that would see only "php" for
+	 * "woocommerce-hu_HU.l10n.php" and either wrongly reject it (extension
+	 * "php" not in a literal ".l10n.php"-only list) or wrongly accept every
+	 * ".php" file (if "php" alone were whitelisted). A mixed tree containing
+	 * every supported extension plus an evil ".php" file and an unrelated
+	 * ".txt" file proves both the acceptance and the rejection sides at
+	 * once.
+	 */
+	public function test_get_remote_paths_from_tree_keeps_every_supported_extension_and_drops_the_rest(): void {
+		$this->given_saved_options( [ 'tone' => 'formal', 'locale' => 'hu_HU' ] );
+
+		$tree = [
+			[ 'type' => 'blob', 'path' => 'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.po' ],
+			[ 'type' => 'blob', 'path' => 'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.mo' ],
+			[ 'type' => 'blob', 'path' => 'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.l10n.php' ],
+			[ 'type' => 'blob', 'path' => 'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU-abcd1234.json' ],
+			[ 'type' => 'blob', 'path' => 'formal/plugins/hu_HU/woocommerce/evil.php' ],
+			[ 'type' => 'blob', 'path' => 'formal/plugins/hu_HU/woocommerce/readme.txt' ],
+		];
+
 		$this->assertSame(
-			[ 'formal/plugins/hu_HU/woocommerce/evil.php' ],
+			[
+				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.po',
+				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.mo',
+				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.l10n.php',
+				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU-abcd1234.json',
+			],
 			FileMatcher::get_remote_paths_from_tree( 'woocommerce', 'plugin', $tree )
 		);
 	}

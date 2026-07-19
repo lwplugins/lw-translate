@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace LightweightPlugins\Translate\Installer;
 
+use LightweightPlugins\Translate\Api\TreeParser;
 use LightweightPlugins\Translate\Options;
 
 /**
@@ -29,7 +30,10 @@ final class FileMatcher {
 		$dir    = 'theme' === $type ? 'themes' : 'plugins';
 		$prefix = $tone . '/' . $dir . '/' . $locale . '/' . $slug . '/';
 
-		$extensions = [ '.mo', '.po', '.l10n.php' ];
+		// JSON files carry a content hash in the filename and cannot be
+		// predicted here, so the deterministic extensions are the full
+		// whitelist minus ".json" (see TreeParser::EXTENSIONS).
+		$extensions = array_diff( TreeParser::EXTENSIONS, [ '.json' ] );
 		$paths      = [];
 
 		foreach ( $extensions as $ext ) {
@@ -64,12 +68,35 @@ final class FileMatcher {
 
 			$path = $entry['path'] ?? '';
 
-			if ( str_starts_with( $path, $prefix ) ) {
-				$paths[] = $path;
+			if ( ! str_starts_with( $path, $prefix ) ) {
+				continue;
 			}
+
+			if ( ! self::has_known_extension( $path ) ) {
+				continue;
+			}
+
+			$paths[] = $path;
 		}
 
 		return $paths;
+	}
+
+	/**
+	 * Check whether a path ends with one of the known translation
+	 * extensions (TreeParser::EXTENSIONS is the single source of truth).
+	 *
+	 * @param string $path Remote file path.
+	 * @return bool
+	 */
+	private static function has_known_extension( string $path ): bool {
+		foreach ( TreeParser::EXTENSIONS as $extension ) {
+			if ( str_ends_with( $path, $extension ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

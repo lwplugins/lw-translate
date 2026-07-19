@@ -16,8 +16,12 @@ final class TreeParser {
 
 	/**
 	 * Supported file extensions for translation files.
+	 *
+	 * Public: this is the single source of truth for "is this a
+	 * translation file" checks. FileMatcher reuses it to whitelist remote
+	 * tree paths, so keep it here rather than duplicating the list.
 	 */
-	private const EXTENSIONS = [ '.mo', '.po', '.l10n.php', '.json' ];
+	public const EXTENSIONS = [ '.mo', '.po', '.l10n.php', '.json' ];
 
 	/**
 	 * Parse tree entries for a given tone and locale.
