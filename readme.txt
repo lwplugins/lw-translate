@@ -2,9 +2,9 @@
 Contributors: lwplugins
 Tags: translation, locale, language, i18n, community
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,9 @@ Some translation repositories provide both formal and informal variants. Formal 
 The plugin calculates git blob SHA hashes of your local .mo files and compares them with the remote repository. Only genuinely changed files trigger an update notification.
 
 == Changelog ==
+
+= 1.1.1 =
+* Update: Tested up to WordPress 7.1.
 
 = 1.1.0 =
 * Fix: Only real translation files (.po, .mo, .l10n.php, .json) are installed — previously any filename under the matching folder was downloaded into wp-content/languages
