@@ -26,22 +26,8 @@ import { tableLabels } from '../../components/tableLabels';
 import { errorMessage } from '../../data/api';
 import ActionResults from './ActionResults';
 import SourceBar from './SourceBar';
+import ViewChips from './ViewChips';
 import { translationColumns } from './translationColumns';
-
-/**
- * Filter chip label with its count: "Plugins (3)".
- *
- * @param {string} label Label.
- * @param {number} count Count.
- * @return {string} Chip label.
- */
-const withCount = ( label, count ) =>
-	sprintf(
-		/* translators: 1: filter name, 2: number of items. */
-		__( '%1$s (%2$d)', 'lw-translate' ),
-		label,
-		count
-	);
 
 /**
  * Confirmation text for deleting rows.
@@ -103,39 +89,6 @@ export default function TranslationsTab( { list, actions } ) {
 		sort: { field: 'name', direction: 'asc' },
 		perPage: 20,
 	} );
-
-	const views = counts
-		? [
-				{
-					value: 'plugin',
-					label: withCount(
-						__( 'Plugins', 'lw-translate' ),
-						counts.plugin
-					),
-				},
-				{
-					value: 'theme',
-					label: withCount(
-						__( 'Themes', 'lw-translate' ),
-						counts.theme
-					),
-				},
-				{
-					value: 'update',
-					label: withCount(
-						__( 'Updates available', 'lw-translate' ),
-						counts.update
-					),
-				},
-				{
-					value: 'not_installed',
-					label: withCount(
-						__( 'Not installed', 'lw-translate' ),
-						counts.notInstalled
-					),
-				},
-			]
-		: [];
 
 	if ( list.error && ! data ) {
 		return (
@@ -202,14 +155,11 @@ export default function TranslationsTab( { list, actions } ) {
 				table={ table }
 				isLoading={ list.isLoading || actions.busy === 'refresh' }
 				caption={ __( 'Translations', 'lw-translate' ) }
-				filters={ [
-					{
-						field: 'views',
-						label: __( 'Show', 'lw-translate' ),
-						multiple: false,
-						options: views,
-					},
-				] }
+				toolbar={
+					counts ? (
+						<ViewChips table={ table } counts={ counts } />
+					) : null
+				}
 				labels={ {
 					...tableLabels(),
 					search: __( 'Search by name or slug', 'lw-translate' ),
