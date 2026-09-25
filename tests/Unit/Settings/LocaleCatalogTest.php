@@ -88,4 +88,21 @@ final class LocaleCatalogTest extends MonkeyTestCase {
 
 		$this->assertSame( [ 'hu_HU' ], LocaleCatalog::offered( false ) );
 	}
+
+	/**
+	 * WordPress core does not polyfill mb_strtoupper(); a host without
+	 * mbstring must not fatal on the settings screen.
+	 */
+	public function test_capitalize_works_without_mbstring(): void {
+		$this->assertSame( 'Magyar', LocaleCatalog::capitalize( 'magyar', false ) );
+		$this->assertSame( 'ελληνικά', LocaleCatalog::capitalize( 'ελληνικά', false ) );
+	}
+
+	public function test_capitalize_uses_mbstring_when_present(): void {
+		if ( ! function_exists( 'mb_strtoupper' ) ) {
+			$this->markTestSkipped( 'mbstring is not loaded.' );
+		}
+
+		$this->assertSame( 'Ελληνικά', LocaleCatalog::capitalize( 'ελληνικά', true ) );
+	}
 }

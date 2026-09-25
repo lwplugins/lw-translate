@@ -96,6 +96,24 @@ final class LocaleCatalog {
 			return $code;
 		}
 
-		return mb_strtoupper( mb_substr( $name, 0, 1 ) ) . mb_substr( $name, 1 ) . ' (' . $code . ')';
+		return self::capitalize( $name ) . ' (' . $code . ')';
+	}
+
+	/**
+	 * Upper-case the first letter. WordPress does not polyfill
+	 * mb_strtoupper(), so without mbstring only an ASCII first letter changes.
+	 *
+	 * @param string    $text      Text.
+	 * @param bool|null $multibyte Use mbstring; null = when it is loaded.
+	 * @return string
+	 */
+	public static function capitalize( string $text, ?bool $multibyte = null ): string {
+		$multibyte = $multibyte ?? ( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) );
+
+		if ( $multibyte ) {
+			return mb_strtoupper( mb_substr( $text, 0, 1 ) ) . mb_substr( $text, 1 );
+		}
+
+		return ucfirst( $text );
 	}
 }
