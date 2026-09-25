@@ -8,9 +8,9 @@ LW Translate connects to GitHub-hosted translation repositories (like [hellowpio
 
 ## Features
 
-- **Translation browser** — WP_List_Table with search, sort, filter, and pagination
+- **Translation browser** — React admin table with search, view filters with counts, sorting, and pagination
 - **One-click install/update** — download translation files directly to `WP_LANG_DIR`
-- **SHA-based update detection** — compares git blob hashes, no unnecessary downloads
+- **SHA-based update detection** — compares the git blob hashes of every installable file, no unnecessary downloads
 - **Formal & informal tone** — switch between translation variants (e.g. polite vs. familiar)
 - **Multi-locale support** — works with any locale available in the repository
 - **Bulk actions** — install, update, or delete multiple translations at once

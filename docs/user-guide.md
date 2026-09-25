@@ -19,59 +19,54 @@ composer require lwplugins/lw-translate
 ```
 
 ### Requirements
-- PHP 8.1+
+- PHP 8.0+
 - WordPress 6.0+
 
 ---
 
-## Admin Pages
+## Admin Page
 
-The plugin adds two pages under the **LW Plugins** menu:
+The plugin adds one page under the **LW Plugins** menu: `LW Plugins > Translate`. It has two sections in the side navigation (links work with `#translations` / `#general` or `?tab=general`).
 
-### 1. Translations (`LW Plugins > Translate`)
+### 1. Translations
 
-The main page with a WP_List_Table showing all available translations.
+A table of every installed plugin and theme that has a folder in the repository for the selected tone and locale.
 
 **Toolbar:**
-- Displays the current **tone** (Formal/Informal) and **locale** (e.g. hu_HU)
-- **Refresh Cache** button to force-reload repository data from GitHub
+- The current **tone** (Formal/Informal) and **locale** (e.g. hu_HU), with a link to the repository
+- How long ago the repository listing was fetched
+- **Refresh** to drop the cached listing and comparison and fetch fresh data from GitHub
+
+**Warnings:** a GitHub error (for example an exhausted rate limit, with the wait time) or an incomplete ("truncated") repository listing is shown above the table instead of an empty list.
 
 **Table columns:**
 
 | Column | Description |
 |--------|-------------|
-| Name | Plugin/theme display name and slug |
+| Name | Plugin/theme display name, slug and a link to its repository folder |
 | Type | "Plugin" or "Theme" badge |
-| Status | Green checkmark (up to date), orange arrow (update available), or dash (not installed) |
-| Files | Number of translation files available remotely |
+| Status | Up to date, Update available or Not installed |
+| Files | Number of installable translation files in the repository |
 | Local Date | `PO-Revision-Date` from the locally installed .po file |
 | Actions | Install / Update / Delete buttons |
 
-**View filters (above the table):**
-- **All** - Every translation available for your installed plugins/themes
-- **Plugins** - Plugin translations only
-- **Themes** - Theme translations only
-- **Updates Available** - Translations where the remote version differs from local
-- **Not Installed** - Translations available but not yet installed locally
+**View chips:** All, Plugins, Themes, Updates available, Not installed — each with its count.
 
-**Search:** Use the search box to filter by plugin/theme name or slug.
+**Search:** filters by plugin/theme name or slug. **Sorting:** click a column header.
 
-**Sorting:** Click column headers (Name, Type, Status, Local Date) to sort.
+**Bulk actions:** tick rows, then **Install/Update selected** or **Delete selected** (deleting asks first). Items are sent in batches of 10. After every action a result list shows what happened to each item.
 
-**Bulk actions:**
-1. Select items with checkboxes
-2. Choose "Install/Update Selected" or "Delete Selected" from the dropdown
-3. Click "Apply"
+Installing, updating, deleting and refreshing need the `install_languages` capability. WordPress denies it when `DISALLOW_FILE_MODS` is set and, on multisite, to everyone but super admins; such users see the list read-only.
 
-### 2. Translate Settings (`LW Plugins > Translate Settings`)
-
-Settings page with the following options:
+### 2. General
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| **Tone** | Formal | Choose between formal and informal translation variants. Some repositories provide both (e.g. formal = polite form, informal = familiar form). |
-| **Locale** | hu_HU | Target locale code. Determines which language folder to look for in the repository. |
-| **Cache TTL** | 43200 (12h) | How long to cache the GitHub repository tree (in seconds). Minimum: 3600 (1h), maximum: 604800 (7 days). |
+| **Tone** | Formal | Choose between formal and informal translation variants. |
+| **Locale** | hu_HU | Target locale. Only the locales the repository offers can be chosen. |
+| **Cache lifetime** | 43200 (12 hours) | How long the repository listing is cached, in seconds: 3600 (1 hour) to 604800 (7 days). |
+
+Save with the top bar button or Cmd/Ctrl+S. A save is all or nothing: if any field is invalid, nothing is stored and the field shows why.
 
 ---
 
@@ -86,20 +81,20 @@ Settings page with the following options:
 ### Update detection (SHA comparison)
 The plugin uses git blob SHA hashes to detect changes:
 - **Remote SHA**: Provided by the GitHub Trees API for each file
-- **Local SHA**: Calculated from the local `.mo` file content using the same algorithm: `sha1("blob " + filesize + "\0" + content)`
-- If SHAs match, the translation is **up to date**
-- If they differ, an **update** is available
-- If no local file exists, it shows as **not installed**
+- **Local SHA**: Calculated from each local file (`.mo`, `.po` and script translation `.json`) using the same algorithm: `sha1("blob " + filesize + "\0" + content)`
+- If every file matches, the translation is **up to date**
+- If any file differs or is missing, an **update** is available
+- If none of the files exists locally, it shows as **not installed**
 
 This approach avoids unnecessary downloads - only genuinely changed files trigger update notifications.
 
 ### File installation
 When you click Install or Update:
-1. The plugin downloads all translation files for that slug (`.mo`, `.po`, `.l10n.php`, `.json`)
+1. The plugin downloads the item's `{slug}-{locale}.mo`, `.po` and `{slug}-{locale}-{md5}.json` files and checks each against its blob SHA; the fast `.l10n.php` file is generated locally from the `.mo` (never downloaded)
 2. Files are saved via `WP_Filesystem` to the standard WordPress language directory:
    - Plugins: `WP_LANG_DIR/plugins/{slug}-{locale}.mo`
    - Themes: `WP_LANG_DIR/themes/{slug}-{locale}.mo`
-3. The comparison cache is cleared so the table reflects the new state
+3. The comparison cache is cleared so the table reflects the new state (also after WP-CLI install/delete)
 
 ### Repository structure
 The plugin expects this directory structure in the GitHub repository:
@@ -136,7 +131,7 @@ informal/
 
 **Cache is automatically cleared when:**
 - A translation is installed, updated, or deleted
-- You click the "Refresh Cache" button
+- You click the "Refresh" button (or run `wp lw-translate refresh`)
 - The tree cache TTL expires naturally
 
 **Cache is also cleared when you change tone or locale in settings** (via the comparison transient key which includes both values).
@@ -147,7 +142,7 @@ informal/
 
 ### No translations appear
 - Check that you have plugins/themes installed that exist in the repository
-- Click "Refresh Cache" to force a fresh API call
+- Click "Refresh" to force a fresh API call, and read the warning above the table if there is one
 - Verify your locale setting matches the repository structure (e.g. `hu_HU`)
 
 ### GitHub API rate limit

@@ -20,7 +20,7 @@ LW Translate provides an easy way to install and manage community translations f
 * One-click install and update translations
 * Formal (magázó) and informal (tegező) tone support
 * SHA-based update detection (no unnecessary downloads)
-* WP_List_Table interface with search, sort, and filter
+* Admin table with search, view filters, sorting and per-item results
 * Bulk install/update/delete actions
 * Smart caching for GitHub API calls
 * WP_Filesystem for safe file operations
