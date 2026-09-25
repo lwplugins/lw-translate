@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.2.0] - 2026-09-25
+
+### Added
+- New Translate screen built with WordPress components, like the other LW plugins: side navigation, save bar with a Cmd/Ctrl+S shortcut, loading skeletons and a mobile layout.
+- The translations table has search, view filters with counts (All, Plugins, Themes, Updates available, Not installed), sortable columns and a result list showing what happened to each item.
+- Bulk "Install/Update selected" and "Delete selected" work; items are sent in batches and deleting asks first.
+- GitHub errors and incomplete repository listings are shown above the table instead of "No items found"; an exhausted rate limit says when to try again.
+- The toolbar shows the source repository, how long ago the listing was fetched and a Refresh button.
+- Admin REST API under `lw-translate/v1/admin/` for settings and translations. Reading needs manage_options; installing, deleting and refreshing need install_languages.
+
+### Changed
+- A cache lifetime outside 1 hour–7 days is rejected with a message on the admin screen instead of being adjusted silently.
+- The old settings form, list table, admin.js/admin.css, the AJAX endpoints and the unused TranslationsPage and FileMatcher classes were removed.
+
+### Fixed
+- The list no longer stays stale after an install or delete when a persistent object cache (Redis, Memcached) is active, or after a WP-CLI install/delete.
+- A theme with the same folder name as a plugin now shows up in the list.
+- Updates are detected for every translation file (.mo, .po, .json), not only the .mo.
+- Delete reports failures honestly and removes only the files the repository lists for the item plus the generated .l10n.php; language-pack files it never installed are left alone. If GitHub can't be reached, nothing is deleted and the reason is shown. WP-CLI `delete --all` counts failures.
+- Plugins and themes whose repository folder holds no installable file no longer appear with an Install button that always fails.
+- The locale is validated on every save, including `wp lw-translate settings set`.
+- The settings screen no longer needs the mbstring PHP extension.
+
 ## [1.1.4] - 2026-09-25
 
 ### Security

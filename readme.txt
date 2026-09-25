@@ -4,7 +4,7 @@ Tags: translation, locale, language, i18n, community
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.4
+Stable tag: 1.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,23 @@ Some translation repositories provide both formal and informal variants. Formal 
 The plugin calculates git blob SHA hashes of your local .mo files and compares them with the remote repository. Only genuinely changed files trigger an update notification.
 
 == Changelog ==
+
+= 1.2.0 =
+* New: New Translate screen built with WordPress components, like the other LW plugins: side navigation, save bar with a Cmd/Ctrl+S shortcut, loading skeletons and a mobile layout.
+* New: The translations table has search, view filters with counts (All, Plugins, Themes, Updates available, Not installed), sortable columns and a result list showing what happened to each item.
+* New: Bulk "Install/Update selected" and "Delete selected" work; items are sent in batches and deleting asks first.
+* New: GitHub errors and incomplete repository listings are shown above the table instead of "No items found"; an exhausted rate limit says when to try again.
+* New: The toolbar shows the source repository, how long ago the listing was fetched and a Refresh button.
+* New: Admin REST API under lw-translate/v1/admin/ for settings and translations. Reading needs manage_options; installing, deleting and refreshing need install_languages.
+* Change: A cache lifetime outside 1 hour–7 days is rejected with a message on the admin screen instead of being adjusted silently.
+* Change: The old settings form, list table, admin.js/admin.css, the AJAX endpoints and the unused TranslationsPage and FileMatcher classes were removed.
+* Fix: The list no longer stays stale after an install or delete when a persistent object cache (Redis, Memcached) is active, or after a WP-CLI install/delete.
+* Fix: A theme with the same folder name as a plugin now shows up in the list.
+* Fix: Updates are detected for every translation file (.mo, .po, .json), not only the .mo.
+* Fix: Delete reports failures honestly and removes only the files the repository lists for the item plus the generated .l10n.php; language-pack files it never installed are left alone. If GitHub can't be reached, nothing is deleted and the reason is shown. WP-CLI delete --all counts failures.
+* Fix: Plugins and themes whose repository folder holds no installable file no longer appear with an Install button that always fails.
+* Fix: The locale is validated on every save, including wp lw-translate settings set.
+* Fix: The settings screen no longer needs the mbstring PHP extension.
 
 = 1.1.4 =
 * Fix: Translation files that execute as PHP (.l10n.php) are no longer downloaded; WordPress's own converter generates them from the .mo file.
@@ -133,6 +150,9 @@ The plugin calculates git blob SHA hashes of your local .mo files and compares t
 * Bulk actions support
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+New Translate screen with working bulk actions, search and honest results. Your settings and installed translations are kept.
 
 = 1.1.4 =
 Security release. Translation files that run as PHP are no longer downloaded, downloads are verified, and only users who may install languages can change translations. Updating is recommended.
