@@ -185,6 +185,10 @@ final class Commands {
 			WP_CLI::error( 'Invalid tone. Use: ' . implode( ', ', Options::TONES ) . '.' );
 		}
 
+		if ( 'locale' === $key && $checked[ $key ] !== $value ) {
+			WP_CLI::error( 'Invalid locale. Use a WordPress locale code such as hu_HU.' );
+		}
+
 		if ( $checked[ $key ] !== $value ) {
 			WP_CLI::warning( "Value adjusted to the allowed range: {$checked[ $key ]}" );
 		}

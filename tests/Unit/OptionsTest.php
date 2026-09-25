@@ -186,4 +186,27 @@ final class OptionsTest extends MonkeyTestCase {
 
 		Options::save( [ 'tone' => 'informal' ] );
 	}
+
+	/**
+	 * Before 1.2.0 any string was stored as the locale (the form offered
+	 * one value, but nothing checked it); it flows into repository paths
+	 * and the transient name.
+	 */
+	public function test_save_replaces_a_malformed_locale_with_the_default(): void {
+		Functions\expect( 'update_option' )
+			->once()
+			->with( Options::OPTION_NAME, [ 'locale' => 'hu_HU' ] )
+			->andReturn( true );
+
+		Options::save( [ 'locale' => 'hu_HU/../../x' ] );
+	}
+
+	public function test_save_keeps_a_well_formed_locale(): void {
+		Functions\expect( 'update_option' )
+			->once()
+			->with( Options::OPTION_NAME, [ 'locale' => 'de_DE_formal' ] )
+			->andReturn( true );
+
+		Options::save( [ 'locale' => 'de_DE_formal' ] );
+	}
 }

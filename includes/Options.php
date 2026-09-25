@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace LightweightPlugins\Translate;
 
+use LightweightPlugins\Translate\Installer\FileNamePolicy;
+
 /**
  * Handles plugin options and settings.
  */
@@ -100,7 +102,7 @@ final class Options {
 	/**
 	 * Enforce the allowed values. Shared by the settings form and WP-CLI.
 	 *
-	 * An unknown tone becomes "formal"; cache_ttl is clamped to
+	 * An unknown tone becomes "formal", a malformed locale the default; cache_ttl is clamped to
 	 * CACHE_TTL_MIN..CACHE_TTL_MAX. Keys that are not given stay absent.
 	 *
 	 * @param array<string, mixed> $options Options to check.
@@ -109,6 +111,11 @@ final class Options {
 	public static function sanitize( array $options ): array {
 		if ( array_key_exists( 'tone', $options ) ) {
 			$options['tone'] = in_array( $options['tone'], self::TONES, true ) ? $options['tone'] : 'formal';
+		}
+
+		if ( array_key_exists( 'locale', $options ) ) {
+			$locale            = is_string( $options['locale'] ) ? $options['locale'] : '';
+			$options['locale'] = FileNamePolicy::is_valid_locale( $locale ) ? $locale : self::get_defaults()['locale'];
 		}
 
 		if ( array_key_exists( 'cache_ttl', $options ) ) {
