@@ -65,6 +65,7 @@ The plugin calculates git blob SHA hashes of your local .mo files and compares t
 
 = 1.1.4 =
 * Fix: Translation files that execute as PHP (.l10n.php) are no longer downloaded; WordPress's own converter generates them from the .mo file.
+* Fix: On update, translation PHP files (.l10n.php) downloaded by earlier versions are regenerated from their .mo files, or removed if that isn't possible.
 * Fix: Only the translation files that belong to the plugin or theme being installed are written (`{slug}-{locale}.mo`, `.po` and script `.json` files). Anything else in the repository folder is ignored and listed in the result.
 * Fix: Every downloaded file is checked against the repository's checksum before anything is written. If one file doesn't match, nothing is installed for that item.
 * Fix: Installing, updating and deleting translations now requires the "install languages" permission. On multisite only network admins can do it, and nothing can be changed when file changes are disabled on the site (DISALLOW_FILE_MODS).
