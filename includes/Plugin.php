@@ -69,7 +69,7 @@ final class Plugin {
 	public function ajax_install(): void {
 		check_ajax_referer( 'lw_translate_nonce', 'nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! Capability::can_install() ) {
 			wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', 'lw-translate' ) ] );
 		}
 
@@ -105,7 +105,7 @@ final class Plugin {
 	public function ajax_bulk_install(): void {
 		check_ajax_referer( 'lw_translate_nonce', 'nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! Capability::can_install() ) {
 			wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', 'lw-translate' ) ] );
 		}
 
@@ -147,7 +147,7 @@ final class Plugin {
 	public function ajax_delete(): void {
 		check_ajax_referer( 'lw_translate_nonce', 'nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! Capability::can_install() ) {
 			wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', 'lw-translate' ) ] );
 		}
 
@@ -174,7 +174,7 @@ final class Plugin {
 	public function ajax_refresh_cache(): void {
 		check_ajax_referer( 'lw_translate_nonce', 'nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! Capability::can_install() ) {
 			wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', 'lw-translate' ) ] );
 		}
 

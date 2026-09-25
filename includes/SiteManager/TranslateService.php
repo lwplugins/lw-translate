@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace LightweightPlugins\Translate\SiteManager;
 
+use LightweightPlugins\Translate\Capability;
 use LightweightPlugins\Translate\Installer\FileInstaller;
 use LightweightPlugins\Translate\Options;
 use LightweightPlugins\Translate\Translation\Comparator;
@@ -77,6 +78,10 @@ final class TranslateService {
 	 * @return array<string, mixed>|WP_Error
 	 */
 	public static function install_translation( array $input ): array|WP_Error {
+		if ( ! Capability::can_install() ) {
+			return self::forbidden();
+		}
+
 		$slug = isset( $input['slug'] ) ? sanitize_text_field( $input['slug'] ) : '';
 		$type = isset( $input['type'] ) ? sanitize_text_field( $input['type'] ) : '';
 
@@ -120,6 +125,10 @@ final class TranslateService {
 	 * @return array<string, mixed>|WP_Error
 	 */
 	public static function update_translations( array $input ): array|WP_Error { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Required by ability callback interface.
+		if ( ! Capability::can_install() ) {
+			return self::forbidden();
+		}
+
 		$items = Comparator::compare_all();
 
 		if ( is_wp_error( $items ) ) {
@@ -158,6 +167,19 @@ final class TranslateService {
 			'failed'  => $failed,
 			'total'   => count( $updated ),
 		];
+	}
+
+	/**
+	 * Error for a user who may not change translation files.
+	 *
+	 * @return WP_Error
+	 */
+	private static function forbidden(): WP_Error {
+		return new WP_Error(
+			'forbidden',
+			__( 'You are not allowed to install translations on this site.', 'lw-translate' ),
+			[ 'status' => 403 ]
+		);
 	}
 
 	/**

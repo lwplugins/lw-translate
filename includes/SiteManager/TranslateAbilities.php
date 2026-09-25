@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace LightweightPlugins\Translate\SiteManager;
 
+use LightweightPlugins\Translate\Capability;
+
 /**
  * Registers Translate-specific abilities with the WordPress Abilities API.
  */
@@ -23,8 +25,8 @@ final class TranslateAbilities {
 	public static function register( object $permissions ): void {
 		self::register_list_translations( $permissions );
 		self::register_get_options( $permissions );
-		self::register_install_translation( $permissions );
-		self::register_update_translations( $permissions );
+		self::register_install_translation();
+		self::register_update_translations();
 	}
 
 	/**
@@ -108,10 +110,12 @@ final class TranslateAbilities {
 	/**
 	 * Register install-translation ability.
 	 *
-	 * @param object $permissions Permission manager instance.
+	 * Writes files, so it uses the plugin's own install_languages check
+	 * instead of the Site Manager options check.
+	 *
 	 * @return void
 	 */
-	private static function register_install_translation( object $permissions ): void {
+	private static function register_install_translation(): void {
 		wp_register_ability(
 			'lw-translate/install-translation',
 			[
@@ -119,7 +123,7 @@ final class TranslateAbilities {
 				'description'         => __( 'Install or update a translation for a specific plugin or theme.', 'lw-translate' ),
 				'category'            => 'translate',
 				'execute_callback'    => [ TranslateService::class, 'install_translation' ],
-				'permission_callback' => $permissions->callback( 'can_manage_options' ),
+				'permission_callback' => [ Capability::class, 'can_install' ],
 				'input_schema'        => [
 					'type'       => 'object',
 					'required'   => [ 'slug', 'type' ],
@@ -154,10 +158,12 @@ final class TranslateAbilities {
 	/**
 	 * Register update-translations ability.
 	 *
-	 * @param object $permissions Permission manager instance.
+	 * Writes files, so it uses the plugin's own install_languages check
+	 * instead of the Site Manager options check.
+	 *
 	 * @return void
 	 */
-	private static function register_update_translations( object $permissions ): void {
+	private static function register_update_translations(): void {
 		wp_register_ability(
 			'lw-translate/update-translations',
 			[
@@ -165,7 +171,7 @@ final class TranslateAbilities {
 				'description'         => __( 'Update all translations that have a newer version available.', 'lw-translate' ),
 				'category'            => 'translate',
 				'execute_callback'    => [ TranslateService::class, 'update_translations' ],
-				'permission_callback' => $permissions->callback( 'can_manage_options' ),
+				'permission_callback' => [ Capability::class, 'can_install' ],
 				'input_schema'        => [
 					'type'    => 'object',
 					'default' => [],
