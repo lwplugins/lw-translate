@@ -113,9 +113,24 @@ final class TreeParserTest extends TestCase {
 		return [
 			'.mo'      => [ 'woocommerce-hu_HU.mo' ],
 			'.po'      => [ 'woocommerce-hu_HU.po' ],
-			'.l10n.php' => [ 'woocommerce-hu_HU.l10n.php' ],
 			'.json'    => [ 'woocommerce-hu_HU-1234abcd.json' ],
 		];
+	}
+
+	/**
+	 * Upstream `.l10n.php` files are executable PHP; they are never offered
+	 * for install (WordPress core's converter builds them from the .mo).
+	 */
+	public function test_parse_ignores_l10n_php_files(): void {
+		$tree = [
+			[
+				'type' => 'blob',
+				'path' => 'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.l10n.php',
+				'sha'  => 'x',
+			],
+		];
+
+		$this->assertSame( [], TreeParser::parse( $tree, 'formal', 'hu_HU' ) );
 	}
 
 	/**

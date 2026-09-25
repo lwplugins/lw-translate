@@ -65,6 +65,10 @@ trait InstallTrait {
 			WP_CLI::error( $result->get_error_message() );
 		}
 
+		if ( ! empty( $result['skipped'] ) ) {
+			WP_CLI::warning( 'Ignored files that are not valid translation files for this item: ' . implode( ', ', $result['skipped'] ) );
+		}
+
 		WP_CLI::success( "Translation installed for {$type}: {$slug}" );
 	}
 

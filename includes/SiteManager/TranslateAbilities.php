@@ -140,6 +140,10 @@ final class TranslateAbilities {
 					'properties' => [
 						'success' => [ 'type' => 'boolean' ],
 						'message' => [ 'type' => 'string' ],
+						'skipped' => [
+							'type'  => 'array',
+							'items' => [ 'type' => 'string' ],
+						],
 					],
 				],
 				'meta'                => self::write_meta(),

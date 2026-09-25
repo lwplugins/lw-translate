@@ -20,8 +20,12 @@ final class TreeParser {
 	 * Public: this is the single source of truth for "is this a
 	 * translation file" checks. FileMatcher reuses it to whitelist remote
 	 * tree paths, so keep it here rather than duplicating the list.
+	 *
+	 * ".l10n.php" is deliberately absent: those files are executable PHP,
+	 * so they are never taken from the repository. L10nPhpGenerator builds
+	 * them locally from the installed .mo.
 	 */
-	public const EXTENSIONS = [ '.mo', '.po', '.l10n.php', '.json' ];
+	public const EXTENSIONS = [ '.mo', '.po', '.json' ];
 
 	/**
 	 * Parse tree entries for a given tone and locale.

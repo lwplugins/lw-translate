@@ -12,6 +12,7 @@ namespace LightweightPlugins\Translate;
 use LightweightPlugins\Translate\Admin\SettingsPage;
 use LightweightPlugins\Translate\CLI\Commands as CLICommands;
 use LightweightPlugins\Translate\Installer\FileInstaller;
+use LightweightPlugins\Translate\Installer\SkippedFilesNotice;
 use LightweightPlugins\Translate\SiteManager\Integration as SiteManagerIntegration;
 
 /**
@@ -88,7 +89,12 @@ final class Plugin {
 
 		self::clear_comparison_cache();
 
-		wp_send_json_success( [ 'message' => __( 'Translation installed successfully.', 'lw-translate' ) ] );
+		wp_send_json_success(
+			[
+				'message' => trim( __( 'Translation installed successfully.', 'lw-translate' ) . ' ' . SkippedFilesNotice::message( $result['skipped'] ) ),
+				'skipped' => $result['skipped'],
+			]
+		);
 	}
 
 	/**
@@ -124,7 +130,7 @@ final class Plugin {
 				'slug'    => $parts[1],
 				'type'    => $parts[0],
 				'success' => ! is_wp_error( $result ),
-				'message' => is_wp_error( $result ) ? $result->get_error_message() : '',
+				'message' => is_wp_error( $result ) ? $result->get_error_message() : SkippedFilesNotice::message( $result['skipped'] ),
 			];
 		}
 

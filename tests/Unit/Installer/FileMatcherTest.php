@@ -52,7 +52,6 @@ final class FileMatcherTest extends MonkeyTestCase {
 			[
 				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.mo',
 				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.po',
-				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.l10n.php',
 			],
 			$paths
 		);
@@ -230,7 +229,8 @@ final class FileMatcherTest extends MonkeyTestCase {
 	 * ".php" file (if "php" alone were whitelisted). A mixed tree containing
 	 * every supported extension plus an evil ".php" file and an unrelated
 	 * ".txt" file proves both the acceptance and the rejection sides at
-	 * once.
+	 * once. Since 1.1.4 ".l10n.php" is no longer supported: upstream PHP is
+	 * never installed, core's converter builds it from the .mo instead.
 	 */
 	public function test_get_remote_paths_from_tree_keeps_every_supported_extension_and_drops_the_rest(): void {
 		$this->given_saved_options( [ 'tone' => 'formal', 'locale' => 'hu_HU' ] );
@@ -248,7 +248,6 @@ final class FileMatcherTest extends MonkeyTestCase {
 			[
 				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.po',
 				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.mo',
-				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU.l10n.php',
 				'formal/plugins/hu_HU/woocommerce/woocommerce-hu_HU-abcd1234.json',
 			],
 			FileMatcher::get_remote_paths_from_tree( 'woocommerce', 'plugin', $tree )

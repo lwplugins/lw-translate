@@ -109,6 +109,7 @@ final class TranslateService {
 			'success' => true,
 			/* translators: 1: plugin/theme type, 2: slug */
 			'message' => sprintf( __( 'Translation installed for %1$s %2$s.', 'lw-translate' ), $type, $slug ),
+			'skipped' => $result['skipped'],
 		];
 	}
 

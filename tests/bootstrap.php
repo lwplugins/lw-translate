@@ -23,4 +23,21 @@ if ( ! defined( 'WP_LANG_DIR' ) ) {
 	define( 'WP_LANG_DIR', '/tmp/lw-translate-tests/languages' );
 }
 
+if ( ! defined( 'FS_CHMOD_FILE' ) ) {
+	define( 'FS_CHMOD_FILE', 0644 );
+}
+
+if ( ! defined( 'FS_CHMOD_DIR' ) ) {
+	define( 'FS_CHMOD_DIR', 0755 );
+}
+
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
+
+// Minimal doubles for the WordPress core classes the plugin type-hints.
+if ( ! class_exists( 'WP_Error' ) ) {
+	require_once __DIR__ . '/Stubs/WP_Error.php';
+}
+
+if ( ! class_exists( 'WP_Filesystem_Base' ) ) {
+	require_once __DIR__ . '/Stubs/WP_Filesystem_Base.php';
+}
