@@ -188,8 +188,18 @@ final class Commands {
 			$value = (int) $value;
 		}
 
+		$checked = Options::sanitize( [ $key => $value ] );
+
+		if ( 'tone' === $key && $checked[ $key ] !== $value ) {
+			WP_CLI::error( 'Invalid tone. Use: ' . implode( ', ', Options::TONES ) . '.' );
+		}
+
+		if ( $checked[ $key ] !== $value ) {
+			WP_CLI::warning( "Value adjusted to the allowed range: {$checked[ $key ]}" );
+		}
+
 		$options         = Options::get_all();
-		$options[ $key ] = $value;
+		$options[ $key ] = $checked[ $key ];
 		Options::save( $options );
 
 		WP_CLI::success( "Setting '{$key}' updated." );

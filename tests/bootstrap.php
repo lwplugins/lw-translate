@@ -23,6 +23,10 @@ if ( ! defined( 'WP_LANG_DIR' ) ) {
 	define( 'WP_LANG_DIR', '/tmp/lw-translate-tests/languages' );
 }
 
+if ( ! defined( 'LW_TRANSLATE_VERSION' ) ) {
+	define( 'LW_TRANSLATE_VERSION', '0.0.0-test' );
+}
+
 if ( ! defined( 'FS_CHMOD_FILE' ) ) {
 	define( 'FS_CHMOD_FILE', 0644 );
 }

@@ -135,4 +135,55 @@ final class OptionsTest extends MonkeyTestCase {
 
 		$this->assertSame( 'formal', Options::get( 'tone' ) );
 	}
+
+	/**
+	 * A TTL of 0 would make set_transient() store the whole repository tree
+	 * as a permanent, autoloaded option.
+	 *
+	 * @dataProvider provide_cache_ttls
+	 */
+	public function test_save_clamps_cache_ttl_to_one_hour_through_one_week( mixed $given, int $stored ): void {
+		Functions\expect( 'update_option' )
+			->once()
+			->with( Options::OPTION_NAME, [ 'cache_ttl' => $stored ] )
+			->andReturn( true );
+
+		Options::save( [ 'cache_ttl' => $given ] );
+	}
+
+	/**
+	 * @return array<string, array{0: mixed, 1: int}>
+	 */
+	public static function provide_cache_ttls(): array {
+		return [
+			'zero'         => [ 0, 3600 ],
+			'negative'     => [ -5, 3600 ],
+			'below min'    => [ 60, 3600 ],
+			'in range'     => [ 43200, 43200 ],
+			'above max'    => [ 99999999, 604800 ],
+			'numeric text' => [ '7200', 7200 ],
+		];
+	}
+
+	/**
+	 * The CLI "settings set" command writes through Options::save(), so the
+	 * whitelist must live here, not only in the admin form handler.
+	 */
+	public function test_save_replaces_an_unknown_tone_with_formal(): void {
+		Functions\expect( 'update_option' )
+			->once()
+			->with( Options::OPTION_NAME, [ 'tone' => 'formal' ] )
+			->andReturn( true );
+
+		Options::save( [ 'tone' => '../evil' ] );
+	}
+
+	public function test_save_keeps_a_valid_tone(): void {
+		Functions\expect( 'update_option' )
+			->once()
+			->with( Options::OPTION_NAME, [ 'tone' => 'informal' ] )
+			->andReturn( true );
+
+		Options::save( [ 'tone' => 'informal' ] );
+	}
 }

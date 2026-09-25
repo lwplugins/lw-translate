@@ -87,7 +87,7 @@ final class GitHubClient {
 		}
 
 		$tree = $body['tree'];
-		$ttl  = (int) Options::get( 'cache_ttl', 43200 );
+		$ttl  = Options::clamp_cache_ttl( (int) Options::get( 'cache_ttl', 43200 ) );
 
 		set_transient( self::CACHE_KEY, $tree, $ttl );
 
