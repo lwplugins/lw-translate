@@ -4,7 +4,7 @@ Tags: translation, locale, language, i18n, community
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,9 @@ Some translation repositories provide both formal and informal variants. Formal 
 The plugin calculates git blob SHA hashes of your local .mo files and compares them with the remote repository. Only genuinely changed files trigger an update notification.
 
 == Changelog ==
+
+= 1.1.3 =
+* Fix: notices from themes and other plugins (for example a theme's purchase-code or recommended-plugins notice) could show on the LW Translate screen. They are now kept off every LW Plugins screen, whatever their markup.
 
 = 1.1.2 =
 * Fix: the release package and Composer dist no longer ship tests, docs or development configuration
