@@ -55,27 +55,31 @@ final class LocalScanner {
 	}
 
 	/**
-	 * Get the local .mo file SHA for comparison.
+	 * Blob SHAs of the given file names that exist in the item's language folder.
 	 *
-	 * @param string $slug   Plugin or theme slug.
-	 * @param string $type   Type: 'plugin' or 'theme'.
-	 * @param string $locale Locale code.
-	 * @return string|null Git-compatible SHA or null if not found.
+	 * @param string             $type  Type: 'plugin' or 'theme'.
+	 * @param array<int, string> $names File names (already checked by FileNamePolicy).
+	 * @return array<string, string> File name => git blob SHA.
 	 */
-	public static function get_local_sha( string $slug, string $type, string $locale ): ?string {
-		$path = self::get_local_mo_path( $slug, $type, $locale );
+	public static function get_local_shas( string $type, array $names ): array {
+		$dir  = WP_LANG_DIR . '/' . ( 'theme' === $type ? 'themes' : 'plugins' );
+		$shas = [];
 
-		if ( ! file_exists( $path ) ) {
-			return null;
+		foreach ( $names as $name ) {
+			$path = $dir . '/' . $name;
+
+			if ( ! is_file( $path ) ) {
+				continue;
+			}
+
+			$content = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
+			if ( false !== $content ) {
+				$shas[ $name ] = self::git_blob_sha( $content );
+			}
 		}
 
-		$content = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-
-		if ( false === $content ) {
-			return null;
-		}
-
-		return self::git_blob_sha( $content );
+		return $shas;
 	}
 
 	/**
@@ -105,19 +109,6 @@ final class LocalScanner {
 		}
 
 		return '';
-	}
-
-	/**
-	 * Get the full path to a local .mo file.
-	 *
-	 * @param string $slug   Plugin or theme slug.
-	 * @param string $type   Type: 'plugin' or 'theme'.
-	 * @param string $locale Locale code.
-	 * @return string Full file path.
-	 */
-	public static function get_local_mo_path( string $slug, string $type, string $locale ): string {
-		$dir = 'theme' === $type ? 'themes' : 'plugins';
-		return WP_LANG_DIR . '/' . $dir . '/' . $slug . '-' . $locale . '.mo';
 	}
 
 	/**

@@ -1,20 +1,7 @@
 <?php
 /**
- * Tests for Comparator.
- *
- * Only the transient-cache short-circuit in compare_all() is covered here.
- * The actual up_to_date/update/not_installed decision lives in the private
- * determine_status()/compare_type() methods, reachable only through
- * compare_all(), which -- on a cache miss -- hard-instantiates GitHubClient
- * (a real wp_remote_get() call inside it, no injection seam) and calls
- * LocalScanner's statics (get_plugins()/wp_get_themes(), plus file_exists()/
- * file_get_contents() against the real filesystem). Reaching the decision
- * logic on a cache miss would need upwards of ten stubs plus a hand-rolled
- * WP_Error double (the class does not exist at all in this test runtime --
- * see the report), which is exactly the "5+ stubs = report it, don't force
- * it" case from tests.md. See the report for the full testability finding
- * and the tests that would cover it if GitHubClient/LocalScanner became
- * injectable.
+ * Tests for Comparator: the cache short-circuit and the pure pairing and
+ * filtering steps (the status decision is StatusResolverTest).
  *
  * @package LightweightPlugins\Translate
  */
@@ -112,5 +99,15 @@ final class ComparatorTest extends MonkeyTestCase {
 		$matches = Comparator::match( $remote, [ '2048' => 'Game' ], [] );
 
 		$this->assertSame( '2048', $matches[0]['slug'] );
+	}
+
+	public function test_installable_drops_files_the_file_name_policy_rejects(): void {
+		$files = [
+			'akismet-hu_HU.mo'       => 'a',
+			'akismet-hu_HU.l10n.php' => 'b',
+			'other-hu_HU.mo'         => 'c',
+		];
+
+		$this->assertSame( [ 'akismet-hu_HU.mo' => 'a' ], Comparator::installable( $files, 'akismet', 'hu_HU' ) );
 	}
 }

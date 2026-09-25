@@ -11,6 +11,7 @@ namespace LightweightPlugins\Translate\Translation;
 
 use LightweightPlugins\Translate\Api\GitHubClient;
 use LightweightPlugins\Translate\Api\TreeParser;
+use LightweightPlugins\Translate\Installer\FileNamePolicy;
 use LightweightPlugins\Translate\Options;
 use WP_Error;
 
@@ -50,14 +51,15 @@ final class Comparator {
 		$items   = [];
 
 		foreach ( $matches as $match ) {
+			$files   = self::installable( $match['files'], $match['slug'], $locale );
 			$items[] = new TranslationItem(
 				slug: $match['slug'],
 				name: $match['name'],
 				type: $match['type'],
-				status: self::determine_status( $match['slug'], $match['type'], $locale, $match['files'] ),
-				file_count: count( $match['files'] ),
+				status: StatusResolver::resolve( $files, LocalScanner::get_local_shas( $match['type'], array_keys( $files ) ) ),
+				file_count: count( $files ),
 				local_date: LocalScanner::get_local_date( $match['slug'], $match['type'], $locale ),
-				files: $match['files'],
+				files: $files,
 			);
 		}
 
@@ -101,29 +103,18 @@ final class Comparator {
 	}
 
 	/**
-	 * Determine translation status by comparing SHA hashes.
+	 * Keep the repository files FileNamePolicy allows for the item.
 	 *
-	 * @param string               $slug   Plugin or theme slug.
-	 * @param string               $type   Type: 'plugin' or 'theme'.
-	 * @param string               $locale Locale code.
-	 * @param array<string,string> $files  Remote files with SHA hashes.
-	 * @return string Status constant.
+	 * @param array<string, string> $files  File name => blob SHA.
+	 * @param string                $slug   Plugin or theme slug.
+	 * @param string                $locale Locale.
+	 * @return array<string, string>
 	 */
-	private static function determine_status( string $slug, string $type, string $locale, array $files ): string {
-		$local_sha = LocalScanner::get_local_sha( $slug, $type, $locale );
-
-		if ( null === $local_sha ) {
-			return TranslationItem::STATUS_NOT_INSTALLED;
-		}
-
-		$mo_filename = $slug . '-' . $locale . '.mo';
-
-		foreach ( $files as $filename => $remote_sha ) {
-			if ( $filename === $mo_filename && $local_sha !== $remote_sha ) {
-				return TranslationItem::STATUS_UPDATE;
-			}
-		}
-
-		return TranslationItem::STATUS_UP_TO_DATE;
+	public static function installable( array $files, string $slug, string $locale ): array {
+		return array_filter(
+			$files,
+			static fn( $name ): bool => FileNamePolicy::is_allowed_basename( (string) $name, $slug, $locale ),
+			ARRAY_FILTER_USE_KEY
+		);
 	}
 }

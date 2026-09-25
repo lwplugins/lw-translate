@@ -28,6 +28,14 @@ final class TreeParser {
 	public const EXTENSIONS = [ '.mo', '.po', '.json' ];
 
 	/**
+	 * Repository folder per item type.
+	 */
+	private const DIRS = [
+		'plugin' => 'plugins',
+		'theme'  => 'themes',
+	];
+
+	/**
 	 * Parse tree entries for a given tone and locale.
 	 *
 	 * Plugins and themes are kept apart, because a theme and a plugin can
@@ -46,10 +54,7 @@ final class TreeParser {
 			'theme'  => [],
 		];
 
-		foreach ( [
-			'plugin' => 'plugins',
-			'theme'  => 'themes',
-		] as $type => $dir ) {
+		foreach ( self::DIRS as $type => $dir ) {
 			$prefix = $tone . '/' . $dir . '/' . $locale . '/';
 
 			foreach ( $tree as $entry ) {
