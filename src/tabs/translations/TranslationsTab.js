@@ -1,0 +1,280 @@
+/**
+ * External dependencies
+ */
+import { DataTable, useTableState } from '@lwplugins/data-table';
+import '@lwplugins/data-table/style.css';
+
+/**
+ * WordPress dependencies
+ */
+import {
+	Notice,
+	// Core has no stable ConfirmDialog yet (same as the sibling LW admins).
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalConfirmDialog as ConfirmDialog,
+} from '@wordpress/components';
+import { useMemo, useState } from '@wordpress/element';
+import { __, _n, sprintf } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
+import Callout from '../../components/Callout';
+import LoadError from '../../components/LoadError';
+import Section from '../../components/Section';
+import { tableLabels } from '../../components/tableLabels';
+import { errorMessage } from '../../data/api';
+import ActionResults from './ActionResults';
+import SourceBar from './SourceBar';
+import { translationColumns } from './translationColumns';
+
+/**
+ * Filter chip label with its count: "Plugins (3)".
+ *
+ * @param {string} label Label.
+ * @param {number} count Count.
+ * @return {string} Chip label.
+ */
+const withCount = ( label, count ) =>
+	sprintf(
+		/* translators: 1: filter name, 2: number of items. */
+		__( '%1$s (%2$d)', 'lw-translate' ),
+		label,
+		count
+	);
+
+/**
+ * Confirmation text for deleting rows.
+ *
+ * @param {Array} rows Rows to delete.
+ * @return {string} Question.
+ */
+const deleteQuestion = ( rows ) =>
+	rows.length === 1
+		? __( 'Delete this translation?', 'lw-translate' ) +
+			' ' +
+			rows[ 0 ].name
+		: sprintf(
+				/* translators: %d: number of translations. */
+				_n(
+					'Delete %d selected translation?',
+					'Delete %d selected translations?',
+					rows.length,
+					'lw-translate'
+				),
+				rows.length
+			);
+
+/**
+ * Translations: every installed plugin and theme that has a folder in the
+ * repository, with install / update / delete per row or for a selection.
+ *
+ * @param {Object} props
+ * @param {Object} props.list    useRemote() of the list.
+ * @param {Object} props.actions useTranslationActions().
+ */
+export default function TranslationsTab( { list, actions } ) {
+	const [ selected, setSelected ] = useState( [] );
+	const [ pendingDelete, setPendingDelete ] = useState( null );
+	const data = list.data;
+	const rows = useMemo( () => data?.rows || [], [ data ] );
+	const canInstall = !! data?.canInstall;
+	const counts = data?.counts;
+
+	const act = ( action, target, busyKey ) => {
+		if ( action === 'delete' ) {
+			setPendingDelete( { rows: target, busyKey } );
+			return;
+		}
+		actions
+			.run( 'install', target, busyKey )
+			.then( () => setSelected( [] ) );
+	};
+
+	const columns = translationColumns( {
+		canInstall,
+		busy: actions.busy,
+		onAction: ( action, row ) =>
+			act( action, [ row ], `${ action }:${ row.id }` ),
+	} );
+	const table = useTableState( rows, {
+		searchFields: [ 'name', 'slug' ],
+		columns,
+		sort: { field: 'name', direction: 'asc' },
+		perPage: 20,
+	} );
+
+	const views = counts
+		? [
+				{
+					value: 'plugin',
+					label: withCount(
+						__( 'Plugins', 'lw-translate' ),
+						counts.plugin
+					),
+				},
+				{
+					value: 'theme',
+					label: withCount(
+						__( 'Themes', 'lw-translate' ),
+						counts.theme
+					),
+				},
+				{
+					value: 'update',
+					label: withCount(
+						__( 'Updates available', 'lw-translate' ),
+						counts.update
+					),
+				},
+				{
+					value: 'not_installed',
+					label: withCount(
+						__( 'Not installed', 'lw-translate' ),
+						counts.notInstalled
+					),
+				},
+			]
+		: [];
+
+	if ( list.error && ! data ) {
+		return (
+			<LoadError
+				message={ errorMessage( list.error ) }
+				onRetry={ () => list.reload() }
+			/>
+		);
+	}
+
+	return (
+		<Section
+			title={ __( 'Available translations', 'lw-translate' ) }
+			description={ __(
+				'Installed plugins and themes that have a translation in the repository.',
+				'lw-translate'
+			) }
+		>
+			<SourceBar
+				data={ data }
+				busy={ actions.busy }
+				onRefresh={ actions.refresh }
+			/>
+			{ ( data?.warnings || [] ).map( ( warning ) => (
+				<Notice
+					key={ warning.code }
+					status={ warning.level }
+					isDismissible={ false }
+				>
+					{ warning.message }
+				</Notice>
+			) ) }
+			{ list.error && data && (
+				<Notice status="error" isDismissible={ false }>
+					{ errorMessage( list.error ) }
+				</Notice>
+			) }
+			{ data && ! canInstall && (
+				<Callout tone="warning">
+					{ __(
+						'You can view the translations, but installing, updating or deleting them is not allowed for your account on this site (file changes may be disabled).',
+						'lw-translate'
+					) }
+				</Callout>
+			) }
+			{ actions.progress && (
+				<p className="lw-admin-hint" role="status">
+					{ sprintf(
+						/* translators: 1: items done, 2: items in total. */
+						__( 'Working… %1$d of %2$d', 'lw-translate' ),
+						actions.progress.done,
+						actions.progress.total
+					) }
+				</p>
+			) }
+			{ actions.result && (
+				<ActionResults
+					result={ actions.result }
+					onDismiss={ actions.dismiss }
+				/>
+			) }
+			<DataTable
+				columns={ columns }
+				table={ table }
+				isLoading={ list.isLoading || actions.busy === 'refresh' }
+				caption={ __( 'Translations', 'lw-translate' ) }
+				filters={ [
+					{
+						field: 'views',
+						label: __( 'Show', 'lw-translate' ),
+						multiple: false,
+						options: views,
+					},
+				] }
+				labels={ {
+					...tableLabels(),
+					search: __( 'Search by name or slug', 'lw-translate' ),
+					empty: __(
+						'No translation matches these filters.',
+						'lw-translate'
+					),
+					emptyAll: __(
+						'None of the installed plugins and themes has a translation in the repository for this tone and language.',
+						'lw-translate'
+					),
+					selectAll: __(
+						'Select all translations on this page',
+						'lw-translate'
+					),
+				} }
+				getRowId={ ( r ) => r.id }
+				getRowLabel={ ( r ) => r.name }
+				selection={
+					canInstall ? { selected, onChange: setSelected } : undefined
+				}
+				bulkActions={
+					canInstall
+						? [
+								{
+									id: 'install',
+									label: __(
+										'Install/Update selected',
+										'lw-translate'
+									),
+									isEligible: ( r ) =>
+										r.status !== 'installed',
+									onClick: ( eligible ) =>
+										act( 'install', eligible, 'bulk' ),
+								},
+								{
+									id: 'delete',
+									label: __(
+										'Delete selected',
+										'lw-translate'
+									),
+									isDestructive: true,
+									isEligible: ( r ) =>
+										r.status !== 'not_installed',
+									onClick: ( eligible ) =>
+										act( 'delete', eligible, 'bulk' ),
+								},
+							]
+						: undefined
+				}
+			/>
+			<ConfirmDialog
+				isOpen={ !! pendingDelete }
+				confirmButtonText={ __( 'Delete', 'lw-translate' ) }
+				onConfirm={ () => {
+					const pending = pendingDelete;
+					setPendingDelete( null );
+					actions
+						.run( 'delete', pending.rows, pending.busyKey )
+						.then( () => setSelected( [] ) );
+				} }
+				onCancel={ () => setPendingDelete( null ) }
+			>
+				{ pendingDelete ? deleteQuestion( pendingDelete.rows ) : '' }
+			</ConfirmDialog>
+		</Section>
+	);
+}
