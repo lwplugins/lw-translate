@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: LW Translate 1.0.1\n"
-"Report-Msgid-Bugs-To: https://github.com/lwplugins/lw-translate/issues\n"
+"Project-Id-Version: LW Translate 1.1.4\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lw-translate\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LW Plugins <info@lwplugins.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-07T08:43:29+00:00\n"
+"POT-Creation-Date: 2026-09-25T10:38:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lw-translate\n"
@@ -26,14 +26,14 @@ msgstr ""
 
 #. Description of the plugin
 #: lw-translate.php
-msgid "Manage WordPress translations from community repositories."
+msgid "Lightweight translate — manage WordPress translations from community repositories."
 msgstr ""
 
 #. Author of the plugin
 #: lw-translate.php
-#: includes/Admin/ParentPage.php:104
-#: includes/Admin/ParentPage.php:105
-#: includes/Admin/ParentPage.php:126
+#: includes/Admin/ParentPage.php:106
+#: includes/Admin/ParentPage.php:107
+#: includes/Admin/ParentPage.php:128
 msgid "LW Plugins"
 msgstr ""
 
@@ -42,265 +42,749 @@ msgstr ""
 msgid "https://lwplugins.com"
 msgstr ""
 
-#: includes/Admin/ParentPage.php:127
+#: includes/Admin/ParentPage.php:129
 msgid "Lightweight plugins for WordPress - minimal footprint, maximum impact."
 msgstr ""
 
-#: includes/Admin/ParentPage.php:180
+#: includes/Admin/ParentPage.php:190
 msgid "Active"
 msgstr ""
 
-#: includes/Admin/ParentPage.php:187
+#: includes/Admin/ParentPage.php:197
 msgid "Settings"
 msgstr ""
 
-#: includes/Admin/ParentPage.php:191
+#: includes/Admin/ParentPage.php:201
 msgid "Get Plugin"
 msgstr ""
 
-#: includes/Admin/Settings/TabGeneral.php:34
-msgid "General"
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:53
-msgid "Translation Settings"
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:56
-msgid "Configure the translation source and caching."
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:62
-msgid "Tone"
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:70
-msgid "Formal (magázó)"
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:71
-msgid "Informal (tegező)"
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:73
-msgid "Choose between formal and informal translation tone."
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:81
-msgid "Locale"
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:91
-msgid "Target language for translations."
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:99
-msgid "Cache TTL"
-msgstr ""
-
-#: includes/Admin/Settings/TabGeneral.php:108
-msgid "Cache duration in seconds. Default: 43200 (12 hours)."
-msgstr ""
-
-#: includes/Admin/SettingsPage.php:59
-#: includes/Admin/SettingsPage.php:60
-msgid "Translate Settings"
-msgstr ""
-
-#: includes/Admin/TranslationsPage.php:43
-#: includes/Admin/TranslationsPage.php:114
-msgid "Translations"
-msgstr ""
-
-#: includes/Admin/TranslationsPage.php:44
+#: includes/Admin/SettingsPage.php:63
+#: includes/Admin/SettingsPage.php:64
+#: includes/SiteManager/Integration.php:38
 msgid "Translate"
 msgstr ""
 
-#: includes/Admin/TranslationsPage.php:89
-msgid "Installing..."
+#: includes/Admin/SettingsPage.php:134
+msgid "Lightweight Translate"
 msgstr ""
 
-#: includes/Admin/TranslationsPage.php:90
-msgid "Deleting..."
+#: includes/Admin/SettingsPage.php:135
+msgid "The settings screen files are missing. Re-install the plugin from a release ZIP, or run \"npm install && npm run build\" in the plugin directory."
 msgstr ""
 
-#: includes/Admin/TranslationsPage.php:91
-msgid "Done!"
-msgstr ""
-
-#: includes/Admin/TranslationsPage.php:92
-msgid "Error occurred."
-msgstr ""
-
-#: includes/Admin/TranslationsPage.php:93
-msgid "Delete this translation?"
-msgstr ""
-
-#. translators: 1: tone label, 2: locale code
-#: includes/Admin/TranslationsPage.php:121
-#, php-format
-msgid "Source: %1$s / %2$s"
-msgstr ""
-
-#: includes/Admin/TranslationsPage.php:122
-msgid "Formal"
-msgstr ""
-
-#: includes/Admin/TranslationsPage.php:122
-msgid "Informal"
-msgstr ""
-
-#: includes/Admin/TranslationsPage.php:129
-msgid "Refresh Cache"
-msgstr ""
-
-#: includes/Admin/TranslationsPage.php:137
-msgid "Search"
-msgstr ""
-
-#. translators: %d: HTTP status code
-#: includes/Api/GitHubClient.php:79
-#, php-format
-msgid "GitHub API returned status %d."
-msgstr ""
-
-#: includes/Api/GitHubClient.php:86
+#: includes/Api/GitHubClient.php:121
 msgid "Invalid tree response."
 msgstr ""
 
 #. translators: 1: file path, 2: HTTP status code
-#: includes/Api/GitHubClient.php:125
+#: includes/Api/GitHubClient.php:182
 #, php-format
 msgid "Failed to download %1$s (HTTP %2$d)."
 msgstr ""
 
-#: includes/Installer/FileInstaller.php:54
+#. translators: %d: HTTP status code
+#: includes/Api/GitHubError.php:40
+#, php-format
+msgid "GitHub API returned status %d."
+msgstr ""
+
+#: includes/Api/GitHubError.php:53
+msgid "GitHub API rate limit reached. Try again later."
+msgstr ""
+
+#. translators: %d: number of minutes
+#: includes/Api/GitHubError.php:62
+#, php-format
+msgid "GitHub API rate limit reached. Try again in %d minute."
+msgid_plural "GitHub API rate limit reached. Try again in %d minutes."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Installer/FileInstaller.php:76
 msgid "No translation files found for this item."
 msgstr ""
 
-#: includes/Installer/FileInstaller.php:119
+#. translators: %s: comma-separated list of file names
+#: includes/Installer/FileInstaller.php:145
+#, php-format
+msgid "Could not delete: %s"
+msgstr ""
+
+#: includes/Installer/FileInstaller.php:151
+msgid "No installed translation files were found for this item."
+msgstr ""
+
+#: includes/Installer/FileInstaller.php:166
+msgid "Invalid plugin or theme slug."
+msgstr ""
+
+#: includes/Installer/FileInstaller.php:170
+msgid "Invalid locale setting."
+msgstr ""
+
+#: includes/Installer/FileInstaller.php:189
 msgid "Could not determine local path."
 msgstr ""
 
 #. translators: %s: local file path
-#: includes/Installer/FileInstaller.php:128
+#: includes/Installer/FileInstaller.php:196
 #, php-format
 msgid "Could not write file: %s"
 msgstr ""
 
-#: includes/Installer/FileInstaller.php:165
+#: includes/Installer/FileInstaller.php:243
 msgid "Could not initialize filesystem."
 msgstr ""
 
-#: includes/ListTable/TranslationColumns.php:38
-msgid "Theme"
+#. translators: %s: comma-separated list of file names
+#: includes/Installer/SkippedFilesNotice.php:30
+#, php-format
+msgid "Ignored files that are not valid translation files for this item: %s"
 msgstr ""
 
-#: includes/ListTable/TranslationColumns.php:39
-msgid "Plugin"
+#. translators: %s: file name
+#: includes/Installer/VerifiedDownloader.php:60
+#, php-format
+msgid "The downloaded file %s does not match the repository checksum. Nothing was installed for this item."
 msgstr ""
 
-#: includes/ListTable/TranslationColumns.php:57
-msgid "Up to date"
-msgstr ""
-
-#: includes/ListTable/TranslationColumns.php:61
-msgid "Update available"
-msgstr ""
-
-#: includes/ListTable/TranslationColumns.php:65
-msgid "Not installed"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:57
-msgid "Name"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:58
-msgid "Type"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:59
-msgid "Status"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:60
-msgid "Files"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:61
-msgid "Local Date"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:62
-msgid "Actions"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:87
-msgid "Install/Update Selected"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:88
-msgid "Delete Selected"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:116
-msgid "Install"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:120
-msgid "Update"
-msgstr ""
-
-#: includes/ListTable/TranslationListTable.php:122
-#: includes/ListTable/TranslationListTable.php:126
-msgid "Delete"
-msgstr ""
-
-#: includes/ListTable/TranslationViews.php:34
-msgid "All"
-msgstr ""
-
-#: includes/ListTable/TranslationViews.php:40
-msgid "Plugins"
-msgstr ""
-
-#: includes/ListTable/TranslationViews.php:41
-msgid "Themes"
-msgstr ""
-
-#: includes/ListTable/TranslationViews.php:42
-msgid "Updates Available"
-msgstr ""
-
-#: includes/ListTable/TranslationViews.php:43
-msgid "Not Installed"
-msgstr ""
-
-#: includes/Plugin.php:69
-#: includes/Plugin.php:100
-#: includes/Plugin.php:142
-#: includes/Plugin.php:169
-msgid "Insufficient permissions."
-msgstr ""
-
-#: includes/Plugin.php:76
-#: includes/Plugin.php:149
-msgid "Missing parameters."
-msgstr ""
-
-#: includes/Plugin.php:88
+#: includes/Rest/Admin/ItemActions.php:65
 msgid "Translation installed successfully."
 msgstr ""
 
-#: includes/Plugin.php:106
-msgid "No items selected."
-msgstr ""
-
-#: includes/Plugin.php:157
+#: includes/Rest/Admin/ItemActions.php:92
 msgid "Translation deleted."
 msgstr ""
 
-#: includes/Plugin.php:175
+#: includes/Rest/Admin/ItemsInput.php:40
+msgid "No items selected."
+msgstr ""
+
+#: includes/Rest/Admin/ItemsInput.php:50
+msgid "Each item needs a type (plugin or theme) and a valid slug."
+msgstr ""
+
+#. translators: %d: maximum number of items
+#: includes/Rest/Admin/ItemsInput.php:61
+#, php-format
+msgid "Send at most %d items per request."
+msgstr ""
+
+#: includes/Rest/Admin/SettingsController.php:63
+msgid "The request is too large."
+msgstr ""
+
+#: includes/Rest/Admin/SettingsController.php:78
+msgid "Some settings are not valid. Nothing was saved."
+msgstr ""
+
+#: includes/Rest/Admin/TranslationList.php:59
+msgid "GitHub returned an incomplete repository listing, so some translations may be missing from this list."
+msgstr ""
+
+#. translators: %s: comma-separated list of allowed values
+#: includes/Settings/Input/EnumParser.php:34
+#, php-format
+msgid "Must be one of: %s."
+msgstr ""
+
+#: includes/Settings/Input/IntParser.php:30
+msgid "Must be a whole number."
+msgstr ""
+
+#. translators: 1: lowest allowed number, 2: highest allowed number
+#: includes/Settings/Input/IntParser.php:37
+#, php-format
+msgid "Must be between %1$d and %2$d."
+msgstr ""
+
+#: includes/Settings/Input/LocaleParser.php:30
+msgid "Not a valid locale code."
+msgstr ""
+
+#. translators: %s: comma-separated list of locale codes
+#: includes/Settings/Input/LocaleParser.php:37
+#, php-format
+msgid "The repository has no translations for this locale. Available: %s."
+msgstr ""
+
+#. translators: %s: constant name
+#: includes/Settings/Input/OptionInput.php:48
+#, php-format
+msgid "This setting is set by %s in wp-config.php and cannot be changed here."
+msgstr ""
+
+#. translators: %s: setting key
+#: includes/Settings/Input/OptionInput.php:84
+#, php-format
+msgid "Unknown setting: %s."
+msgstr ""
+
+#: includes/SiteManager/Integration.php:39
+msgid "Translation management abilities"
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:42
+msgid "List Translations"
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:43
+msgid "List installed translations and their update status for all plugins and themes."
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:54
+msgid "Filter by type: plugin, theme, or all (default)."
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:59
+msgid "Filter by status: up_to_date, update, not_installed, or all (default)."
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:89
+msgid "Get Translate Options"
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:90
+msgid "Get LW Translate plugin settings (locale, tone, cache TTL)."
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:122
+msgid "Install Translation"
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:123
+msgid "Install or update a translation for a specific plugin or theme."
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:133
+msgid "Plugin or theme slug (e.g. woocommerce, storefront)."
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:138
+msgid "Whether the slug refers to a plugin or a theme."
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:170
+msgid "Update All Translations"
+msgstr ""
+
+#: includes/SiteManager/TranslateAbilities.php:171
+msgid "Update all translations that have a newer version available."
+msgstr ""
+
+#: includes/SiteManager/TranslateService.php:92
+msgid "Both slug and type are required."
+msgstr ""
+
+#: includes/SiteManager/TranslateService.php:100
+msgid "Type must be plugin or theme."
+msgstr ""
+
+#. translators: 1: plugin/theme type, 2: slug
+#: includes/SiteManager/TranslateService.php:117
+#, php-format
+msgid "Translation installed for %1$s %2$s."
+msgstr ""
+
+#: includes/SiteManager/TranslateService.php:181
+msgid "You are not allowed to install translations on this site."
+msgstr ""
+
+#: lw-translate.php:43
+msgid "Autoloader not found. Please run \"composer install\" in the plugin directory, or re-install the plugin from a release ZIP."
+msgstr ""
+
+#: build/index.js:1
+#: build/index.js:19
+msgid "Loading…"
+msgstr ""
+
+#: build/index.js:1
+msgid "Try again"
+msgstr ""
+
+#: build/index.js:1
+msgid "That did not work. Please reload the page and try again."
+msgstr ""
+
+#: build/index.js:1
+msgid "LW Plugins (opens in a new tab)"
+msgstr ""
+
+#: build/index.js:1
+#: build/index.js:19
+msgid "Translations"
+msgstr ""
+
+#: build/index.js:1
+msgid "General"
+msgstr ""
+
+#: build/index.js:1
+#: build/index.js:7
+msgid "Translation Settings"
+msgstr ""
+
+#. translators: %d: number of translations with an update.
+#: build/index.js:2
+#, js-format
+msgid "%d update available"
+msgid_plural "%d updates available"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/index.js:2
+msgid "Has invalid fields"
+msgstr ""
+
+#: build/index.js:2
+msgid "LW Translate home"
+msgstr ""
+
+#: build/index.js:2
+msgid "LW Translate sections"
+msgstr ""
+
+#: build/index.js:2
+msgid "Documentation"
+msgstr ""
+
+#: build/index.js:2
+#: build/index.js:13
+#: build/index.js:18
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: build/index.js:2
+msgid "Unsaved changes"
+msgstr ""
+
+#: build/index.js:2
+msgid "Discard"
+msgstr ""
+
+#: build/index.js:2
+msgid "Save changes"
+msgstr ""
+
+#: build/index.js:2
+msgid "Set in wp-config.php"
+msgstr ""
+
+#. translators: %d: number of days.
+#: build/index.js:3
+#, js-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of hours.
+#: build/index.js:4
+#, js-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of minutes.
+#: build/index.js:5
+#, js-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/index.js:5
+msgid "less than a minute"
+msgstr ""
+
+#: build/index.js:5
+msgid "Theme"
+msgstr ""
+
+#: build/index.js:5
+msgid "Plugin"
+msgstr ""
+
+#: build/index.js:5
+#: build/index.js:6
+msgid "Cache lifetime"
+msgstr ""
+
+#. translators: 1: shortest lifetime, 2: longest lifetime, 3: default lifetime in seconds, 4: default spelled out.
+#: build/index.js:6
+#, js-format
+msgid "How long the repository listing is cached, in seconds: %1$s to %2$s. Default: %3$d (%4$s). A new value applies from the next refresh."
+msgstr ""
+
+#: build/index.js:6
+msgid "seconds"
+msgstr ""
+
+#. translators: %s: lifetime spelled out, e.g. "12 hours".
+#: build/index.js:7
+#, js-format
+msgid "= %s"
+msgstr ""
+
+#: build/index.js:7
+msgid "Configure the translation source and caching."
+msgstr ""
+
+#: build/index.js:7
+msgid "Tone"
+msgstr ""
+
+#: build/index.js:7
+msgid "Choose between formal and informal translation tone."
+msgstr ""
+
+#: build/index.js:7
+msgid "Formal (magázó)"
+msgstr ""
+
+#: build/index.js:7
+msgid "Informal (tegező)"
+msgstr ""
+
+#: build/index.js:7
+msgid "Locale"
+msgstr ""
+
+#: build/index.js:7
+msgid "Target language for translations."
+msgstr ""
+
+#. translators: %s: repository name and branch, e.g. "owner/repo (main)".
+#: build/index.js:8
+#, js-format
+msgid "Translations come from <a>%s</a>."
+msgstr ""
+
+#: build/index.js:8
+msgid "Only .mo, .po and script translation (.json) files are installed; the fast .l10n.php files are generated on this site."
+msgstr ""
+
+#. translators: %d: number of translations.
+#: build/index.js:9
+#: build/index.js:22
+#, js-format
+msgid "%d translation installed."
+msgid_plural "%d translations installed."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of translations.
+#: build/index.js:10
+#: build/index.js:23
+#, js-format
+msgid "%d translation deleted."
+msgid_plural "%d translations deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of failed items.
+#: build/index.js:11
+#, js-format
+msgid "%d failed."
+msgid_plural "%d failed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/index.js:11
+msgid "Dismiss"
+msgstr ""
+
+#: build/index.js:11
+msgid "Not cached yet"
+msgstr ""
+
+#. translators: %s: relative time, e.g. "5 minutes ago".
+#: build/index.js:12
+#, js-format
+msgid "Repository listing fetched %s"
+msgstr ""
+
+#. translators: 1: tone ("Formal"/"Informal"), 2: locale code.
+#: build/index.js:13
+#, js-format
+msgid "Source: %1$s / %2$s"
+msgstr ""
+
+#: build/index.js:13
+msgid "Formal"
+msgstr ""
+
+#: build/index.js:13
+msgid "Informal"
+msgstr ""
+
+#: build/index.js:13
+msgid "Refresh"
+msgstr ""
+
+#: build/index.js:13
+#: build/index.js:19
+msgid "All"
+msgstr ""
+
+#: build/index.js:13
+msgid "Plugins"
+msgstr ""
+
+#: build/index.js:13
+msgid "Themes"
+msgstr ""
+
+#: build/index.js:13
+msgid "Updates available"
+msgstr ""
+
+#: build/index.js:13
+#: build/index.js:14
+msgid "Not installed"
+msgstr ""
+
+#: build/index.js:13
+msgid "Show"
+msgstr ""
+
+#. translators: 1: filter name, 2: number of items.
+#: build/index.js:14
+#, js-format
+msgid "%1$s (%2$d)"
+msgstr ""
+
+#: build/index.js:14
+msgid "Up to date"
+msgstr ""
+
+#: build/index.js:14
+msgid "Update available"
+msgstr ""
+
+#. translators: %s: plugin or theme name.
+#: build/index.js:15
+#, js-format
+msgid "Update the %s translation"
+msgstr ""
+
+#. translators: %s: plugin or theme name.
+#: build/index.js:16
+#, js-format
+msgid "Install the %s translation"
+msgstr ""
+
+#: build/index.js:16
+msgid "Update"
+msgstr ""
+
+#: build/index.js:16
+msgid "Install"
+msgstr ""
+
+#. translators: %s: plugin or theme name.
+#: build/index.js:17
+#, js-format
+msgid "Delete the %s translation"
+msgstr ""
+
+#: build/index.js:17
+#: build/index.js:21
+msgid "Delete"
+msgstr ""
+
+#: build/index.js:17
+msgid "Delete this translation?"
+msgstr ""
+
+#. translators: %d: number of translations.
+#: build/index.js:18
+#, js-format
+msgid "Delete %d selected translation?"
+msgid_plural "Delete %d selected translations?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/index.js:18
+msgid "Name"
+msgstr ""
+
+#: build/index.js:18
+msgid "Source"
+msgstr ""
+
+#: build/index.js:18
+msgid "Type"
+msgstr ""
+
+#: build/index.js:18
+msgid "Status"
+msgstr ""
+
+#: build/index.js:18
+msgid "Files"
+msgstr ""
+
+#: build/index.js:18
+msgid "Local Date"
+msgstr ""
+
+#: build/index.js:18
+msgid "None"
+msgstr ""
+
+#: build/index.js:18
+msgid "Actions"
+msgstr ""
+
+#: build/index.js:18
+msgid "Available translations"
+msgstr ""
+
+#: build/index.js:18
+msgid "Installed plugins and themes that have a translation in the repository."
+msgstr ""
+
+#: build/index.js:18
+msgid "You can view the translations, but installing, updating or deleting them is not allowed for your account on this site (file changes may be disabled)."
+msgstr ""
+
+#. translators: 1: items done, 2: items in total.
+#: build/index.js:19
+#, js-format
+msgid "Working… %1$d of %2$d"
+msgstr ""
+
+#: build/index.js:19
+msgid "Search"
+msgstr ""
+
+#: build/index.js:19
+msgid "Filter"
+msgstr ""
+
+#: build/index.js:19
+msgid "Clear"
+msgstr ""
+
+#: build/index.js:19
+msgid "Clear all filters"
+msgstr ""
+
+#: build/index.js:19
+msgid "No entries match these filters."
+msgstr ""
+
+#: build/index.js:19
+msgid "Nothing here yet."
+msgstr ""
+
+#: build/index.js:19
+msgid "Previous page"
+msgstr ""
+
+#: build/index.js:19
+msgid "Next page"
+msgstr ""
+
+#: build/index.js:19
+msgid "Rows per page"
+msgstr ""
+
+#: build/index.js:19
+msgid "Select all rows on this page"
+msgstr ""
+
+#: build/index.js:19
+msgid "Clear selection"
+msgstr ""
+
+#: build/index.js:19
+msgid "Bulk actions"
+msgstr ""
+
+#. translators: %d: number of rows.
+#: build/index.js:19
+#, js-format
+msgid "%d entry"
+msgid_plural "%d entries"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of results.
+#: build/index.js:19
+#, js-format
+msgid "%d result"
+msgid_plural "%d results"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: current page, 2: total pages.
+#: build/index.js:19
+#, js-format
+msgid "Page %1$d of %2$d"
+msgstr ""
+
+#. translators: %s: row name.
+#: build/index.js:19
+#, js-format
+msgid "Select: %s"
+msgstr ""
+
+#. translators: %d: number of selected rows.
+#: build/index.js:20
+#, js-format
+msgid "%d selected"
+msgid_plural "%d selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: selected rows, 2: of those, on this page.
+#: build/index.js:21
+#, js-format
+msgid "%1$d selected, %2$d on this page"
+msgstr ""
+
+#. translators: 1: rows the action applies to, 2: selected rows on this page.
+#: build/index.js:21
+#, js-format
+msgid "applies to %1$d of %2$d"
+msgstr ""
+
+#: build/index.js:21
+msgid "Search by name or slug"
+msgstr ""
+
+#: build/index.js:21
+msgid "No translation matches these filters."
+msgstr ""
+
+#: build/index.js:21
+msgid "None of the installed plugins and themes has a translation in the repository for this tone and language."
+msgstr ""
+
+#: build/index.js:21
+msgid "Select all translations on this page"
+msgstr ""
+
+#: build/index.js:21
+msgid "Install/Update selected"
+msgstr ""
+
+#: build/index.js:21
+msgid "Delete selected"
+msgstr ""
+
+#: build/index.js:23
 msgid "Cache cleared."
+msgstr ""
+
+#: build/index.js:23
+msgid "Settings saved."
+msgstr ""
+
+#: build/index.js:23
+msgid "Nothing was saved. Fix the highlighted fields and save again."
 msgstr ""

@@ -3,16 +3,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: LW Translate 1.0.1\n"
-"Report-Msgid-Bugs-To: https://github.com/lwplugins/lw-translate/issues\n"
-"POT-Creation-Date: 2026-02-07T08:43:29+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lw-translate\n"
+"POT-Creation-Date: 2026-09-25T10:38:39+00:00\n"
+"PO-Revision-Date: 2026-09-25 12:00+0000\n"
+"Last-Translator: LW Plugins <info@lwplugins.com>\n"
 "Language-Team: LW Plugins <info@lwplugins.com>\n"
 "Language: hu_HU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: lw-translate\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
 #. Plugin Name of the plugin
@@ -27,12 +28,16 @@ msgstr "https://github.com/lwplugins/lw-translate"
 
 #. Description of the plugin
 #: lw-translate.php
-msgid "Manage WordPress translations from community repositories."
-msgstr "WordPress-fordítások kezelése közösségi repókból."
+msgid ""
+"Lightweight translate — manage WordPress translations from community "
+"repositories."
+msgstr ""
+"Könnyűsúlyú fordításkezelő – WordPress fordítások kezelése közösségi "
+"tárolókból."
 
 #. Author of the plugin
-#: lw-translate.php includes/Admin/ParentPage.php:104
-#: includes/Admin/ParentPage.php:105 includes/Admin/ParentPage.php:126
+#: lw-translate.php includes/Admin/ParentPage.php:106
+#: includes/Admin/ParentPage.php:107 includes/Admin/ParentPage.php:128
 msgid "LW Plugins"
 msgstr "LW Plugins"
 
@@ -41,261 +46,762 @@ msgstr "LW Plugins"
 msgid "https://lwplugins.com"
 msgstr "https://lwplugins.com"
 
-#: includes/Admin/ParentPage.php:127
+#: includes/Admin/ParentPage.php:129
 msgid "Lightweight plugins for WordPress - minimal footprint, maximum impact."
 msgstr "Könnyű WordPress bővítmények – minimális terhelés, maximális hatás."
 
-#: includes/Admin/ParentPage.php:180
+#: includes/Admin/ParentPage.php:190
 msgid "Active"
 msgstr "Aktív"
 
-#: includes/Admin/ParentPage.php:187
+#: includes/Admin/ParentPage.php:197
 msgid "Settings"
 msgstr "Beállítások"
 
-#: includes/Admin/ParentPage.php:191
+#: includes/Admin/ParentPage.php:201
 msgid "Get Plugin"
 msgstr "Bővítmény beszerzése"
 
-#: includes/Admin/Settings/TabGeneral.php:34
-msgid "General"
-msgstr "Általános"
-
-#: includes/Admin/Settings/TabGeneral.php:53
-msgid "Translation Settings"
-msgstr "Fordítási beállítások"
-
-#: includes/Admin/Settings/TabGeneral.php:56
-msgid "Configure the translation source and caching."
-msgstr "Állítsd be a fordítás forrását és a gyorsítótárazást."
-
-#: includes/Admin/Settings/TabGeneral.php:62
-msgid "Tone"
-msgstr "Hangnem"
-
-#: includes/Admin/Settings/TabGeneral.php:70
-msgid "Formal (magázó)"
-msgstr "Formális (magázó)"
-
-#: includes/Admin/Settings/TabGeneral.php:71
-msgid "Informal (tegező)"
-msgstr "Informális (tegező)"
-
-#: includes/Admin/Settings/TabGeneral.php:73
-msgid "Choose between formal and informal translation tone."
-msgstr "Válassz a formális és az informális fordítási hangnem között."
-
-#: includes/Admin/Settings/TabGeneral.php:81
-msgid "Locale"
-msgstr "Területi beállítás"
-
-#: includes/Admin/Settings/TabGeneral.php:91
-msgid "Target language for translations."
-msgstr "A fordítások cél nyelve."
-
-#: includes/Admin/Settings/TabGeneral.php:99
-msgid "Cache TTL"
-msgstr "Cache TTL"
-
-#: includes/Admin/Settings/TabGeneral.php:108
-msgid "Cache duration in seconds. Default: 43200 (12 hours)."
-msgstr "Gyorsítótár időtartama másodpercben. Alapértelmezett: 43200 (12 óra)."
-
-#: includes/Admin/SettingsPage.php:59 includes/Admin/SettingsPage.php:60
-msgid "Translate Settings"
-msgstr "Fordítási beállítások"
-
-#: includes/Admin/TranslationsPage.php:43
-#: includes/Admin/TranslationsPage.php:114
-msgid "Translations"
-msgstr "Fordítások"
-
-#: includes/Admin/TranslationsPage.php:44
+#: includes/Admin/SettingsPage.php:63 includes/Admin/SettingsPage.php:64
+#: includes/SiteManager/Integration.php:38
 msgid "Translate"
 msgstr "Fordítás"
 
-#: includes/Admin/TranslationsPage.php:89
-msgid "Installing..."
-msgstr "Telepítés..."
+#: includes/Admin/SettingsPage.php:134
+msgid "Lightweight Translate"
+msgstr "Lightweight Translate"
 
-#: includes/Admin/TranslationsPage.php:90
-msgid "Deleting..."
-msgstr "Törlés..."
+#: includes/Admin/SettingsPage.php:135
+msgid ""
+"The settings screen files are missing. Re-install the plugin from a release "
+"ZIP, or run \"npm install && npm run build\" in the plugin directory."
+msgstr ""
+"Hiányoznak a beállítási képernyő fájljai. Telepítsd újra a bővítményt egy "
+"kiadási ZIP-ből, vagy futtasd az „npm install && npm run build” parancsot a "
+"bővítmény mappájában."
 
-#: includes/Admin/TranslationsPage.php:91
-msgid "Done!"
-msgstr "Kész!"
-
-#: includes/Admin/TranslationsPage.php:92
-msgid "Error occurred."
-msgstr "Hiba történt."
-
-#: includes/Admin/TranslationsPage.php:93
-msgid "Delete this translation?"
-msgstr "Törlöd ezt a fordítást?"
-
-#. translators: 1: tone label, 2: locale code
-#: includes/Admin/TranslationsPage.php:121
-#, php-format
-msgid "Source: %1$s / %2$s"
-msgstr "Forrás: %1$s / %2$s"
-
-#: includes/Admin/TranslationsPage.php:122
-msgid "Formal"
-msgstr "Formális"
-
-#: includes/Admin/TranslationsPage.php:122
-msgid "Informal"
-msgstr "Informális"
-
-#: includes/Admin/TranslationsPage.php:129
-msgid "Refresh Cache"
-msgstr "Gyorsítótár frissítése"
-
-#: includes/Admin/TranslationsPage.php:137
-msgid "Search"
-msgstr "Keresés"
-
-#. translators: %d: HTTP status code
-#: includes/Api/GitHubClient.php:79
-#, php-format
-msgid "GitHub API returned status %d."
-msgstr "A GitHub API %d státuszt adott vissza."
-
-#: includes/Api/GitHubClient.php:86
+#: includes/Api/GitHubClient.php:121
 msgid "Invalid tree response."
 msgstr "Érvénytelen tree válasz."
 
 #. translators: 1: file path, 2: HTTP status code
-#: includes/Api/GitHubClient.php:125
+#: includes/Api/GitHubClient.php:182
 #, php-format
 msgid "Failed to download %1$s (HTTP %2$d)."
 msgstr "Nem sikerült letölteni: %1$s (HTTP %2$d)."
 
-#: includes/Installer/FileInstaller.php:54
+#. translators: %d: HTTP status code
+#: includes/Api/GitHubError.php:40
+#, php-format
+msgid "GitHub API returned status %d."
+msgstr "A GitHub API %d státuszt adott vissza."
+
+#: includes/Api/GitHubError.php:53
+msgid "GitHub API rate limit reached. Try again later."
+msgstr "Elérted a GitHub API kéréskorlátját. Próbáld újra később."
+
+#. translators: %d: number of minutes
+#: includes/Api/GitHubError.php:62
+#, php-format
+msgid "GitHub API rate limit reached. Try again in %d minute."
+msgid_plural "GitHub API rate limit reached. Try again in %d minutes."
+msgstr[0] "Elérted a GitHub API kéréskorlátját. Próbáld újra %d perc múlva."
+msgstr[1] "Elérted a GitHub API kéréskorlátját. Próbáld újra %d perc múlva."
+
+#: includes/Installer/FileInstaller.php:76
 msgid "No translation files found for this item."
 msgstr "Nem találhatók fordítási fájlok ehhez az elemhez."
 
-#: includes/Installer/FileInstaller.php:119
+#. translators: %s: comma-separated list of file names
+#: includes/Installer/FileInstaller.php:145
+#, php-format
+msgid "Could not delete: %s"
+msgstr "Nem sikerült törölni: %s"
+
+#: includes/Installer/FileInstaller.php:151
+msgid "No installed translation files were found for this item."
+msgstr "Ehhez az elemhez nem található telepített fordítási fájl."
+
+#: includes/Installer/FileInstaller.php:166
+msgid "Invalid plugin or theme slug."
+msgstr "Érvénytelen bővítmény- vagy sablonazonosító (slug)."
+
+#: includes/Installer/FileInstaller.php:170
+msgid "Invalid locale setting."
+msgstr "Érvénytelen területi beállítás."
+
+#: includes/Installer/FileInstaller.php:189
 msgid "Could not determine local path."
 msgstr "Nem sikerült meghatározni a helyi elérési utat."
 
 #. translators: %s: local file path
-#: includes/Installer/FileInstaller.php:128
+#: includes/Installer/FileInstaller.php:196
 #, php-format
 msgid "Could not write file: %s"
 msgstr "Nem sikerült fájlt írni: %s"
 
-#: includes/Installer/FileInstaller.php:165
+#: includes/Installer/FileInstaller.php:243
 msgid "Could not initialize filesystem."
 msgstr "Nem sikerült inicializálni a fájlrendszert."
 
-#: includes/ListTable/TranslationColumns.php:38
-msgid "Theme"
-msgstr "Sablon"
+#. translators: %s: comma-separated list of file names
+#: includes/Installer/SkippedFilesNotice.php:30
+#, php-format
+msgid "Ignored files that are not valid translation files for this item: %s"
+msgstr ""
+"Kihagyott fájlok, amelyek nem érvényes fordítási fájlok ehhez az elemhez: %s"
 
-#: includes/ListTable/TranslationColumns.php:39
-msgid "Plugin"
-msgstr "Bővítmény"
+#. translators: %s: file name
+#: includes/Installer/VerifiedDownloader.php:60
+#, php-format
+msgid ""
+"The downloaded file %s does not match the repository checksum. Nothing was "
+"installed for this item."
+msgstr ""
+"A letöltött %s fájl nem egyezik a tároló ellenőrzőösszegével. Ehhez az "
+"elemhez semmi nem lett telepítve."
 
-#: includes/ListTable/TranslationColumns.php:57
-msgid "Up to date"
-msgstr "Naprakész"
-
-#: includes/ListTable/TranslationColumns.php:61
-msgid "Update available"
-msgstr "Frissítés elérhető"
-
-#: includes/ListTable/TranslationColumns.php:65
-msgid "Not installed"
-msgstr "Nincs telepítve"
-
-#: includes/ListTable/TranslationListTable.php:57
-msgid "Name"
-msgstr "Név"
-
-#: includes/ListTable/TranslationListTable.php:58
-msgid "Type"
-msgstr "Típus"
-
-#: includes/ListTable/TranslationListTable.php:59
-msgid "Status"
-msgstr "Állapot"
-
-#: includes/ListTable/TranslationListTable.php:60
-msgid "Files"
-msgstr "Fájlok"
-
-#: includes/ListTable/TranslationListTable.php:61
-msgid "Local Date"
-msgstr "Helyi dátum"
-
-#: includes/ListTable/TranslationListTable.php:62
-msgid "Actions"
-msgstr "Műveletek"
-
-#: includes/ListTable/TranslationListTable.php:87
-msgid "Install/Update Selected"
-msgstr "Kijelöltek telepítése/frissítése"
-
-#: includes/ListTable/TranslationListTable.php:88
-msgid "Delete Selected"
-msgstr "Kijelöltek törlése"
-
-#: includes/ListTable/TranslationListTable.php:116
-msgid "Install"
-msgstr "Telepítés"
-
-#: includes/ListTable/TranslationListTable.php:120
-msgid "Update"
-msgstr "Frissítés"
-
-#: includes/ListTable/TranslationListTable.php:122
-#: includes/ListTable/TranslationListTable.php:126
-msgid "Delete"
-msgstr "Törlés"
-
-#: includes/ListTable/TranslationViews.php:34
-msgid "All"
-msgstr "Összes"
-
-#: includes/ListTable/TranslationViews.php:40
-msgid "Plugins"
-msgstr "Bővítmények"
-
-#: includes/ListTable/TranslationViews.php:41
-msgid "Themes"
-msgstr "Sablonok"
-
-#: includes/ListTable/TranslationViews.php:42
-msgid "Updates Available"
-msgstr "Elérhető frissítések"
-
-#: includes/ListTable/TranslationViews.php:43
-msgid "Not Installed"
-msgstr "Nincs telepítve"
-
-#: includes/Plugin.php:69 includes/Plugin.php:100 includes/Plugin.php:142
-#: includes/Plugin.php:169
-msgid "Insufficient permissions."
-msgstr "Nincs megfelelő jogosultságod."
-
-#: includes/Plugin.php:76 includes/Plugin.php:149
-msgid "Missing parameters."
-msgstr "Hiányzó paraméterek."
-
-#: includes/Plugin.php:88
+#: includes/Rest/Admin/ItemActions.php:65
 msgid "Translation installed successfully."
 msgstr "A fordítás sikeresen telepítve."
 
-#: includes/Plugin.php:106
-msgid "No items selected."
-msgstr "Nincs kijelölve elem."
-
-#: includes/Plugin.php:157
+#: includes/Rest/Admin/ItemActions.php:92
 msgid "Translation deleted."
 msgstr "A fordítás törölve."
 
-#: includes/Plugin.php:175
+#: includes/Rest/Admin/ItemsInput.php:40
+msgid "No items selected."
+msgstr "Nincs kijelölve elem."
+
+#: includes/Rest/Admin/ItemsInput.php:50
+msgid "Each item needs a type (plugin or theme) and a valid slug."
+msgstr ""
+"Minden elemhez kell egy típus (bővítmény vagy sablon) és egy érvényes "
+"azonosító (slug)."
+
+#. translators: %d: maximum number of items
+#: includes/Rest/Admin/ItemsInput.php:61
+#, php-format
+msgid "Send at most %d items per request."
+msgstr "Egy kérésben legfeljebb %d elemet küldj."
+
+#: includes/Rest/Admin/SettingsController.php:63
+msgid "The request is too large."
+msgstr "A kérés túl nagy."
+
+#: includes/Rest/Admin/SettingsController.php:78
+msgid "Some settings are not valid. Nothing was saved."
+msgstr "Néhány beállítás érvénytelen. Semmi sem lett mentve."
+
+#: includes/Rest/Admin/TranslationList.php:59
+msgid ""
+"GitHub returned an incomplete repository listing, so some translations may "
+"be missing from this list."
+msgstr ""
+"A GitHub hiányos tárolólistát adott vissza, ezért néhány fordítás hiányozhat "
+"ebből a listából."
+
+#. translators: %s: comma-separated list of allowed values
+#: includes/Settings/Input/EnumParser.php:34
+#, php-format
+msgid "Must be one of: %s."
+msgstr "A következők egyike lehet: %s."
+
+#: includes/Settings/Input/IntParser.php:30
+msgid "Must be a whole number."
+msgstr "Egész számnak kell lennie."
+
+#. translators: 1: lowest allowed number, 2: highest allowed number
+#: includes/Settings/Input/IntParser.php:37
+#, php-format
+msgid "Must be between %1$d and %2$d."
+msgstr "%1$d és %2$d között kell lennie."
+
+#: includes/Settings/Input/LocaleParser.php:30
+msgid "Not a valid locale code."
+msgstr "Nem érvényes nyelvi kód."
+
+#. translators: %s: comma-separated list of locale codes
+#: includes/Settings/Input/LocaleParser.php:37
+#, php-format
+msgid "The repository has no translations for this locale. Available: %s."
+msgstr "A tárolóban nincs fordítás ehhez a nyelvhez. Elérhető: %s."
+
+#. translators: %s: constant name
+#: includes/Settings/Input/OptionInput.php:48
+#, php-format
+msgid "This setting is set by %s in wp-config.php and cannot be changed here."
+msgstr ""
+"Ezt a beállítást a wp-config.php-ban a %s adja meg, itt nem módosítható."
+
+#. translators: %s: setting key
+#: includes/Settings/Input/OptionInput.php:84
+#, php-format
+msgid "Unknown setting: %s."
+msgstr "Ismeretlen beállítás: %s."
+
+#: includes/SiteManager/Integration.php:39
+msgid "Translation management abilities"
+msgstr "Fordításkezelési képességek"
+
+#: includes/SiteManager/TranslateAbilities.php:42
+msgid "List Translations"
+msgstr "Fordítások listázása"
+
+#: includes/SiteManager/TranslateAbilities.php:43
+msgid ""
+"List installed translations and their update status for all plugins and "
+"themes."
+msgstr ""
+"A telepített fordítások és frissítési állapotuk listázása minden "
+"bővítményhez és sablonhoz."
+
+#: includes/SiteManager/TranslateAbilities.php:54
+msgid "Filter by type: plugin, theme, or all (default)."
+msgstr "Szűrés típus szerint: plugin, theme vagy all (alapértelmezett)."
+
+#: includes/SiteManager/TranslateAbilities.php:59
+msgid "Filter by status: up_to_date, update, not_installed, or all (default)."
+msgstr ""
+"Szűrés állapot szerint: up_to_date, update, not_installed vagy all "
+"(alapértelmezett)."
+
+#: includes/SiteManager/TranslateAbilities.php:89
+msgid "Get Translate Options"
+msgstr "Translate beállítások lekérése"
+
+#: includes/SiteManager/TranslateAbilities.php:90
+msgid "Get LW Translate plugin settings (locale, tone, cache TTL)."
+msgstr ""
+"Az LW Translate bővítmény beállításainak lekérése (nyelv, hangnem, "
+"gyorsítótár élettartama)."
+
+#: includes/SiteManager/TranslateAbilities.php:122
+msgid "Install Translation"
+msgstr "Fordítás telepítése"
+
+#: includes/SiteManager/TranslateAbilities.php:123
+msgid "Install or update a translation for a specific plugin or theme."
+msgstr ""
+"Egy adott bővítmény vagy sablon fordításának telepítése vagy frissítése."
+
+#: includes/SiteManager/TranslateAbilities.php:133
+msgid "Plugin or theme slug (e.g. woocommerce, storefront)."
+msgstr "Bővítmény- vagy sablonazonosító (slug), pl. woocommerce, storefront."
+
+#: includes/SiteManager/TranslateAbilities.php:138
+msgid "Whether the slug refers to a plugin or a theme."
+msgstr "Az azonosító bővítményre vagy sablonra vonatkozik."
+
+#: includes/SiteManager/TranslateAbilities.php:170
+msgid "Update All Translations"
+msgstr "Összes fordítás frissítése"
+
+#: includes/SiteManager/TranslateAbilities.php:171
+msgid "Update all translations that have a newer version available."
+msgstr "Minden olyan fordítás frissítése, amelyhez újabb verzió érhető el."
+
+#: includes/SiteManager/TranslateService.php:92
+msgid "Both slug and type are required."
+msgstr "Az azonosító (slug) és a típus is kötelező."
+
+#: includes/SiteManager/TranslateService.php:100
+msgid "Type must be plugin or theme."
+msgstr "A típus csak plugin vagy theme lehet."
+
+#. translators: 1: plugin/theme type, 2: slug
+#: includes/SiteManager/TranslateService.php:117
+#, php-format
+msgid "Translation installed for %1$s %2$s."
+msgstr "Fordítás telepítve: %1$s %2$s."
+
+#: includes/SiteManager/TranslateService.php:181
+msgid "You are not allowed to install translations on this site."
+msgstr "Ezen a webhelyen nem telepíthetsz fordításokat."
+
+#: lw-translate.php:43
+msgid ""
+"Autoloader not found. Please run \"composer install\" in the plugin "
+"directory, or re-install the plugin from a release ZIP."
+msgstr ""
+"Az automatikus betöltő nem található. Futtasd a „composer install” parancsot "
+"a bővítmény mappájában, vagy telepítsd újra a bővítményt egy kiadási ZIP-ből."
+
+#: build/index.js:1 build/index.js:19
+msgid "Loading…"
+msgstr "Betöltés…"
+
+#: build/index.js:1
+msgid "Try again"
+msgstr "Újrapróbálás"
+
+#: build/index.js:1
+msgid "That did not work. Please reload the page and try again."
+msgstr "Ez nem sikerült. Töltsd újra az oldalt, és próbáld újra."
+
+#: build/index.js:1
+msgid "LW Plugins (opens in a new tab)"
+msgstr "LW Plugins (új lapon nyílik meg)"
+
+#: build/index.js:1 build/index.js:19
+msgid "Translations"
+msgstr "Fordítások"
+
+#: build/index.js:1
+msgid "General"
+msgstr "Általános"
+
+#: build/index.js:1 build/index.js:7
+msgid "Translation Settings"
+msgstr "Fordítási beállítások"
+
+#. translators: %d: number of translations with an update.
+#: build/index.js:2
+msgid "%d update available"
+msgid_plural "%d updates available"
+msgstr[0] "%d frissítés érhető el"
+msgstr[1] "%d frissítés érhető el"
+
+#: build/index.js:2
+msgid "Has invalid fields"
+msgstr "Érvénytelen mezőket tartalmaz"
+
+#: build/index.js:2
+msgid "LW Translate home"
+msgstr "LW Translate kezdőlap"
+
+#: build/index.js:2
+msgid "LW Translate sections"
+msgstr "LW Translate részei"
+
+#: build/index.js:2
+msgid "Documentation"
+msgstr "Dokumentáció"
+
+#: build/index.js:2 build/index.js:13 build/index.js:18
+msgid "(opens in a new tab)"
+msgstr "(új lapon nyílik meg)"
+
+#: build/index.js:2
+msgid "Unsaved changes"
+msgstr "Nem mentett módosítások"
+
+#: build/index.js:2
+msgid "Discard"
+msgstr "Elvetés"
+
+#: build/index.js:2
+msgid "Save changes"
+msgstr "Módosítások mentése"
+
+#: build/index.js:2
+msgid "Set in wp-config.php"
+msgstr "A wp-config.php-ban beállítva"
+
+#. translators: %d: number of days.
+#: build/index.js:3
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d nap"
+msgstr[1] "%d nap"
+
+#. translators: %d: number of hours.
+#: build/index.js:4
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d óra"
+msgstr[1] "%d óra"
+
+#. translators: %d: number of minutes.
+#: build/index.js:5
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d perc"
+msgstr[1] "%d perc"
+
+#: build/index.js:5
+msgid "less than a minute"
+msgstr "kevesebb mint egy perc"
+
+#: build/index.js:5
+msgid "Theme"
+msgstr "Sablon"
+
+#: build/index.js:5
+msgid "Plugin"
+msgstr "Bővítmény"
+
+#: build/index.js:5 build/index.js:6
+msgid "Cache lifetime"
+msgstr "Gyorsítótár élettartama"
+
+#. translators: 1: shortest lifetime, 2: longest lifetime, 3: default lifetime in seconds, 4: default spelled out.
+#: build/index.js:6
+msgid ""
+"How long the repository listing is cached, in seconds: %1$s to %2$s. "
+"Default: %3$d (%4$s). A new value applies from the next refresh."
+msgstr ""
+"Meddig tárolja a gyorsítótár a tároló fájllistáját, másodpercben: %1$s és "
+"%2$s között. Alapértelmezés: %3$d (%4$s). Az új érték a következő "
+"frissítéstől érvényes."
+
+#: build/index.js:6
+msgid "seconds"
+msgstr "másodperc"
+
+#. translators: %s: lifetime spelled out, e.g. "12 hours".
+#: build/index.js:7
+msgid "= %s"
+msgstr "= %s"
+
+#: build/index.js:7
+msgid "Configure the translation source and caching."
+msgstr "Állítsd be a fordítás forrását és a gyorsítótárazást."
+
+#: build/index.js:7
+msgid "Tone"
+msgstr "Hangnem"
+
+#: build/index.js:7
+msgid "Choose between formal and informal translation tone."
+msgstr "Válassz a formális és az informális fordítási hangnem között."
+
+#: build/index.js:7
+msgid "Formal (magázó)"
+msgstr "Formális (magázó)"
+
+#: build/index.js:7
+msgid "Informal (tegező)"
+msgstr "Informális (tegező)"
+
+#: build/index.js:7
+msgid "Locale"
+msgstr "Területi beállítás"
+
+#: build/index.js:7
+msgid "Target language for translations."
+msgstr "A fordítások cél nyelve."
+
+#. translators: %s: repository name and branch, e.g. "owner/repo (main)".
+#: build/index.js:8
+msgid "Translations come from <a>%s</a>."
+msgstr "A fordítások forrása: <a>%s</a>."
+
+#: build/index.js:8
+msgid ""
+"Only .mo, .po and script translation (.json) files are installed; the "
+"fast .l10n.php files are generated on this site."
+msgstr ""
+"Csak .mo, .po és szkriptfordítási (.json) fájlok települnek; a "
+"gyors .l10n.php fájlokat ez a webhely állítja elő."
+
+#. translators: %d: number of translations.
+#: build/index.js:9 build/index.js:22
+msgid "%d translation installed."
+msgid_plural "%d translations installed."
+msgstr[0] "%d fordítás telepítve."
+msgstr[1] "%d fordítás telepítve."
+
+#. translators: %d: number of translations.
+#: build/index.js:10 build/index.js:23
+msgid "%d translation deleted."
+msgid_plural "%d translations deleted."
+msgstr[0] "%d fordítás törölve."
+msgstr[1] "%d fordítás törölve."
+
+#. translators: %d: number of failed items.
+#: build/index.js:11
+msgid "%d failed."
+msgid_plural "%d failed."
+msgstr[0] "%d sikertelen."
+msgstr[1] "%d sikertelen."
+
+#: build/index.js:11
+msgid "Dismiss"
+msgstr "Bezárás"
+
+#: build/index.js:11
+msgid "Not cached yet"
+msgstr "Még nincs gyorsítótárban"
+
+#. translators: %s: relative time, e.g. "5 minutes ago".
+#: build/index.js:12
+msgid "Repository listing fetched %s"
+msgstr "A tároló fájllistája letöltve: %s"
+
+#. translators: 1: tone ("Formal"/"Informal"), 2: locale code.
+#: build/index.js:13
+msgid "Source: %1$s / %2$s"
+msgstr "Forrás: %1$s / %2$s"
+
+#: build/index.js:13
+msgid "Formal"
+msgstr "Formális"
+
+#: build/index.js:13
+msgid "Informal"
+msgstr "Informális"
+
+#: build/index.js:13
+msgid "Refresh"
+msgstr "Frissítés"
+
+#: build/index.js:13 build/index.js:19
+msgid "All"
+msgstr "Összes"
+
+#: build/index.js:13
+msgid "Plugins"
+msgstr "Bővítmények"
+
+#: build/index.js:13
+msgid "Themes"
+msgstr "Sablonok"
+
+#: build/index.js:13
+msgid "Updates available"
+msgstr "Frissíthető"
+
+#: build/index.js:13 build/index.js:14
+msgid "Not installed"
+msgstr "Nincs telepítve"
+
+#: build/index.js:13
+msgid "Show"
+msgstr "Megjelenítés"
+
+#. translators: 1: filter name, 2: number of items.
+#: build/index.js:14
+msgid "%1$s (%2$d)"
+msgstr "%1$s (%2$d)"
+
+#: build/index.js:14
+msgid "Up to date"
+msgstr "Naprakész"
+
+#: build/index.js:14
+msgid "Update available"
+msgstr "Frissítés elérhető"
+
+#. translators: %s: plugin or theme name.
+#: build/index.js:15
+msgid "Update the %s translation"
+msgstr "A(z) %s fordításának frissítése"
+
+#. translators: %s: plugin or theme name.
+#: build/index.js:16
+msgid "Install the %s translation"
+msgstr "A(z) %s fordításának telepítése"
+
+#: build/index.js:16
+msgid "Update"
+msgstr "Frissítés"
+
+#: build/index.js:16
+msgid "Install"
+msgstr "Telepítés"
+
+#. translators: %s: plugin or theme name.
+#: build/index.js:17
+msgid "Delete the %s translation"
+msgstr "A(z) %s fordításának törlése"
+
+#: build/index.js:17 build/index.js:21
+msgid "Delete"
+msgstr "Törlés"
+
+#: build/index.js:17
+msgid "Delete this translation?"
+msgstr "Törlöd ezt a fordítást?"
+
+#. translators: %d: number of translations.
+#: build/index.js:18
+msgid "Delete %d selected translation?"
+msgid_plural "Delete %d selected translations?"
+msgstr[0] "Törlöd a kijelölt %d fordítást?"
+msgstr[1] "Törlöd a kijelölt %d fordítást?"
+
+#: build/index.js:18
+msgid "Name"
+msgstr "Név"
+
+#: build/index.js:18
+msgid "Source"
+msgstr "Forrás"
+
+#: build/index.js:18
+msgid "Type"
+msgstr "Típus"
+
+#: build/index.js:18
+msgid "Status"
+msgstr "Állapot"
+
+#: build/index.js:18
+msgid "Files"
+msgstr "Fájlok"
+
+#: build/index.js:18
+msgid "Local Date"
+msgstr "Helyi dátum"
+
+#: build/index.js:18
+msgid "None"
+msgstr "Nincs"
+
+#: build/index.js:18
+msgid "Actions"
+msgstr "Műveletek"
+
+#: build/index.js:18
+msgid "Available translations"
+msgstr "Elérhető fordítások"
+
+#: build/index.js:18
+msgid "Installed plugins and themes that have a translation in the repository."
+msgstr ""
+"Azok a telepített bővítmények és sablonok, amelyekhez van fordítás a "
+"tárolóban."
+
+#: build/index.js:18
+msgid ""
+"You can view the translations, but installing, updating or deleting them is "
+"not allowed for your account on this site (file changes may be disabled)."
+msgstr ""
+"A fordításokat megtekintheted, de a telepítésük, frissítésük vagy törlésük a "
+"fiókodnak nem engedélyezett ezen a webhelyen (lehet, hogy a fájlmódosítás le "
+"van tiltva)."
+
+#. translators: 1: items done, 2: items in total.
+#: build/index.js:19
+msgid "Working… %1$d of %2$d"
+msgstr "Folyamatban… %1$d / %2$d"
+
+#: build/index.js:19
+msgid "Search"
+msgstr "Keresés"
+
+#: build/index.js:19
+msgid "Filter"
+msgstr "Szűrő"
+
+#: build/index.js:19
+msgid "Clear"
+msgstr "Törlés"
+
+#: build/index.js:19
+msgid "Clear all filters"
+msgstr "Összes szűrő törlése"
+
+#: build/index.js:19
+msgid "No entries match these filters."
+msgstr "Egy bejegyzés sem felel meg ezeknek a szűrőknek."
+
+#: build/index.js:19
+msgid "Nothing here yet."
+msgstr "Itt még nincs semmi."
+
+#: build/index.js:19
+msgid "Previous page"
+msgstr "Előző oldal"
+
+#: build/index.js:19
+msgid "Next page"
+msgstr "Következő oldal"
+
+#: build/index.js:19
+msgid "Rows per page"
+msgstr "Sorok oldalanként"
+
+#: build/index.js:19
+msgid "Select all rows on this page"
+msgstr "Az oldal összes sorának kijelölése"
+
+#: build/index.js:19
+msgid "Clear selection"
+msgstr "Kijelölés törlése"
+
+#: build/index.js:19
+msgid "Bulk actions"
+msgstr "Csoportos műveletek"
+
+#. translators: %d: number of rows.
+#: build/index.js:19
+msgid "%d entry"
+msgid_plural "%d entries"
+msgstr[0] "%d bejegyzés"
+msgstr[1] "%d bejegyzés"
+
+#. translators: %d: number of results.
+#: build/index.js:19
+msgid "%d result"
+msgid_plural "%d results"
+msgstr[0] "%d találat"
+msgstr[1] "%d találat"
+
+#. translators: 1: current page, 2: total pages.
+#: build/index.js:19
+msgid "Page %1$d of %2$d"
+msgstr "%1$d. oldal / %2$d"
+
+#. translators: %s: row name.
+#: build/index.js:19
+msgid "Select: %s"
+msgstr "Kijelölés: %s"
+
+#. translators: %d: number of selected rows.
+#: build/index.js:20
+msgid "%d selected"
+msgid_plural "%d selected"
+msgstr[0] "%d kijelölve"
+msgstr[1] "%d kijelölve"
+
+#. translators: 1: selected rows, 2: of those, on this page.
+#: build/index.js:21
+msgid "%1$d selected, %2$d on this page"
+msgstr "%1$d kijelölve, ebből %2$d ezen az oldalon"
+
+#. translators: 1: rows the action applies to, 2: selected rows on this page.
+#: build/index.js:21
+msgid "applies to %1$d of %2$d"
+msgstr "%2$d közül %1$d elemre vonatkozik"
+
+#: build/index.js:21
+msgid "Search by name or slug"
+msgstr "Keresés név vagy azonosító (slug) alapján"
+
+#: build/index.js:21
+msgid "No translation matches these filters."
+msgstr "Egy fordítás sem felel meg ezeknek a szűrőknek."
+
+#: build/index.js:21
+msgid ""
+"None of the installed plugins and themes has a translation in the repository "
+"for this tone and language."
+msgstr ""
+"A telepített bővítmények és sablonok egyikéhez sincs fordítás a tárolóban "
+"ezzel a hangnemmel és nyelvvel."
+
+#: build/index.js:21
+msgid "Select all translations on this page"
+msgstr "Az oldal összes fordításának kijelölése"
+
+#: build/index.js:21
+msgid "Install/Update selected"
+msgstr "Kijelöltek telepítése/frissítése"
+
+#: build/index.js:21
+msgid "Delete selected"
+msgstr "Kijelöltek törlése"
+
+#: build/index.js:23
 msgid "Cache cleared."
 msgstr "Gyorsítótár törölve."
+
+#: build/index.js:23
+msgid "Settings saved."
+msgstr "Beállítások mentve."
+
+#: build/index.js:23
+msgid "Nothing was saved. Fix the highlighted fields and save again."
+msgstr "Semmi sem lett mentve. Javítsd a kiemelt mezőket, és ments újra."
