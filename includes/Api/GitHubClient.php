@@ -59,6 +59,17 @@ final class GitHubClient {
 	}
 
 	/**
+	 * The cached tree, without fetching it.
+	 *
+	 * @return array<int, array<string, mixed>>|null Null when nothing is cached.
+	 */
+	public static function cached_tree(): ?array {
+		$payload = TreePayload::read( get_transient( self::CACHE_KEY ) );
+
+		return null === $payload ? null : $payload['tree'];
+	}
+
+	/**
 	 * What is known about the cached tree, without fetching it.
 	 *
 	 * @return array{truncated: bool, fetched_at: int|null}|null Null when nothing is cached.

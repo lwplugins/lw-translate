@@ -48,7 +48,7 @@ final class SettingsController {
 	 * @return WP_REST_Response
 	 */
 	public function get_settings(): WP_REST_Response {
-		return new WP_REST_Response( self::shape( LocaleCatalog::offered() ) );
+		return new WP_REST_Response( self::shape( LocaleCatalog::offered( false ) ) );
 	}
 
 	/**

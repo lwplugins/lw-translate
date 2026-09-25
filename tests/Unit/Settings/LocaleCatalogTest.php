@@ -79,4 +79,13 @@ final class LocaleCatalogTest extends MonkeyTestCase {
 
 		$this->assertSame( [ 'hu_HU' ], LocaleCatalog::offered() );
 	}
+
+	public function test_offered_without_fetching_never_contacts_github(): void {
+		Functions\when( 'get_option' )->justReturn( [] );
+		Functions\when( 'wp_parse_args' )->alias( static fn ( $args, $defaults ): array => array_merge( (array) $defaults, (array) $args ) );
+		Functions\when( 'get_transient' )->justReturn( false );
+		Functions\expect( 'wp_remote_get' )->never();
+
+		$this->assertSame( [ 'hu_HU' ], LocaleCatalog::offered( false ) );
+	}
 }

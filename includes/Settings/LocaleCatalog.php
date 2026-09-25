@@ -43,14 +43,18 @@ final class LocaleCatalog {
 	}
 
 	/**
-	 * The offered locales: from the (cached) tree, or the default and the
-	 * saved locale when the repository cannot be read.
+	 * The offered locales: from the tree, or the default and the saved
+	 * locale when the repository cannot be read.
 	 *
+	 * @param bool $fetch Fetch the tree from GitHub on a cache miss. Reading
+	 *                    the settings passes false (the Translations list,
+	 *                    loaded next to it, fetches the tree anyway);
+	 *                    validating a save passes true.
 	 * @return array<int, string>
 	 */
-	public static function offered(): array {
-		$tree    = ( new GitHubClient() )->fetch_tree();
-		$locales = is_wp_error( $tree ) ? [] : self::from_tree( $tree );
+	public static function offered( bool $fetch = true ): array {
+		$tree    = $fetch ? ( new GitHubClient() )->fetch_tree() : GitHubClient::cached_tree();
+		$locales = is_array( $tree ) ? self::from_tree( $tree ) : [];
 
 		if ( [] !== $locales ) {
 			return $locales;
