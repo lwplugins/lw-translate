@@ -28,6 +28,13 @@ final class InMemoryFilesystem extends \WP_Filesystem_Base {
 	 */
 	public array $deleted = [];
 
+	/**
+	 * When true, delete() fails and keeps the file (a read-only folder).
+	 *
+	 * @var bool
+	 */
+	public bool $refuse_delete = false;
+
 	public function put_contents( $file, $contents, $mode = false ) {
 		$this->files[ $file ] = $contents;
 		return true;
@@ -38,6 +45,10 @@ final class InMemoryFilesystem extends \WP_Filesystem_Base {
 	}
 
 	public function delete( $file, $recursive = false, $type = false ) {
+		if ( $this->refuse_delete ) {
+			return false;
+		}
+
 		$this->deleted[] = $file;
 		unset( $this->files[ $file ] );
 		return true;

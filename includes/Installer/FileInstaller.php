@@ -114,48 +114,44 @@ final class FileInstaller {
 	/**
 	 * Delete translation files for a slug.
 	 *
-	 * Only file names that pass FileNamePolicy for this item are deleted,
-	 * plus the locally generated `.l10n.php` when the .mo goes.
+	 * The files are found in the language folder (see TranslationRemover),
+	 * so no repository access is needed.
 	 *
 	 * @param string $slug Plugin or theme slug.
 	 * @param string $type Type: 'plugin' or 'theme'.
-	 * @return void
+	 * @return array{deleted: array<int, string>}|WP_Error WP_Error when nothing was installed or a file could not be deleted.
 	 */
-	public function delete( string $slug, string $type ): void {
+	public function delete( string $slug, string $type ): array|WP_Error {
 		$locale = (string) Options::get( 'locale', 'hu_HU' );
+		$valid  = $this->validate_item( $slug, $locale );
 
-		if ( is_wp_error( $this->validate_item( $slug, $locale ) ) ) {
-			return;
-		}
-
-		$tree = $this->client->fetch_tree();
-
-		if ( is_wp_error( $tree ) ) {
-			return;
+		if ( is_wp_error( $valid ) ) {
+			return $valid;
 		}
 
 		$filesystem = $this->get_filesystem();
 
 		if ( is_wp_error( $filesystem ) ) {
-			return;
+			return $filesystem;
 		}
 
-		$selection = TreeSelection::select( $tree, $slug, $type, (string) Options::get( 'tone', 'formal' ), $locale );
-		$base_dir  = WP_LANG_DIR . '/' . self::type_dir( $type );
+		$result = ( new TranslationRemover() )
+			->remove( $filesystem, WP_LANG_DIR . '/' . self::type_dir( $type ), $slug, $locale );
 
-		foreach ( array_keys( $selection['files'] ) as $name ) {
-			$local_path = $base_dir . '/' . $name;
-
-			if ( PathGuard::is_contained( $base_dir, $local_path ) && file_exists( $local_path ) ) {
-				wp_delete_file( $local_path );
-			}
+		if ( [] !== $result['failed'] ) {
+			return new WP_Error(
+				'delete_failed',
+				/* translators: %s: comma-separated list of file names */
+				sprintf( __( 'Could not delete: %s', 'lw-translate' ), implode( ', ', $result['failed'] ) ),
+				[ 'deleted' => $result['deleted'] ]
+			);
 		}
 
-		$mo_path = $base_dir . '/' . $slug . '-' . $locale . '.mo';
-
-		if ( ! file_exists( $mo_path ) && PathGuard::is_contained( $base_dir, $mo_path ) ) {
-			$this->generator->remove( $mo_path, $filesystem );
+		if ( [] === $result['deleted'] ) {
+			return new WP_Error( 'nothing_to_delete', __( 'No installed translation files were found for this item.', 'lw-translate' ) );
 		}
+
+		return [ 'deleted' => $result['deleted'] ];
 	}
 
 	/**

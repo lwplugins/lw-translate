@@ -162,9 +162,13 @@ final class Plugin {
 		}
 
 		$installer = new FileInstaller();
-		$installer->delete( $slug, $type );
+		$result    = $installer->delete( $slug, $type );
 
 		CompareCache::clear();
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( [ 'message' => $result->get_error_message() ] );
+		}
 
 		wp_send_json_success( [ 'message' => __( 'Translation deleted.', 'lw-translate' ) ] );
 	}

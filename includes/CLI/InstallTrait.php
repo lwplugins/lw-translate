@@ -119,9 +119,13 @@ trait InstallTrait {
 		$type = $assoc_args['type'] ?? 'plugin';
 
 		$installer = new FileInstaller();
-		$installer->delete( $slug, $type );
+		$result    = $installer->delete( $slug, $type );
 
 		CompareCache::clear();
+
+		if ( is_wp_error( $result ) ) {
+			WP_CLI::error( $result->get_error_message() );
+		}
 
 		WP_CLI::success( "Translation deleted for {$type}: {$slug}" );
 	}
@@ -195,14 +199,23 @@ trait InstallTrait {
 		$progress  = WP_CLI\Utils\make_progress_bar( 'Deleting translations', count( $installed ) );
 		$installer = new FileInstaller();
 
+		$errors = 0;
+
 		foreach ( $installed as $item ) {
-			$installer->delete( $item->slug, $item->type );
+			$result = $installer->delete( $item->slug, $item->type );
+
+			if ( is_wp_error( $result ) ) {
+				WP_CLI::warning( "{$item->slug}: " . $result->get_error_message() );
+				++$errors;
+			}
+
 			$progress->tick();
 		}
 
 		$progress->finish();
 		CompareCache::clear();
 
-		WP_CLI::success( sprintf( 'Deleted %d translation(s).', count( $installed ) ) );
+		$count = count( $installed ) - $errors;
+		WP_CLI::success( "Deleted {$count} translation(s)." . ( $errors > 0 ? " {$errors} error(s)." : '' ) );
 	}
 }
