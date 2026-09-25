@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: LW Translate 1.1.4\n"
+"Project-Id-Version: LW Translate 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lw-translate\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-25T10:53:46+00:00\n"
+"POT-Creation-Date: 2026-09-25T11:13:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lw-translate\n"
@@ -303,7 +303,7 @@ msgid "Autoloader not found. Please run \"composer install\" in the plugin direc
 msgstr ""
 
 #: build/index.js:1
-#: build/index.js:19
+#: build/index.js:16
 msgid "Loading…"
 msgstr ""
 
@@ -320,7 +320,7 @@ msgid "LW Plugins (opens in a new tab)"
 msgstr ""
 
 #: build/index.js:1
-#: build/index.js:19
+#: build/index.js:16
 msgid "Translations"
 msgstr ""
 
@@ -358,8 +358,8 @@ msgid "Documentation"
 msgstr ""
 
 #: build/index.js:2
-#: build/index.js:13
-#: build/index.js:18
+#: build/index.js:10
+#: build/index.js:15
 msgid "(opens in a new tab)"
 msgstr ""
 
@@ -474,247 +474,229 @@ msgstr ""
 msgid "Only .mo, .po and script translation (.json) files are installed; the fast .l10n.php files are generated on this site."
 msgstr ""
 
-#. translators: %d: number of translations.
-#: build/index.js:9
-#: build/index.js:22
-#, js-format
-msgid "%d translation installed."
-msgid_plural "%d translations installed."
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: %d: number of translations.
-#: build/index.js:10
-#: build/index.js:23
-#, js-format
-msgid "%d translation deleted."
-msgid_plural "%d translations deleted."
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: %d: number of failed items.
-#: build/index.js:11
-#, js-format
-msgid "%d failed."
-msgid_plural "%d failed."
-msgstr[0] ""
-msgstr[1] ""
-
-#: build/index.js:11
-msgid "Dismiss"
-msgstr ""
-
-#: build/index.js:11
+#: build/index.js:8
 msgid "Not cached yet"
 msgstr ""
 
 #. translators: %s: relative time, e.g. "5 minutes ago".
-#: build/index.js:12
+#: build/index.js:9
 #, js-format
 msgid "Repository listing fetched %s"
 msgstr ""
 
 #. translators: 1: tone ("Formal"/"Informal"), 2: locale code.
-#: build/index.js:13
+#: build/index.js:10
 #, js-format
 msgid "Source: %1$s / %2$s"
 msgstr ""
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Formal"
 msgstr ""
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Informal"
 msgstr ""
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Refresh"
 msgstr ""
 
-#: build/index.js:13
-#: build/index.js:19
+#: build/index.js:10
+#: build/index.js:16
 msgid "All"
 msgstr ""
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Plugins"
 msgstr ""
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Themes"
 msgstr ""
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Updates available"
 msgstr ""
 
-#: build/index.js:13
-#: build/index.js:14
+#: build/index.js:10
+#: build/index.js:11
 msgid "Not installed"
 msgstr ""
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Show"
 msgstr ""
 
 #. translators: 1: filter name, 2: number of items.
-#: build/index.js:14
+#: build/index.js:11
 #, js-format
 msgid "%1$s (%2$d)"
 msgstr ""
 
-#: build/index.js:14
+#: build/index.js:11
 msgid "Up to date"
 msgstr ""
 
-#: build/index.js:14
+#: build/index.js:11
 msgid "Update available"
 msgstr ""
 
 #. translators: %s: plugin or theme name.
-#: build/index.js:15
+#: build/index.js:12
 #, js-format
 msgid "Update the %s translation"
 msgstr ""
 
 #. translators: %s: plugin or theme name.
-#: build/index.js:16
+#: build/index.js:13
 #, js-format
 msgid "Install the %s translation"
 msgstr ""
 
-#: build/index.js:16
+#: build/index.js:13
 msgid "Update"
 msgstr ""
 
-#: build/index.js:16
+#: build/index.js:13
 msgid "Install"
 msgstr ""
 
 #. translators: %s: plugin or theme name.
-#: build/index.js:17
+#: build/index.js:14
 #, js-format
 msgid "Delete the %s translation"
 msgstr ""
 
-#: build/index.js:17
-#: build/index.js:21
+#: build/index.js:14
+#: build/index.js:18
 msgid "Delete"
 msgstr ""
 
-#: build/index.js:17
+#: build/index.js:14
+msgid "just installed"
+msgstr ""
+
+#: build/index.js:14
+msgid "just deleted"
+msgstr ""
+
+#: build/index.js:14
+msgid "Failed"
+msgstr ""
+
+#: build/index.js:14
 msgid "Delete this translation?"
 msgstr ""
 
 #. translators: %d: number of translations.
-#: build/index.js:18
+#: build/index.js:15
 #, js-format
 msgid "Delete %d selected translation?"
 msgid_plural "Delete %d selected translations?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Name"
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Source"
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Type"
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Status"
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Files"
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Local Date"
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "None"
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Actions"
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Available translations"
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Installed plugins and themes that have a translation in the repository."
 msgstr ""
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "You can view the translations, but installing, updating or deleting them is not allowed for your account on this site (file changes may be disabled)."
 msgstr ""
 
 #. translators: 1: items done, 2: items in total.
-#: build/index.js:19
+#: build/index.js:16
 #, js-format
 msgid "Working… %1$d of %2$d"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Search"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Filter"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Clear"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Clear all filters"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "No entries match these filters."
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Nothing here yet."
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Previous page"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Next page"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Rows per page"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Select all rows on this page"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Clear selection"
 msgstr ""
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Bulk actions"
 msgstr ""
 
 #. translators: %d: number of rows.
-#: build/index.js:19
+#: build/index.js:16
 #, js-format
 msgid "%d entry"
 msgid_plural "%d entries"
@@ -722,7 +704,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of results.
-#: build/index.js:19
+#: build/index.js:16
 #, js-format
 msgid "%d result"
 msgid_plural "%d results"
@@ -730,19 +712,19 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: current page, 2: total pages.
-#: build/index.js:19
+#: build/index.js:16
 #, js-format
 msgid "Page %1$d of %2$d"
 msgstr ""
 
 #. translators: %s: row name.
-#: build/index.js:19
+#: build/index.js:16
 #, js-format
 msgid "Select: %s"
 msgstr ""
 
 #. translators: %d: number of selected rows.
-#: build/index.js:20
+#: build/index.js:17
 #, js-format
 msgid "%d selected"
 msgid_plural "%d selected"
@@ -750,49 +732,73 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: selected rows, 2: of those, on this page.
-#: build/index.js:21
+#: build/index.js:18
 #, js-format
 msgid "%1$d selected, %2$d on this page"
 msgstr ""
 
 #. translators: 1: rows the action applies to, 2: selected rows on this page.
-#: build/index.js:21
+#: build/index.js:18
 #, js-format
 msgid "applies to %1$d of %2$d"
 msgstr ""
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "Search by name or slug"
 msgstr ""
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "No translation matches these filters."
 msgstr ""
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "None of the installed plugins and themes has a translation in the repository for this tone and language."
 msgstr ""
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "Select all translations on this page"
 msgstr ""
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "Install/Update selected"
 msgstr ""
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "Delete selected"
 msgstr ""
 
-#: build/index.js:23
+#. translators: 1: number of translations, 2: plugin/theme names.
+#: build/index.js:19
+#, js-format
+msgid "%1$d translation installed: %2$s"
+msgid_plural "%1$d translations installed: %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: number of translations, 2: plugin/theme names.
+#: build/index.js:20
+#, js-format
+msgid "%1$d translation deleted: %2$s"
+msgid_plural "%1$d translations deleted: %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: number of failed items, 2: plugin/theme names.
+#: build/index.js:21
+#, js-format
+msgid "%1$d failed: %2$s"
+msgid_plural "%1$d failed: %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/index.js:21
 msgid "Cache cleared."
 msgstr ""
 
-#: build/index.js:23
+#: build/index.js:21
 msgid "Settings saved."
 msgstr ""
 
-#: build/index.js:23
+#: build/index.js:21
 msgid "Nothing was saved. Fix the highlighted fields and save again."
 msgstr ""

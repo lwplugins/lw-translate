@@ -41,7 +41,7 @@ export default function TranslationStatus( { status } ) {
 	return (
 		<StatusBadge status={ meta.tone }>
 			<span className="lw-translate-status">
-				<Icon icon={ meta.icon } size={ 16 } />
+				<Icon icon={ meta.icon } size={ 14 } />
 				{ statusLabel( status ) }
 			</span>
 		</StatusBadge>

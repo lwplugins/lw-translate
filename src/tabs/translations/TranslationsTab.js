@@ -13,7 +13,7 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalConfirmDialog as ConfirmDialog,
 } from '@wordpress/components';
-import { useMemo, useState } from '@wordpress/element';
+import { useEffect, useMemo, useState } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
 /**
@@ -24,7 +24,6 @@ import LoadError from '../../components/LoadError';
 import Section from '../../components/Section';
 import { tableLabels } from '../../components/tableLabels';
 import { errorMessage } from '../../data/api';
-import ActionResults from './ActionResults';
 import SourceBar from './SourceBar';
 import ViewChips from './ViewChips';
 import { translationColumns } from './translationColumns';
@@ -67,6 +66,31 @@ export default function TranslationsTab( { list, actions } ) {
 	const canInstall = !! data?.canInstall;
 	const counts = data?.counts;
 
+	// Rows touched by the last run: successes glow for a few seconds,
+	// failures keep their reason until the next run.
+	const [ showOk, setShowOk ] = useState( false );
+	useEffect( () => {
+		if ( ! actions.result ) {
+			return undefined;
+		}
+		setShowOk( true );
+		const timer = setTimeout( () => setShowOk( false ), 6000 );
+		return () => clearTimeout( timer );
+	}, [ actions.result ] );
+	const marks = useMemo( () => {
+		const map = {};
+		( actions.result?.items || [] ).forEach( ( r ) => {
+			if ( ! r.ok || showOk ) {
+				map[ `${ r.type }:${ r.slug }` ] = {
+					ok: r.ok,
+					action: actions.result.action,
+					message: r.message,
+				};
+			}
+		} );
+		return map;
+	}, [ actions.result, showOk ] );
+
 	const act = ( action, target, busyKey ) => {
 		if ( action === 'delete' ) {
 			setPendingDelete( { rows: target, busyKey } );
@@ -80,6 +104,7 @@ export default function TranslationsTab( { list, actions } ) {
 	const columns = translationColumns( {
 		canInstall,
 		busy: actions.busy,
+		marks,
 		onAction: ( action, row ) =>
 			act( action, [ row ], `${ action }:${ row.id }` ),
 	} );
@@ -143,12 +168,6 @@ export default function TranslationsTab( { list, actions } ) {
 						actions.progress.total
 					) }
 				</p>
-			) }
-			{ actions.result && (
-				<ActionResults
-					result={ actions.result }
-					onDismiss={ actions.dismiss }
-				/>
 			) }
 			<DataTable
 				columns={ columns }

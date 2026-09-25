@@ -85,15 +85,47 @@ function RowActions( { row, busy, onAction } ) {
 }
 
 /**
+ * What the last run did to this row: a short "just installed/deleted" tag,
+ * or the failure reason. The row itself is tinted through CSS :has().
+ *
+ * @param {Object}      props
+ * @param {Object|null} props.mark { ok, action, message } or undefined.
+ */
+function RowMark( { mark } ) {
+	if ( ! mark ) {
+		return null;
+	}
+	if ( ! mark.ok ) {
+		return (
+			<span className="lw-translate-mark is-failed" role="alert">
+				{ mark.message || __( 'Failed', 'lw-translate' ) }
+			</span>
+		);
+	}
+	return (
+		<span className="lw-translate-mark is-ok">
+			{ mark.action === 'install'
+				? __( 'just installed', 'lw-translate' )
+				: __( 'just deleted', 'lw-translate' ) }
+		</span>
+	);
+}
+
+/**
  * Columns of the translations table.
  *
  * @param {Object}   args
  * @param {boolean}  args.canInstall Whether actions are allowed.
  * @param {string}   args.busy       Busy key.
+ * @param {Object}   args.marks      Row id → { ok, action, message } of the last run.
  * @param {Function} args.onAction   ( action, row ).
- * @return {Array} Columns.
  */
-export function translationColumns( { canInstall, busy, onAction } ) {
+export function translationColumns( {
+	canInstall,
+	busy,
+	marks = {},
+	onAction,
+} ) {
 	const columns = [
 		{
 			id: 'name',
@@ -103,7 +135,10 @@ export function translationColumns( { canInstall, busy, onAction } ) {
 			searchValue: ( r ) => `${ r.name } ${ r.slug }`,
 			render: ( r ) => (
 				<span className="lw-admin-stack">
-					<strong>{ r.name }</strong>
+					<span className="lw-admin-inline">
+						<strong>{ r.name }</strong>
+						<RowMark mark={ marks[ r.id ] } />
+					</span>
 					<span className="lw-admin-inline lw-translate-slug">
 						<code className="lw-admin-code">{ r.slug }</code>
 						{ r.remoteUrl && (

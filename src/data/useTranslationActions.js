@@ -25,6 +25,74 @@ const chunk = ( items, size ) =>
  * @param {Object} list useRemote() of the translations list.
  * @return {Object} { run, refresh, busy, result, progress, dismiss }.
  */
+/**
+ * Snackbar text for a finished run: what worked (by name) and what failed.
+ *
+ * @param {string}      action  install|delete.
+ * @param {Array}       items   Per-item results with names.
+ * @param {string|null} failure Request-level error.
+ * @return {Object} { message, failed }.
+ */
+export function runSummary( action, items, failure ) {
+	const ok = items.filter( ( r ) => r.ok );
+	const bad = items.filter( ( r ) => ! r.ok );
+	const names = ( list ) => list.map( ( r ) => r.name ).join( ', ' );
+	const parts = [];
+
+	if ( ok.length && action === 'install' ) {
+		parts.push(
+			sprintf(
+				/* translators: 1: number of translations, 2: plugin/theme names. */
+				_n(
+					'%1$d translation installed: %2$s',
+					'%1$d translations installed: %2$s',
+					ok.length,
+					'lw-translate'
+				),
+				ok.length,
+				names( ok )
+			)
+		);
+	} else if ( ok.length ) {
+		parts.push(
+			sprintf(
+				/* translators: 1: number of translations, 2: plugin/theme names. */
+				_n(
+					'%1$d translation deleted: %2$s',
+					'%1$d translations deleted: %2$s',
+					ok.length,
+					'lw-translate'
+				),
+				ok.length,
+				names( ok )
+			)
+		);
+	}
+	if ( bad.length ) {
+		parts.push(
+			sprintf(
+				/* translators: 1: number of failed items, 2: plugin/theme names. */
+				_n(
+					'%1$d failed: %2$s',
+					'%1$d failed: %2$s',
+					bad.length,
+					'lw-translate'
+				),
+				bad.length,
+				names( bad )
+			)
+		);
+	}
+	if ( failure ) {
+		parts.push( failure );
+	}
+
+	return {
+		message: parts.join( ' · ' ),
+		failed: bad.length > 0 || !! failure,
+	};
+}
+
 export default function useTranslationActions( list ) {
 	const [ busy, setBusy ] = useState( '' );
 	const [ result, setResult ] = useState( null );
@@ -78,34 +146,15 @@ export default function useTranslationActions( list ) {
 		} ) );
 		setResult( { action, items: named, failure } );
 
-		const failed = named.filter( ( r ) => ! r.ok ).length;
-		if ( failure ) {
-			createErrorNotice( failure, { type: 'snackbar' } );
-		} else if ( ! failed ) {
-			createSuccessNotice(
-				action === 'install'
-					? sprintf(
-							/* translators: %d: number of translations. */
-							_n(
-								'%d translation installed.',
-								'%d translations installed.',
-								named.length,
-								'lw-translate'
-							),
-							named.length
-						)
-					: sprintf(
-							/* translators: %d: number of translations. */
-							_n(
-								'%d translation deleted.',
-								'%d translations deleted.',
-								named.length,
-								'lw-translate'
-							),
-							named.length
-						),
-				{ type: 'snackbar' }
-			);
+		const summary = runSummary( action, named, failure );
+		if ( summary.failed ) {
+			// Failures stay until dismissed; the failed rows say why.
+			createErrorNotice( summary.message, {
+				type: 'snackbar',
+				explicitDismiss: true,
+			} );
+		} else {
+			createSuccessNotice( summary.message, { type: 'snackbar' } );
 		}
 	};
 

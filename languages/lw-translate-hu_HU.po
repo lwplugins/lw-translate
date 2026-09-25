@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LW Translate 1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/lw-translate\n"
-"POT-Creation-Date: 2026-09-25T10:53:46+00:00\n"
+"POT-Creation-Date: 2026-09-25T11:13:25+00:00\n"
 "PO-Revision-Date: 2026-09-25 12:00+0000\n"
 "Last-Translator: LW Plugins <info@lwplugins.com>\n"
 "Language-Team: LW Plugins <info@lwplugins.com>\n"
@@ -116,7 +116,9 @@ msgstr "Nem találhatók fordítási fájlok ehhez az elemhez."
 #: includes/Installer/FileInstaller.php:139
 #, php-format
 msgid "Could not read the repository listing, so nothing was deleted: %s"
-msgstr "Nem sikerült beolvasni a tároló fájllistáját, ezért semmi nem lett törölve: %s"
+msgstr ""
+"Nem sikerült beolvasni a tároló fájllistáját, ezért semmi nem lett törölve: "
+"%s"
 
 #. translators: %s: comma-separated list of file names
 #: includes/Installer/FileInstaller.php:157
@@ -334,7 +336,7 @@ msgstr ""
 "Az automatikus betöltő nem található. Futtasd a „composer install” parancsot "
 "a bővítmény mappájában, vagy telepítsd újra a bővítményt egy kiadási ZIP-ből."
 
-#: build/index.js:1 build/index.js:19
+#: build/index.js:1 build/index.js:16
 msgid "Loading…"
 msgstr "Betöltés…"
 
@@ -350,7 +352,7 @@ msgstr "Ez nem sikerült. Töltsd újra az oldalt, és próbáld újra."
 msgid "LW Plugins (opens in a new tab)"
 msgstr "LW Plugins (új lapon nyílik meg)"
 
-#: build/index.js:1 build/index.js:19
+#: build/index.js:1 build/index.js:16
 msgid "Translations"
 msgstr "Fordítások"
 
@@ -385,7 +387,7 @@ msgstr "LW Translate részei"
 msgid "Documentation"
 msgstr "Dokumentáció"
 
-#: build/index.js:2 build/index.js:13 build/index.js:18
+#: build/index.js:2 build/index.js:10 build/index.js:15
 msgid "(opens in a new tab)"
 msgstr "(új lapon nyílik meg)"
 
@@ -502,175 +504,162 @@ msgstr ""
 "Csak .mo, .po és szkriptfordítási (.json) fájlok települnek; a "
 "gyors .l10n.php fájlokat ez a webhely állítja elő."
 
-#. translators: %d: number of translations.
-#: build/index.js:9 build/index.js:22
-msgid "%d translation installed."
-msgid_plural "%d translations installed."
-msgstr[0] "%d fordítás telepítve."
-msgstr[1] "%d fordítás telepítve."
-
-#. translators: %d: number of translations.
-#: build/index.js:10 build/index.js:23
-msgid "%d translation deleted."
-msgid_plural "%d translations deleted."
-msgstr[0] "%d fordítás törölve."
-msgstr[1] "%d fordítás törölve."
-
-#. translators: %d: number of failed items.
-#: build/index.js:11
-msgid "%d failed."
-msgid_plural "%d failed."
-msgstr[0] "%d sikertelen."
-msgstr[1] "%d sikertelen."
-
-#: build/index.js:11
-msgid "Dismiss"
-msgstr "Bezárás"
-
-#: build/index.js:11
+#: build/index.js:8
 msgid "Not cached yet"
 msgstr "Még nincs gyorsítótárban"
 
 #. translators: %s: relative time, e.g. "5 minutes ago".
-#: build/index.js:12
+#: build/index.js:9
 msgid "Repository listing fetched %s"
 msgstr "A tároló fájllistája letöltve: %s"
 
 #. translators: 1: tone ("Formal"/"Informal"), 2: locale code.
-#: build/index.js:13
+#: build/index.js:10
 msgid "Source: %1$s / %2$s"
 msgstr "Forrás: %1$s / %2$s"
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Formal"
 msgstr "Formális"
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Informal"
 msgstr "Informális"
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Refresh"
 msgstr "Frissítés"
 
-#: build/index.js:13 build/index.js:19
+#: build/index.js:10 build/index.js:16
 msgid "All"
 msgstr "Összes"
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Plugins"
 msgstr "Bővítmények"
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Themes"
 msgstr "Sablonok"
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Updates available"
 msgstr "Frissíthető"
 
-#: build/index.js:13 build/index.js:14
+#: build/index.js:10 build/index.js:11
 msgid "Not installed"
 msgstr "Nincs telepítve"
 
-#: build/index.js:13
+#: build/index.js:10
 msgid "Show"
 msgstr "Megjelenítés"
 
 #. translators: 1: filter name, 2: number of items.
-#: build/index.js:14
+#: build/index.js:11
 msgid "%1$s (%2$d)"
 msgstr "%1$s (%2$d)"
 
-#: build/index.js:14
+#: build/index.js:11
 msgid "Up to date"
 msgstr "Naprakész"
 
-#: build/index.js:14
+#: build/index.js:11
 msgid "Update available"
 msgstr "Frissítés elérhető"
 
 #. translators: %s: plugin or theme name.
-#: build/index.js:15
+#: build/index.js:12
 msgid "Update the %s translation"
 msgstr "A(z) %s fordításának frissítése"
 
 #. translators: %s: plugin or theme name.
-#: build/index.js:16
+#: build/index.js:13
 msgid "Install the %s translation"
 msgstr "A(z) %s fordításának telepítése"
 
-#: build/index.js:16
+#: build/index.js:13
 msgid "Update"
 msgstr "Frissítés"
 
-#: build/index.js:16
+#: build/index.js:13
 msgid "Install"
 msgstr "Telepítés"
 
 #. translators: %s: plugin or theme name.
-#: build/index.js:17
+#: build/index.js:14
 msgid "Delete the %s translation"
 msgstr "A(z) %s fordításának törlése"
 
-#: build/index.js:17 build/index.js:21
+#: build/index.js:14 build/index.js:18
 msgid "Delete"
 msgstr "Törlés"
 
-#: build/index.js:17
+#: build/index.js:14
+msgid "just installed"
+msgstr "most telepítve"
+
+#: build/index.js:14
+msgid "just deleted"
+msgstr "most törölve"
+
+#: build/index.js:14
+msgid "Failed"
+msgstr "Sikertelen"
+
+#: build/index.js:14
 msgid "Delete this translation?"
 msgstr "Törlöd ezt a fordítást?"
 
 #. translators: %d: number of translations.
-#: build/index.js:18
+#: build/index.js:15
 msgid "Delete %d selected translation?"
 msgid_plural "Delete %d selected translations?"
 msgstr[0] "Törlöd a kijelölt %d fordítást?"
 msgstr[1] "Törlöd a kijelölt %d fordítást?"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Name"
 msgstr "Név"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Source"
 msgstr "Forrás"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Type"
 msgstr "Típus"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Status"
 msgstr "Állapot"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Files"
 msgstr "Fájlok"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Local Date"
 msgstr "Helyi dátum"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "None"
 msgstr "Nincs"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Actions"
 msgstr "Műveletek"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Available translations"
 msgstr "Elérhető fordítások"
 
-#: build/index.js:18
+#: build/index.js:15
 msgid "Installed plugins and themes that have a translation in the repository."
 msgstr ""
 "Azok a telepített bővítmények és sablonok, amelyekhez van fordítás a "
 "tárolóban."
 
-#: build/index.js:18
+#: build/index.js:15
 msgid ""
 "You can view the translations, but installing, updating or deleting them is "
 "not allowed for your account on this site (file changes may be disabled)."
@@ -680,108 +669,108 @@ msgstr ""
 "van tiltva)."
 
 #. translators: 1: items done, 2: items in total.
-#: build/index.js:19
+#: build/index.js:16
 msgid "Working… %1$d of %2$d"
 msgstr "Folyamatban… %1$d / %2$d"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Search"
 msgstr "Keresés"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Filter"
 msgstr "Szűrő"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Clear"
 msgstr "Törlés"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Clear all filters"
 msgstr "Összes szűrő törlése"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "No entries match these filters."
 msgstr "Egy bejegyzés sem felel meg ezeknek a szűrőknek."
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Nothing here yet."
 msgstr "Itt még nincs semmi."
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Previous page"
 msgstr "Előző oldal"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Next page"
 msgstr "Következő oldal"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Rows per page"
 msgstr "Sorok oldalanként"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Select all rows on this page"
 msgstr "Az oldal összes sorának kijelölése"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Clear selection"
 msgstr "Kijelölés törlése"
 
-#: build/index.js:19
+#: build/index.js:16
 msgid "Bulk actions"
 msgstr "Csoportos műveletek"
 
 #. translators: %d: number of rows.
-#: build/index.js:19
+#: build/index.js:16
 msgid "%d entry"
 msgid_plural "%d entries"
 msgstr[0] "%d bejegyzés"
 msgstr[1] "%d bejegyzés"
 
 #. translators: %d: number of results.
-#: build/index.js:19
+#: build/index.js:16
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] "%d találat"
 msgstr[1] "%d találat"
 
 #. translators: 1: current page, 2: total pages.
-#: build/index.js:19
+#: build/index.js:16
 msgid "Page %1$d of %2$d"
 msgstr "%1$d. oldal / %2$d"
 
 #. translators: %s: row name.
-#: build/index.js:19
+#: build/index.js:16
 msgid "Select: %s"
 msgstr "Kijelölés: %s"
 
 #. translators: %d: number of selected rows.
-#: build/index.js:20
+#: build/index.js:17
 msgid "%d selected"
 msgid_plural "%d selected"
 msgstr[0] "%d kijelölve"
 msgstr[1] "%d kijelölve"
 
 #. translators: 1: selected rows, 2: of those, on this page.
-#: build/index.js:21
+#: build/index.js:18
 msgid "%1$d selected, %2$d on this page"
 msgstr "%1$d kijelölve, ebből %2$d ezen az oldalon"
 
 #. translators: 1: rows the action applies to, 2: selected rows on this page.
-#: build/index.js:21
+#: build/index.js:18
 msgid "applies to %1$d of %2$d"
 msgstr "%2$d közül %1$d elemre vonatkozik"
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "Search by name or slug"
 msgstr "Keresés név vagy azonosító (slug) alapján"
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "No translation matches these filters."
 msgstr "Egy fordítás sem felel meg ezeknek a szűrőknek."
 
-#: build/index.js:21
+#: build/index.js:18
 msgid ""
 "None of the installed plugins and themes has a translation in the repository "
 "for this tone and language."
@@ -789,26 +778,47 @@ msgstr ""
 "A telepített bővítmények és sablonok egyikéhez sincs fordítás a tárolóban "
 "ezzel a hangnemmel és nyelvvel."
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "Select all translations on this page"
 msgstr "Az oldal összes fordításának kijelölése"
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "Install/Update selected"
 msgstr "Kijelöltek telepítése/frissítése"
 
-#: build/index.js:21
+#: build/index.js:18
 msgid "Delete selected"
 msgstr "Kijelöltek törlése"
 
-#: build/index.js:23
+#. translators: 1: number of translations, 2: plugin/theme names.
+#: build/index.js:19
+msgid "%1$d translation installed: %2$s"
+msgid_plural "%1$d translations installed: %2$s"
+msgstr[0] "%1$d fordítás telepítve: %2$s"
+msgstr[1] "%1$d fordítás telepítve: %2$s"
+
+#. translators: 1: number of translations, 2: plugin/theme names.
+#: build/index.js:20
+msgid "%1$d translation deleted: %2$s"
+msgid_plural "%1$d translations deleted: %2$s"
+msgstr[0] "%1$d fordítás törölve: %2$s"
+msgstr[1] "%1$d fordítás törölve: %2$s"
+
+#. translators: 1: number of failed items, 2: plugin/theme names.
+#: build/index.js:21
+msgid "%1$d failed: %2$s"
+msgid_plural "%1$d failed: %2$s"
+msgstr[0] "%1$d sikertelen: %2$s"
+msgstr[1] "%1$d sikertelen: %2$s"
+
+#: build/index.js:21
 msgid "Cache cleared."
 msgstr "Gyorsítótár törölve."
 
-#: build/index.js:23
+#: build/index.js:21
 msgid "Settings saved."
 msgstr "Beállítások mentve."
 
-#: build/index.js:23
+#: build/index.js:21
 msgid "Nothing was saved. Fix the highlighted fields and save again."
 msgstr "Semmi sem lett mentve. Javítsd a kiemelt mezőket, és ments újra."
