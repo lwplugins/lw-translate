@@ -43,15 +43,18 @@ final class Comparator {
 			return $tree;
 		}
 
-		$matches = self::match(
-			TreeParser::parse( $tree, $tone, $locale ),
-			LocalScanner::get_installed_plugins(),
-			LocalScanner::get_installed_themes()
+		$matches = self::with_installable_files(
+			self::match(
+				TreeParser::parse( $tree, $tone, $locale ),
+				LocalScanner::get_installed_plugins(),
+				LocalScanner::get_installed_themes()
+			),
+			$locale
 		);
 		$items   = [];
 
 		foreach ( $matches as $match ) {
-			$files   = self::installable( $match['files'], $match['slug'], $locale );
+			$files   = $match['files'];
 			$items[] = new TranslationItem(
 				slug: $match['slug'],
 				name: $match['name'],
@@ -100,6 +103,28 @@ final class Comparator {
 		}
 
 		return $matches;
+	}
+
+	/**
+	 * Keep only the installable files of each match, and drop the matches
+	 * that have none (their Install could only fail).
+	 *
+	 * @param array<int, array{type: string, slug: string, name: string, files: array<string, string>}> $matches Matches.
+	 * @param string                                                                                    $locale  Locale.
+	 * @return array<int, array{type: string, slug: string, name: string, files: array<string, string>}>
+	 */
+	public static function with_installable_files( array $matches, string $locale ): array {
+		$kept = [];
+
+		foreach ( $matches as $match ) {
+			$match['files'] = self::installable( $match['files'], $match['slug'], $locale );
+
+			if ( [] !== $match['files'] ) {
+				$kept[] = $match;
+			}
+		}
+
+		return $kept;
 	}
 
 	/**

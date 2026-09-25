@@ -110,4 +110,34 @@ final class ComparatorTest extends MonkeyTestCase {
 
 		$this->assertSame( [ 'akismet-hu_HU.mo' => 'a' ], Comparator::installable( $files, 'akismet', 'hu_HU' ) );
 	}
+
+	/**
+	 * A folder with only rejected names (e.g. only an upstream .l10n.php)
+	 * used to give a row whose Install always failed.
+	 */
+	public function test_with_installable_files_drops_items_without_any_and_filters_the_rest(): void {
+		$matches = [
+			[
+				'type'  => 'plugin',
+				'slug'  => 'akismet',
+				'name'  => 'Akismet',
+				'files' => [
+					'akismet-hu_HU.mo'   => 'a',
+					'readme.txt'         => 'b',
+				],
+			],
+			[
+				'type'  => 'theme',
+				'slug'  => 'astra',
+				'name'  => 'Astra',
+				'files' => [ 'astra-hu_HU.l10n.php' => 'c' ],
+			],
+		];
+
+		$result = Comparator::with_installable_files( $matches, 'hu_HU' );
+
+		$this->assertCount( 1, $result );
+		$this->assertSame( 'akismet', $result[0]['slug'] );
+		$this->assertSame( [ 'akismet-hu_HU.mo' => 'a' ], $result[0]['files'] );
+	}
 }
