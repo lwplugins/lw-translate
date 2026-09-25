@@ -18,7 +18,7 @@ final class TreeParser {
 	 * Supported file extensions for translation files.
 	 *
 	 * Public: this is the single source of truth for "is this a
-	 * translation file" checks. FileMatcher reuses it to whitelist remote
+	 * translation file" checks. TreeParser::parse() uses it to filter remote
 	 * tree paths, so keep it here rather than duplicating the list.
 	 *
 	 * ".l10n.php" is deliberately absent: those files are executable PHP,

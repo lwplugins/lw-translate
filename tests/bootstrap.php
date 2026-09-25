@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Never touched by unit tests (no real filesystem I/O is performed against
-// it), but FileMatcher/FileInstaller/LocalScanner reference the constant
+// it), but FileInstaller/LocalScanner/TranslationList reference the constant
 // when building path strings, so it must exist.
 if ( ! defined( 'WP_LANG_DIR' ) ) {
 	define( 'WP_LANG_DIR', '/tmp/lw-translate-tests/languages' );
@@ -48,4 +48,8 @@ if ( ! class_exists( 'WP_Filesystem_Base' ) ) {
 
 if ( ! class_exists( 'WP_CLI' ) ) {
 	require_once __DIR__ . '/Stubs/WP_CLI.php';
+}
+
+if ( ! class_exists( 'WP_REST_Server' ) ) {
+	require_once __DIR__ . '/Stubs/WP_REST_Server.php';
 }
