@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-25T10:38:39+00:00\n"
+"POT-Creation-Date: 2026-09-25T10:53:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: lw-translate\n"
@@ -72,12 +72,12 @@ msgstr ""
 msgid "The settings screen files are missing. Re-install the plugin from a release ZIP, or run \"npm install && npm run build\" in the plugin directory."
 msgstr ""
 
-#: includes/Api/GitHubClient.php:121
+#: includes/Api/GitHubClient.php:132
 msgid "Invalid tree response."
 msgstr ""
 
 #. translators: 1: file path, 2: HTTP status code
-#: includes/Api/GitHubClient.php:182
+#: includes/Api/GitHubClient.php:193
 #, php-format
 msgid "Failed to download %1$s (HTTP %2$d)."
 msgstr ""
@@ -104,35 +104,41 @@ msgstr[1] ""
 msgid "No translation files found for this item."
 msgstr ""
 
+#. translators: %s: error message from GitHub
+#: includes/Installer/FileInstaller.php:139
+#, php-format
+msgid "Could not read the repository listing, so nothing was deleted: %s"
+msgstr ""
+
 #. translators: %s: comma-separated list of file names
-#: includes/Installer/FileInstaller.php:145
+#: includes/Installer/FileInstaller.php:157
 #, php-format
 msgid "Could not delete: %s"
 msgstr ""
 
-#: includes/Installer/FileInstaller.php:151
+#: includes/Installer/FileInstaller.php:163
 msgid "No installed translation files were found for this item."
 msgstr ""
 
-#: includes/Installer/FileInstaller.php:166
+#: includes/Installer/FileInstaller.php:178
 msgid "Invalid plugin or theme slug."
 msgstr ""
 
-#: includes/Installer/FileInstaller.php:170
+#: includes/Installer/FileInstaller.php:182
 msgid "Invalid locale setting."
 msgstr ""
 
-#: includes/Installer/FileInstaller.php:189
+#: includes/Installer/FileInstaller.php:201
 msgid "Could not determine local path."
 msgstr ""
 
 #. translators: %s: local file path
-#: includes/Installer/FileInstaller.php:196
+#: includes/Installer/FileInstaller.php:208
 #, php-format
 msgid "Could not write file: %s"
 msgstr ""
 
-#: includes/Installer/FileInstaller.php:243
+#: includes/Installer/FileInstaller.php:255
 msgid "Could not initialize filesystem."
 msgstr ""
 
@@ -156,21 +162,23 @@ msgstr ""
 msgid "Translation deleted."
 msgstr ""
 
-#: includes/Rest/Admin/ItemsInput.php:40
+#: includes/Rest/Admin/ItemsInput.php:41
 msgid "No items selected."
 msgstr ""
 
-#: includes/Rest/Admin/ItemsInput.php:50
-msgid "Each item needs a type (plugin or theme) and a valid slug."
-msgstr ""
-
 #. translators: %d: maximum number of items
-#: includes/Rest/Admin/ItemsInput.php:61
+#: includes/Rest/Admin/ItemsInput.php:48
 #, php-format
 msgid "Send at most %d items per request."
 msgstr ""
 
+#: includes/Rest/Admin/ItemsInput.php:52
+#: includes/Rest/Admin/ItemsInput.php:62
+msgid "Each item needs a type (plugin or theme) and a valid slug."
+msgstr ""
+
 #: includes/Rest/Admin/SettingsController.php:63
+#: includes/Rest/Admin/TranslationsController.php:136
 msgid "The request is too large."
 msgstr ""
 
