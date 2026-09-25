@@ -20,7 +20,7 @@ LW Translate connects to GitHub-hosted translation repositories (like [hellowpio
 ## Requirements
 
 - PHP 8.1+
-- WordPress 6.0+
+- WordPress 6.6+
 
 ## Installation
 

@@ -20,7 +20,7 @@ composer require lwplugins/lw-translate
 
 ### Requirements
 - PHP 8.0+
-- WordPress 6.0+
+- WordPress 6.6+
 
 ---
 

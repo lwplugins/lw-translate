@@ -1,10 +1,10 @@
 === LW Translate ===
 Contributors: lwplugins
 Tags: translation, locale, language, i18n, community
-Requires at least: 6.0
+Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,9 @@ Some translation repositories provide both formal and informal variants. Formal 
 The plugin calculates git blob SHA hashes of your local .mo files and compares them with the remote repository. Only genuinely changed files trigger an update notification.
 
 == Changelog ==
+
+= 1.2.1 =
+* Fix: "Requires at least" raised to WordPress 6.6 - the React settings screen needs the react-jsx-runtime script core registers from 6.6; on older versions the page stayed blank.
 
 = 1.2.0 =
 * New: New Translate screen built with WordPress components, like the other LW plugins: side navigation, save bar with a Cmd/Ctrl+S shortcut, loading skeletons and a mobile layout.
