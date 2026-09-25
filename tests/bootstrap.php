@@ -53,3 +53,7 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 if ( ! class_exists( 'WP_REST_Server' ) ) {
 	require_once __DIR__ . '/Stubs/WP_REST_Server.php';
 }
+
+if ( ! class_exists( 'WP_REST_Request' ) ) {
+	require_once __DIR__ . '/Stubs/WP_REST.php';
+}
