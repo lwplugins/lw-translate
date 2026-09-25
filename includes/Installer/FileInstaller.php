@@ -46,7 +46,8 @@ final class FileInstaller {
 	 *
 	 * Only `{slug}-{locale}.mo|.po` and `{slug}-{locale}-{md5}.json` are
 	 * installed. Any other file in the item's repository folder is left
-	 * out and listed under "skipped". The `.l10n.php` is generated locally
+	 * out and listed under "skipped". Every file is checked against its
+	 * blob SHA before any is written. The `.l10n.php` is generated locally
 	 * from the installed .mo.
 	 *
 	 * @param string $slug Plugin or theme slug.
@@ -84,8 +85,14 @@ final class FileInstaller {
 
 		$base_dir = $this->ensure_directories( $filesystem, $type );
 
-		foreach ( $selection['files'] as $name => $file ) {
-			$result = $this->download_and_save( $file['path'], $base_dir . '/' . $name, $base_dir, $filesystem );
+		$contents = ( new VerifiedDownloader( [ $this->client, 'download_file' ] ) )->fetch_all( $selection['files'] );
+
+		if ( is_wp_error( $contents ) ) {
+			return $contents;
+		}
+
+		foreach ( $contents as $name => $content ) {
+			$result = $this->save( $base_dir, $name, $content, $filesystem );
 
 			if ( is_wp_error( $result ) ) {
 				return $result;
@@ -171,28 +178,22 @@ final class FileInstaller {
 	}
 
 	/**
-	 * Download a remote file and save it locally.
+	 * Save a verified file into the language folder.
 	 *
-	 * @param string             $remote_path Remote file path.
-	 * @param string             $local_path  Target path.
-	 * @param string             $base_dir    Language folder the target must stay in.
-	 * @param WP_Filesystem_Base $filesystem  WordPress filesystem instance.
+	 * @param string             $base_dir   Language folder the target must stay in.
+	 * @param string             $name       File name.
+	 * @param string             $content    Verified file contents.
+	 * @param WP_Filesystem_Base $filesystem WordPress filesystem instance.
 	 * @return true|WP_Error
 	 */
-	private function download_and_save( string $remote_path, string $local_path, string $base_dir, WP_Filesystem_Base $filesystem ): bool|WP_Error {
+	private function save( string $base_dir, string $name, string $content, WP_Filesystem_Base $filesystem ): bool|WP_Error {
+		$local_path = $base_dir . '/' . $name;
+
 		if ( ! PathGuard::is_contained( $base_dir, $local_path ) ) {
 			return new WP_Error( 'invalid_path', __( 'Could not determine local path.', 'lw-translate' ) );
 		}
 
-		$content = $this->client->download_file( $remote_path );
-
-		if ( is_wp_error( $content ) ) {
-			return $content;
-		}
-
-		$written = $filesystem->put_contents( $local_path, $content, FS_CHMOD_FILE );
-
-		if ( ! $written ) {
+		if ( ! $filesystem->put_contents( $local_path, $content, FS_CHMOD_FILE ) ) {
 			return new WP_Error(
 				'write_error',
 				/* translators: %s: local file path */
