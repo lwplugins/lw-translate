@@ -95,6 +95,15 @@ final class GitHubClient {
 	}
 
 	/**
+	 * Forget the cached tree.
+	 *
+	 * @return void
+	 */
+	public static function clear_cache(): void {
+		delete_transient( self::CACHE_KEY );
+	}
+
+	/**
 	 * Download a raw file from the repository.
 	 *
 	 * @param string $path File path in the repository.

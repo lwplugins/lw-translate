@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace LightweightPlugins\Translate\CLI;
 
 use LightweightPlugins\Translate\Installer\FileInstaller;
+use LightweightPlugins\Translate\Translation\CompareCache;
 use LightweightPlugins\Translate\Translation\Comparator;
 use LightweightPlugins\Translate\Translation\TranslationItem;
 use WP_CLI;
@@ -60,6 +61,8 @@ trait InstallTrait {
 
 		$installer = new FileInstaller();
 		$result    = $installer->install( $slug, $type );
+
+		CompareCache::clear();
 
 		if ( is_wp_error( $result ) ) {
 			WP_CLI::error( $result->get_error_message() );
@@ -118,6 +121,8 @@ trait InstallTrait {
 		$installer = new FileInstaller();
 		$installer->delete( $slug, $type );
 
+		CompareCache::clear();
+
 		WP_CLI::success( "Translation deleted for {$type}: {$slug}" );
 	}
 
@@ -159,6 +164,7 @@ trait InstallTrait {
 		}
 
 		$progress->finish();
+		CompareCache::clear();
 
 		$count = count( $updatable ) - $errors;
 		WP_CLI::success( "Installed {$count} translation(s)." . ( $errors > 0 ? " {$errors} error(s)." : '' ) );
@@ -195,6 +201,7 @@ trait InstallTrait {
 		}
 
 		$progress->finish();
+		CompareCache::clear();
 
 		WP_CLI::success( sprintf( 'Deleted %d translation(s).', count( $installed ) ) );
 	}

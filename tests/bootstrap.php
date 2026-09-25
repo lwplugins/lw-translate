@@ -45,3 +45,7 @@ if ( ! class_exists( 'WP_Error' ) ) {
 if ( ! class_exists( 'WP_Filesystem_Base' ) ) {
 	require_once __DIR__ . '/Stubs/WP_Filesystem_Base.php';
 }
+
+if ( ! class_exists( 'WP_CLI' ) ) {
+	require_once __DIR__ . '/Stubs/WP_CLI.php';
+}

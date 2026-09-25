@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace LightweightPlugins\Translate\CLI;
 
 use LightweightPlugins\Translate\Options;
+use LightweightPlugins\Translate\Translation\CompareCache;
 use WP_CLI;
 
 /**
@@ -114,17 +115,7 @@ final class Commands {
 	 * @return void
 	 */
 	public function refresh(): void {
-		global $wpdb;
-
-		delete_transient( 'lw_translate_tree_cache' );
-
-		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-				'_transient_lw_translate_compare_%',
-				'_transient_timeout_lw_translate_compare_%'
-			)
-		);
+		CompareCache::clear_all();
 
 		WP_CLI::success( 'Cache cleared. Next list/install will fetch fresh data.' );
 	}

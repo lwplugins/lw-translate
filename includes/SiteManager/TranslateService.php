@@ -11,6 +11,7 @@ namespace LightweightPlugins\Translate\SiteManager;
 
 use LightweightPlugins\Translate\Capability;
 use LightweightPlugins\Translate\Installer\FileInstaller;
+use LightweightPlugins\Translate\Translation\CompareCache;
 use LightweightPlugins\Translate\Options;
 use LightweightPlugins\Translate\Translation\Comparator;
 use LightweightPlugins\Translate\Translation\TranslationItem;
@@ -108,7 +109,7 @@ final class TranslateService {
 			return $result;
 		}
 
-		self::clear_comparison_cache();
+		CompareCache::clear();
 
 		return [
 			'success' => true,
@@ -158,7 +159,7 @@ final class TranslateService {
 		}
 
 		if ( ! empty( $updated ) ) {
-			self::clear_comparison_cache();
+			CompareCache::clear();
 		}
 
 		return [
@@ -197,21 +198,5 @@ final class TranslateService {
 			'file_count' => $item->file_count,
 			'local_date' => $item->local_date,
 		];
-	}
-
-	/**
-	 * Clear comparison transient caches.
-	 *
-	 * @return void
-	 */
-	private static function clear_comparison_cache(): void {
-		global $wpdb;
-		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-				'_transient_lw_translate_compare_%',
-				'_transient_timeout_lw_translate_compare_%'
-			)
-		);
 	}
 }

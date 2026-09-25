@@ -12,6 +12,7 @@ namespace LightweightPlugins\Translate;
 use LightweightPlugins\Translate\Admin\SettingsPage;
 use LightweightPlugins\Translate\CLI\Commands as CLICommands;
 use LightweightPlugins\Translate\Installer\FileInstaller;
+use LightweightPlugins\Translate\Translation\CompareCache;
 use LightweightPlugins\Translate\Installer\SkippedFilesNotice;
 use LightweightPlugins\Translate\SiteManager\Integration as SiteManagerIntegration;
 use LightweightPlugins\Translate\Upgrade\Upgrader;
@@ -89,7 +90,7 @@ final class Plugin {
 			wp_send_json_error( [ 'message' => $result->get_error_message() ] );
 		}
 
-		self::clear_comparison_cache();
+		CompareCache::clear();
 
 		wp_send_json_success(
 			[
@@ -136,7 +137,7 @@ final class Plugin {
 			];
 		}
 
-		self::clear_comparison_cache();
+		CompareCache::clear();
 
 		wp_send_json_success( [ 'results' => $results ] );
 	}
@@ -163,7 +164,7 @@ final class Plugin {
 		$installer = new FileInstaller();
 		$installer->delete( $slug, $type );
 
-		self::clear_comparison_cache();
+		CompareCache::clear();
 
 		wp_send_json_success( [ 'message' => __( 'Translation deleted.', 'lw-translate' ) ] );
 	}
@@ -180,8 +181,7 @@ final class Plugin {
 			wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', 'lw-translate' ) ] );
 		}
 
-		delete_transient( 'lw_translate_tree_cache' );
-		self::clear_comparison_cache();
+		CompareCache::clear_all();
 
 		wp_send_json_success( [ 'message' => __( 'Cache cleared.', 'lw-translate' ) ] );
 	}
@@ -195,21 +195,5 @@ final class Plugin {
 	 */
 	private function init_site_manager(): void {
 		SiteManagerIntegration::init();
-	}
-
-	/**
-	 * Clear comparison transient caches.
-	 *
-	 * @return void
-	 */
-	private static function clear_comparison_cache(): void {
-		global $wpdb;
-		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-				'_transient_lw_translate_compare_%',
-				'_transient_timeout_lw_translate_compare_%'
-			)
-		);
 	}
 }

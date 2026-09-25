@@ -28,7 +28,7 @@ final class Comparator {
 		$locale = (string) Options::get( 'locale', 'hu_HU' );
 		$tone   = (string) Options::get( 'tone', 'formal' );
 
-		$cache_key = 'lw_translate_compare_' . $locale . '_' . $tone;
+		$cache_key = CompareCache::key( $locale, $tone );
 		$cached    = get_transient( $cache_key );
 
 		if ( is_array( $cached ) && ! empty( $cached ) ) {
@@ -57,7 +57,7 @@ final class Comparator {
 			self::compare_type( $remote_data, $themes, 'theme', $locale )
 		);
 
-		set_transient( $cache_key, $items, 3600 );
+		set_transient( $cache_key, $items, CompareCache::TTL );
 
 		return $items;
 	}
