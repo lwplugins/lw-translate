@@ -60,4 +60,57 @@ final class ComparatorTest extends MonkeyTestCase {
 
 		$this->assertSame( $cached, Comparator::compare_all() );
 	}
+
+	/**
+	 * A theme sharing its directory name with a plugin used to be dropped
+	 * (its files were filed under the plugin).
+	 */
+	public function test_match_lists_a_theme_that_shares_its_slug_with_a_plugin(): void {
+		$remote = [
+			'plugin' => [ 'astra' => [ 'astra-hu_HU.mo' => 'p' ] ],
+			'theme'  => [ 'astra' => [ 'astra-hu_HU.mo' => 't' ] ],
+		];
+
+		$matches = Comparator::match( $remote, [ 'astra' => 'Astra Addon' ], [ 'astra' => 'Astra' ] );
+
+		$this->assertSame(
+			[
+				[
+					'type'  => 'plugin',
+					'slug'  => 'astra',
+					'name'  => 'Astra Addon',
+					'files' => [ 'astra-hu_HU.mo' => 'p' ],
+				],
+				[
+					'type'  => 'theme',
+					'slug'  => 'astra',
+					'name'  => 'Astra',
+					'files' => [ 'astra-hu_HU.mo' => 't' ],
+				],
+			],
+			$matches
+		);
+	}
+
+	public function test_match_skips_installed_items_without_a_repository_folder_and_the_other_way_round(): void {
+		$remote = [
+			'plugin' => [ 'woocommerce' => [ 'woocommerce-hu_HU.mo' => 'x' ] ],
+			'theme'  => [],
+		];
+
+		$matches = Comparator::match( $remote, [ 'akismet' => 'Akismet' ], [ 'woocommerce' => 'Not a plugin' ] );
+
+		$this->assertSame( [], $matches );
+	}
+
+	public function test_match_accepts_numeric_slugs_that_php_turned_into_integer_keys(): void {
+		$remote = [
+			'plugin' => [ '2048' => [ '2048-hu_HU.mo' => 'x' ] ],
+			'theme'  => [],
+		];
+
+		$matches = Comparator::match( $remote, [ '2048' => 'Game' ], [] );
+
+		$this->assertSame( '2048', $matches[0]['slug'] );
+	}
 }

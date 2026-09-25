@@ -42,20 +42,24 @@ final class Comparator {
 			return $tree;
 		}
 
-		$remote_data = TreeParser::parse( $tree, $tone, $locale );
-		$plugins     = LocalScanner::get_installed_plugins();
-		$themes      = LocalScanner::get_installed_themes();
-		$items       = [];
-
-		$items = array_merge(
-			$items,
-			self::compare_type( $remote_data, $plugins, 'plugin', $locale )
+		$matches = self::match(
+			TreeParser::parse( $tree, $tone, $locale ),
+			LocalScanner::get_installed_plugins(),
+			LocalScanner::get_installed_themes()
 		);
+		$items   = [];
 
-		$items = array_merge(
-			$items,
-			self::compare_type( $remote_data, $themes, 'theme', $locale )
-		);
+		foreach ( $matches as $match ) {
+			$items[] = new TranslationItem(
+				slug: $match['slug'],
+				name: $match['name'],
+				type: $match['type'],
+				status: self::determine_status( $match['slug'], $match['type'], $locale, $match['files'] ),
+				file_count: count( $match['files'] ),
+				local_date: LocalScanner::get_local_date( $match['slug'], $match['type'], $locale ),
+				files: $match['files'],
+			);
+		}
 
 		set_transient( $cache_key, $items, CompareCache::TTL );
 
@@ -63,43 +67,37 @@ final class Comparator {
 	}
 
 	/**
-	 * Compare a specific type (plugin or theme).
+	 * Pair the installed plugins and themes with their repository folders.
 	 *
-	 * @param array<string, array{type: string, files: array<string, string>}> $remote_data Parsed remote data.
-	 * @param array<string, string>                                            $installed   Installed items (slug => name).
-	 * @param string                                                           $type        Type: 'plugin' or 'theme'.
-	 * @param string                                                           $locale      Locale code.
-	 * @return array<TranslationItem>
+	 * @param array{plugin: array<string, array<string, string>>, theme: array<string, array<string, string>>} $remote  Parsed tree (type => slug => files).
+	 * @param array<string, string>                                                                            $plugins Installed plugins (slug => name).
+	 * @param array<string, string>                                                                            $themes  Installed themes (slug => name).
+	 * @return array<int, array{type: string, slug: string, name: string, files: array<string, string>}>
 	 */
-	private static function compare_type( array $remote_data, array $installed, string $type, string $locale ): array {
-		$items = [];
+	public static function match( array $remote, array $plugins, array $themes ): array {
+		$matches = [];
 
-		foreach ( $installed as $slug => $name ) {
-			if ( ! isset( $remote_data[ $slug ] ) ) {
-				continue;
+		foreach ( [
+			'plugin' => $plugins,
+			'theme'  => $themes,
+		] as $type => $installed ) {
+			foreach ( $installed as $slug => $name ) {
+				$slug = (string) $slug;
+
+				if ( ! isset( $remote[ $type ][ $slug ] ) ) {
+					continue;
+				}
+
+				$matches[] = [
+					'type'  => $type,
+					'slug'  => $slug,
+					'name'  => (string) $name,
+					'files' => $remote[ $type ][ $slug ],
+				];
 			}
-
-			$remote = $remote_data[ $slug ];
-
-			if ( $remote['type'] !== $type ) {
-				continue;
-			}
-
-			$status     = self::determine_status( $slug, $type, $locale, $remote['files'] );
-			$local_date = LocalScanner::get_local_date( $slug, $type, $locale );
-
-			$items[] = new TranslationItem(
-				slug: $slug,
-				name: $name,
-				type: $type,
-				status: $status,
-				file_count: count( $remote['files'] ),
-				local_date: $local_date,
-				files: $remote['files'],
-			);
 		}
 
-		return $items;
+		return $matches;
 	}
 
 	/**

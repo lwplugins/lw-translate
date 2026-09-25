@@ -30,62 +30,63 @@ final class TreeParser {
 	/**
 	 * Parse tree entries for a given tone and locale.
 	 *
-	 * Returns an array keyed by slug, containing type and file entries.
+	 * Plugins and themes are kept apart, because a theme and a plugin can
+	 * share a directory name.
 	 *
 	 * @param array<int, array{type?: string, path?: mixed, sha?: string}> $tree   Raw tree from GitHub API. "path" is
 	 *                                                                             untrusted remote input and is not
 	 *                                                                             guaranteed to be a string.
 	 * @param string                                                       $tone   Translation tone (formal/informal).
 	 * @param string                                                       $locale Target locale (e.g. hu_HU).
-	 * @return array<string, array{type: string, files: array<string, string>}>
+	 * @return array{plugin: array<string, array<string, string>>, theme: array<string, array<string, string>>} Type => slug => file name => blob SHA.
 	 */
 	public static function parse( array $tree, string $tone, string $locale ): array {
-		$results = [];
+		$results = [
+			'plugin' => [],
+			'theme'  => [],
+		];
 
-		foreach ( [ 'plugins', 'themes' ] as $type ) {
-			$prefix = $tone . '/' . $type . '/' . $locale . '/';
+		foreach ( [
+			'plugin' => 'plugins',
+			'theme'  => 'themes',
+		] as $type => $dir ) {
+			$prefix = $tone . '/' . $dir . '/' . $locale . '/';
 
 			foreach ( $tree as $entry ) {
-				if ( 'blob' !== ( $entry['type'] ?? '' ) ) {
+				$file = self::match_entry( $entry, $prefix );
+
+				if ( null === $file ) {
 					continue;
 				}
 
-				$path = $entry['path'] ?? '';
-
-				if ( ! is_string( $path ) ) {
-					continue;
-				}
-
-				if ( ! str_starts_with( $path, $prefix ) ) {
-					continue;
-				}
-
-				$relative = substr( $path, strlen( $prefix ) );
-				$parts    = explode( '/', $relative, 2 );
-
-				if ( 2 !== count( $parts ) ) {
-					continue;
-				}
-
-				$slug     = $parts[0];
-				$filename = $parts[1];
-
-				if ( ! self::is_translation_file( $filename ) ) {
-					continue;
-				}
-
-				if ( ! isset( $results[ $slug ] ) ) {
-					$results[ $slug ] = [
-						'type'  => 'themes' === $type ? 'theme' : 'plugin',
-						'files' => [],
-					];
-				}
-
-				$results[ $slug ]['files'][ $filename ] = $entry['sha'] ?? '';
+				$results[ $type ][ $file[0] ][ $file[1] ] = (string) ( $entry['sha'] ?? '' );
 			}
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Slug and file name of a translation blob under a prefix, or null.
+	 *
+	 * @param array{type?: string, path?: mixed} $entry  Tree entry.
+	 * @param string                             $prefix "{tone}/{dir}/{locale}/".
+	 * @return array{0: string, 1: string}|null
+	 */
+	private static function match_entry( array $entry, string $prefix ): ?array {
+		$path = $entry['path'] ?? '';
+
+		if ( 'blob' !== ( $entry['type'] ?? '' ) || ! is_string( $path ) || ! str_starts_with( $path, $prefix ) ) {
+			return null;
+		}
+
+		$parts = explode( '/', substr( $path, strlen( $prefix ) ), 2 );
+
+		if ( 2 !== count( $parts ) || ! self::is_translation_file( $parts[1] ) ) {
+			return null;
+		}
+
+		return [ $parts[0], $parts[1] ];
 	}
 
 	/**

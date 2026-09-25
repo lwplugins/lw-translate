@@ -17,8 +17,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class TreeParserTest extends TestCase {
 
+	private const EMPTY = [
+		'plugin' => [],
+		'theme'  => [],
+	];
+
 	public function test_parse_returns_empty_array_for_empty_tree(): void {
-		$this->assertSame( [], TreeParser::parse( [], 'formal', 'hu_HU' ) );
+		$this->assertSame( self::EMPTY, TreeParser::parse( [], 'formal', 'hu_HU' ) );
 	}
 
 	public function test_parse_groups_a_plugin_file_under_its_slug(): void {
@@ -32,8 +37,8 @@ final class TreeParserTest extends TestCase {
 
 		$result = TreeParser::parse( $tree, 'formal', 'hu_HU' );
 
-		$this->assertSame( 'plugin', $result['woocommerce']['type'] );
-		$this->assertSame( 'abc123', $result['woocommerce']['files']['woocommerce-hu_HU.mo'] );
+		$this->assertSame( [ 'woocommerce' => [ 'woocommerce-hu_HU.mo' => 'abc123' ] ], $result['plugin'] );
+		$this->assertSame( [], $result['theme'] );
 	}
 
 	public function test_parse_groups_a_theme_file_under_its_slug(): void {
@@ -47,8 +52,33 @@ final class TreeParserTest extends TestCase {
 
 		$result = TreeParser::parse( $tree, 'formal', 'hu_HU' );
 
-		$this->assertSame( 'theme', $result['twentytwentyfour']['type'] );
-		$this->assertSame( 'def456', $result['twentytwentyfour']['files']['twentytwentyfour-hu_HU.po'] );
+		$this->assertSame( [ 'twentytwentyfour' => [ 'twentytwentyfour-hu_HU.po' => 'def456' ] ], $result['theme'] );
+		$this->assertSame( [], $result['plugin'] );
+	}
+
+	/**
+	 * A theme and a plugin can share a directory name. Before 1.2.0 the
+	 * theme's files were merged into the plugin entry (type "plugin"), so
+	 * the theme never showed up in the list.
+	 */
+	public function test_parse_keeps_a_plugin_and_a_theme_with_the_same_slug_apart(): void {
+		$tree = [
+			[
+				'type' => 'blob',
+				'path' => 'formal/plugins/hu_HU/astra/astra-hu_HU.mo',
+				'sha'  => 'plugin-sha',
+			],
+			[
+				'type' => 'blob',
+				'path' => 'formal/themes/hu_HU/astra/astra-hu_HU.mo',
+				'sha'  => 'theme-sha',
+			],
+		];
+
+		$result = TreeParser::parse( $tree, 'formal', 'hu_HU' );
+
+		$this->assertSame( [ 'astra-hu_HU.mo' => 'plugin-sha' ], $result['plugin']['astra'] );
+		$this->assertSame( [ 'astra-hu_HU.mo' => 'theme-sha' ], $result['theme']['astra'] );
 	}
 
 	public function test_parse_defaults_sha_to_empty_string_when_missing(): void {
@@ -61,7 +91,7 @@ final class TreeParserTest extends TestCase {
 
 		$result = TreeParser::parse( $tree, 'formal', 'hu_HU' );
 
-		$this->assertSame( '', $result['woocommerce']['files']['woocommerce-hu_HU.mo'] );
+		$this->assertSame( '', $result['plugin']['woocommerce']['woocommerce-hu_HU.mo'] );
 	}
 
 	/**
@@ -70,7 +100,7 @@ final class TreeParserTest extends TestCase {
 	public function test_parse_ignores_entries_that_do_not_describe_a_translation_file( array $entry ): void {
 		$result = TreeParser::parse( [ $entry ], 'formal', 'hu_HU' );
 
-		$this->assertSame( [], $result );
+		$this->assertSame( self::EMPTY, $result );
 	}
 
 	/**
@@ -103,7 +133,7 @@ final class TreeParserTest extends TestCase {
 
 		$result = TreeParser::parse( $tree, 'formal', 'hu_HU' );
 
-		$this->assertArrayHasKey( $filename, $result['woocommerce']['files'] );
+		$this->assertArrayHasKey( $filename, $result['plugin']['woocommerce'] );
 	}
 
 	/**
@@ -130,7 +160,7 @@ final class TreeParserTest extends TestCase {
 			],
 		];
 
-		$this->assertSame( [], TreeParser::parse( $tree, 'formal', 'hu_HU' ) );
+		$this->assertSame( self::EMPTY, TreeParser::parse( $tree, 'formal', 'hu_HU' ) );
 	}
 
 	/**
@@ -149,7 +179,7 @@ final class TreeParserTest extends TestCase {
 
 		$result = TreeParser::parse( $tree, 'formal', 'hu_HU' );
 
-		$this->assertSame( [], $result );
+		$this->assertSame( self::EMPTY, $result );
 	}
 
 	/**
@@ -166,7 +196,7 @@ final class TreeParserTest extends TestCase {
 			[ 'type' => 'blob', 'path' => $path, 'sha' => 'x' ],
 		];
 
-		$this->assertSame( [], TreeParser::parse( $tree, 'formal', 'hu_HU' ) );
+		$this->assertSame( self::EMPTY, TreeParser::parse( $tree, 'formal', 'hu_HU' ) );
 	}
 
 	/**
@@ -196,7 +226,7 @@ final class TreeParserTest extends TestCase {
 
 		$result = TreeParser::parse( $tree, 'formal', 'hu_HU' );
 
-		$this->assertArrayHasKey( 'nested/dir/woocommerce-hu_HU.po', $result['woocommerce']['files'] );
+		$this->assertArrayHasKey( 'nested/dir/woocommerce-hu_HU.po', $result['plugin']['woocommerce'] );
 	}
 
 	public function test_get_available_locales_returns_empty_array_for_empty_tree(): void {
