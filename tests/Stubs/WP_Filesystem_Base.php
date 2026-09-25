@@ -31,4 +31,8 @@ class WP_Filesystem_Base {
 	public function mkdir( $path, $chmod = false, $chown = false, $chgrp = false ) {
 		return false;
 	}
+
+	public function dirlist( $path, $include_hidden = true, $recursive = false ) {
+		return false;
+	}
 }

@@ -14,6 +14,7 @@ use LightweightPlugins\Translate\CLI\Commands as CLICommands;
 use LightweightPlugins\Translate\Installer\FileInstaller;
 use LightweightPlugins\Translate\Installer\SkippedFilesNotice;
 use LightweightPlugins\Translate\SiteManager\Integration as SiteManagerIntegration;
+use LightweightPlugins\Translate\Upgrade\Upgrader;
 
 /**
  * Main plugin class.
@@ -40,6 +41,7 @@ final class Plugin {
 
 		if ( is_admin() ) {
 			new SettingsPage();
+			Upgrader::init();
 
 			add_action( 'wp_ajax_lw_translate_install', [ $this, 'ajax_install' ] );
 			add_action( 'wp_ajax_lw_translate_bulk_install', [ $this, 'ajax_bulk_install' ] );

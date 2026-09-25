@@ -12,6 +12,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 // Remove plugin options.
 delete_option( 'lw_translate_options' );
+delete_option( 'lw_translate_version' );
+delete_option( 'lw_translate_upgrade_state' );
 
 // Remove transient caches.
 delete_transient( 'lw_translate_tree_cache' );

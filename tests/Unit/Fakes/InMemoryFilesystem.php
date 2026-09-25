@@ -50,4 +50,22 @@ final class InMemoryFilesystem extends \WP_Filesystem_Base {
 	public function mkdir( $path, $chmod = false, $chown = false, $chgrp = false ) {
 		return true;
 	}
+
+	/**
+	 * Files directly inside a folder, in WP_Filesystem dirlist() shape.
+	 */
+	public function dirlist( $path, $include_hidden = true, $recursive = false ) {
+		$list = [];
+
+		foreach ( array_keys( $this->files ) as $file ) {
+			if ( dirname( $file ) === rtrim( $path, '/' ) ) {
+				$list[ basename( $file ) ] = [
+					'name' => basename( $file ),
+					'type' => 'f',
+				];
+			}
+		}
+
+		return $list;
+	}
 }
