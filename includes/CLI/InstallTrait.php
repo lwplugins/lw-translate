@@ -152,26 +152,8 @@ trait InstallTrait {
 			return;
 		}
 
-		$progress  = WP_CLI\Utils\make_progress_bar( 'Installing translations', count( $updatable ) );
 		$installer = new FileInstaller();
-		$errors    = 0;
-
-		foreach ( $updatable as $item ) {
-			$result = $installer->install( $item->slug, $item->type );
-
-			if ( is_wp_error( $result ) ) {
-				WP_CLI::warning( "{$item->slug}: " . $result->get_error_message() );
-				++$errors;
-			}
-
-			$progress->tick();
-		}
-
-		$progress->finish();
-		CompareCache::clear();
-
-		$count = count( $updatable ) - $errors;
-		WP_CLI::success( "Installed {$count} translation(s)." . ( $errors > 0 ? " {$errors} error(s)." : '' ) );
+		BatchRunner::run( $updatable, [ $installer, 'install' ], 'Installing translations', 'Installed %d translation(s).' );
 	}
 
 	/**
@@ -196,26 +178,7 @@ trait InstallTrait {
 			return;
 		}
 
-		$progress  = WP_CLI\Utils\make_progress_bar( 'Deleting translations', count( $installed ) );
 		$installer = new FileInstaller();
-
-		$errors = 0;
-
-		foreach ( $installed as $item ) {
-			$result = $installer->delete( $item->slug, $item->type );
-
-			if ( is_wp_error( $result ) ) {
-				WP_CLI::warning( "{$item->slug}: " . $result->get_error_message() );
-				++$errors;
-			}
-
-			$progress->tick();
-		}
-
-		$progress->finish();
-		CompareCache::clear();
-
-		$count = count( $installed ) - $errors;
-		WP_CLI::success( "Deleted {$count} translation(s)." . ( $errors > 0 ? " {$errors} error(s)." : '' ) );
+		BatchRunner::run( $installed, [ $installer, 'delete' ], 'Deleting translations', 'Deleted %d translation(s).' );
 	}
 }
