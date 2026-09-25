@@ -29,6 +29,11 @@ use WP_REST_Server;
 final class TranslationsController {
 
 	/**
+	 * Largest accepted request body, in bytes (10 items need well under 2 KB).
+	 */
+	private const MAX_BYTES = 8192;
+
+	/**
 	 * Register the routes.
 	 *
 	 * @return void
@@ -72,9 +77,16 @@ final class TranslationsController {
 	/**
 	 * Forget the cached tree and comparison, and return the fresh list.
 	 *
-	 * @return WP_REST_Response
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response|WP_Error
 	 */
-	public function refresh(): WP_REST_Response {
+	public function refresh( WP_REST_Request $request ) {
+		$too_large = self::too_large( $request );
+
+		if ( null !== $too_large ) {
+			return $too_large;
+		}
+
 		CompareCache::clear_all();
 
 		return new WP_REST_Response( self::shape() );
@@ -89,6 +101,12 @@ final class TranslationsController {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	private function run( WP_REST_Request $request, string $action ) {
+		$too_large = self::too_large( $request );
+
+		if ( null !== $too_large ) {
+			return $too_large;
+		}
+
 		$parsed = ItemsInput::parse( $request->get_param( 'items' ) );
 
 		if ( '' !== $parsed['error'] ) {
@@ -102,6 +120,20 @@ final class TranslationsController {
 		CompareCache::clear();
 
 		return new WP_REST_Response( array_merge( [ 'results' => $results ], self::shape() ) );
+	}
+
+	/**
+	 * A 413 error for an oversized body, or null.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_Error|null
+	 */
+	private static function too_large( WP_REST_Request $request ): ?WP_Error {
+		if ( strlen( (string) $request->get_body() ) <= self::MAX_BYTES ) {
+			return null;
+		}
+
+		return Routes::error( 'lw_translate_too_large', __( 'The request is too large.', 'lw-translate' ), 413 );
 	}
 
 	/**

@@ -13,6 +13,7 @@ use Brain\Monkey\Functions;
 use LightweightPlugins\Translate\Options;
 use LightweightPlugins\Translate\Rest\Admin\SettingsController;
 use LightweightPlugins\Translate\Rest\Admin\TranslationsController;
+use LightweightPlugins\Translate\Tests\Unit\Fakes\InMemoryFilesystem;
 use LightweightPlugins\Translate\Tests\Unit\MonkeyTestCase;
 use LightweightPlugins\Translate\Translation\TranslationItem;
 use WP_Error;
@@ -152,7 +153,7 @@ final class ControllersTest extends MonkeyTestCase {
 	public function test_refresh_clears_the_tree_and_comparison_caches(): void {
 		Functions\when( 'wp_remote_get' )->justReturn( new WP_Error( 'http_request_failed', 'offline' ) );
 
-		$data = ( new TranslationsController() )->refresh()->get_data();
+		$data = ( new TranslationsController() )->refresh( new WP_REST_Request() )->get_data();
 
 		$this->assertContains( 'lw_translate_tree_cache', $this->deleted );
 		$this->assertSame( [], $data['rows'] );
@@ -202,5 +203,84 @@ final class ControllersTest extends MonkeyTestCase {
 		$result = ( new SettingsController() )->save_settings( new WP_REST_Request( [], str_repeat( 'x', 9000 ) ) );
 
 		$this->assertSame( 413, $result->get_error_data()['status'] );
+	}
+
+	public function test_install_delete_and_refresh_refuse_an_oversized_body_with_413(): void {
+		$controller = new TranslationsController();
+		$request    = new WP_REST_Request( [], str_repeat( 'x', 20000 ) );
+
+		foreach ( [ 'install', 'delete', 'refresh' ] as $method ) {
+			$result = $controller->$method( $request );
+
+			$this->assertInstanceOf( WP_Error::class, $result, $method );
+			$this->assertSame( 413, $result->get_error_data()['status'], $method );
+		}
+	}
+
+	/**
+	 * GitHub is reachable (cached tree) but the item has nothing installed:
+	 * the per-item result is an honest failure and nothing else changes.
+	 */
+	public function test_delete_answers_per_item_results_plus_the_fresh_list(): void {
+		$this->filesystem();
+
+		$data = ( new TranslationsController() )
+			->delete( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'akismet' ] ] ] ) )
+			->get_data();
+
+		$this->assertSame(
+			[
+				'type'    => 'plugin',
+				'slug'    => 'akismet',
+				'ok'      => false,
+				'message' => 'No installed translation files were found for this item.',
+				'deleted' => [],
+			],
+			$data['results'][0]
+		);
+		$this->assertArrayHasKey( 'rows', $data );
+	}
+
+	public function test_install_succeeds_with_a_verified_download(): void {
+		$content = 'mo-bytes';
+		$sha     = sha1( 'blob ' . strlen( $content ) . "\0" . $content );
+		$fs      = $this->filesystem();
+
+		// PathGuard resolves the target folder with realpath(); the file
+		// itself is only written to the in-memory filesystem.
+		if ( ! is_dir( WP_LANG_DIR . '/plugins' ) ) {
+			mkdir( WP_LANG_DIR . '/plugins', 0777, true );
+		}
+
+		$this->transients['lw_translate_tree_cache']['tree'][] = [
+			'type' => 'blob',
+			'path' => 'informal/plugins/hu_HU/hello-dolly/hello-dolly-hu_HU.mo',
+			'sha'  => $sha,
+		];
+		Functions\when( 'wp_remote_get' )->justReturn( [ 'body' => $content ] );
+		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
+		Functions\when( 'wp_remote_retrieve_body' )->justReturn( $content );
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'hello-dolly' ] ] ] ) )
+			->get_data();
+
+		$this->assertTrue( $data['results'][0]['ok'], $data['results'][0]['message'] );
+		$this->assertSame( 'Translation installed successfully.', $data['results'][0]['message'] );
+		$this->assertSame( $content, $fs->files[ WP_LANG_DIR . '/plugins/hello-dolly-hu_HU.mo' ] );
+	}
+
+	/**
+	 * Put an in-memory filesystem behind WP_Filesystem().
+	 *
+	 * @return InMemoryFilesystem
+	 */
+	private function filesystem(): InMemoryFilesystem {
+		global $wp_filesystem;
+
+		$wp_filesystem = new InMemoryFilesystem();
+		Functions\when( 'WP_Filesystem' )->justReturn( true );
+
+		return $wp_filesystem;
 	}
 }

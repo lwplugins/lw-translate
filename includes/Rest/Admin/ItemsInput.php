@@ -30,7 +30,8 @@ final class ItemsInput {
 	/**
 	 * Parse the raw items list.
 	 *
-	 * Duplicates are dropped. Any malformed item refuses the whole request.
+	 * Duplicates are dropped. More than MAX_ITEMS entries, a non-list, or
+	 * any malformed item refuses the whole request.
 	 *
 	 * @param mixed $raw Raw "items" value.
 	 * @return array{items: array<int, array{type: string, slug: string}>, error: string} "error" is '' when valid.
@@ -40,9 +41,20 @@ final class ItemsInput {
 			return self::fail( __( 'No items selected.', 'lw-translate' ) );
 		}
 
+		// The limit first: a long list is refused without walking it, and
+		// duplicates cannot bring it under the limit.
+		if ( count( $raw ) > self::MAX_ITEMS ) {
+			/* translators: %d: maximum number of items */
+			return self::fail( sprintf( __( 'Send at most %d items per request.', 'lw-translate' ), self::MAX_ITEMS ) );
+		}
+
+		if ( array_keys( $raw ) !== range( 0, count( $raw ) - 1 ) ) {
+			return self::fail( __( 'Each item needs a type (plugin or theme) and a valid slug.', 'lw-translate' ) );
+		}
+
 		$items = [];
 
-		foreach ( array_values( $raw ) as $entry ) {
+		foreach ( $raw as $entry ) {
 			$type = is_array( $entry ) && is_string( $entry['type'] ?? null ) ? $entry['type'] : '';
 			$slug = is_array( $entry ) && is_string( $entry['slug'] ?? null ) ? $entry['slug'] : '';
 
@@ -54,11 +66,6 @@ final class ItemsInput {
 				'type' => $type,
 				'slug' => $slug,
 			];
-		}
-
-		if ( count( $items ) > self::MAX_ITEMS ) {
-			/* translators: %d: maximum number of items */
-			return self::fail( sprintf( __( 'Send at most %d items per request.', 'lw-translate' ), self::MAX_ITEMS ) );
 		}
 
 		return [

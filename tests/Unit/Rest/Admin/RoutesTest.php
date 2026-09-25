@@ -11,12 +11,14 @@ namespace LightweightPlugins\Translate\Tests\Unit\Rest\Admin;
 
 use Brain\Monkey\Functions;
 use LightweightPlugins\Translate\Rest\Admin\Routes;
+use LightweightPlugins\Translate\Rest\Admin\SettingsController;
 use LightweightPlugins\Translate\Rest\Admin\TranslationsController;
 use LightweightPlugins\Translate\Tests\Unit\MonkeyTestCase;
 
 /**
  * @covers \LightweightPlugins\Translate\Rest\Admin\Routes
  * @covers \LightweightPlugins\Translate\Rest\Admin\TranslationsController
+ * @covers \LightweightPlugins\Translate\Rest\Admin\SettingsController
  */
 final class RoutesTest extends MonkeyTestCase {
 
@@ -56,5 +58,22 @@ final class RoutesTest extends MonkeyTestCase {
 			],
 			$routes
 		);
+	}
+
+	public function test_the_settings_routes_read_and_save_with_manage_options(): void {
+		$endpoints = [];
+		Functions\when( 'register_rest_route' )->alias(
+			static function ( string $ns, string $path, array $list ) use ( &$endpoints ): bool {
+				foreach ( $list as $endpoint ) {
+					$endpoints[ $endpoint['methods'] ] = [ $ns . $path, $endpoint['permission_callback'] ];
+				}
+				return true;
+			}
+		);
+
+		( new SettingsController() )->register_routes();
+
+		$this->assertSame( [ 'lw-translate/v1/admin/settings', [ Routes::class, 'can_manage' ] ], $endpoints['GET'] );
+		$this->assertSame( [ 'lw-translate/v1/admin/settings', [ Routes::class, 'can_manage' ] ], $endpoints['POST'] );
 	}
 }

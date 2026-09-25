@@ -16,8 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', __DIR__ . '/' );
 }
 
-// Never touched by unit tests (no real filesystem I/O is performed against
-// it), but FileInstaller/LocalScanner/TranslationList reference the constant
+// Unit tests write nothing there (files go to an in-memory filesystem; one
+// test creates the empty plugins/ folder so PathGuard's realpath() resolves), but FileInstaller/LocalScanner/TranslationList reference the constant
 // when building path strings, so it must exist.
 if ( ! defined( 'WP_LANG_DIR' ) ) {
 	define( 'WP_LANG_DIR', '/tmp/lw-translate-tests/languages' );
