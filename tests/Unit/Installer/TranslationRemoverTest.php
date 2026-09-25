@@ -21,6 +21,10 @@ use PHPUnit\Framework\TestCase;
  */
 final class TranslationRemoverTest extends TestCase {
 
+	private const JSON = 'akismet-hu_HU-0123456789abcdef0123456789abcdef.json';
+
+	private const CORE_JSON = 'akismet-hu_HU-ffffffffffffffffffffffffffffffff.json';
+
 	private string $base;
 
 	private InMemoryFilesystem $fs;
@@ -37,64 +41,70 @@ final class TranslationRemoverTest extends TestCase {
 		}
 	}
 
-	private function remover(): TranslationRemover {
-		return new TranslationRemover();
+	/**
+	 * @param array<int, string> $remote Repository file names of the item.
+	 * @return array{deleted: array<int, string>, failed: array<int, string>}
+	 */
+	private function remove( array $remote, string $slug = 'akismet' ): array {
+		return ( new TranslationRemover() )->remove( $this->fs, $this->base, $slug, 'hu_HU', $remote );
 	}
 
-	/**
-	 * Before 1.2.0 delete took the file names from the current repository
-	 * tree, so a file removed upstream could never be deleted.
-	 */
-	public function test_it_removes_the_installed_files_of_the_item_found_on_disk(): void {
-		$this->add(
-			'akismet-hu_HU.mo',
-			'akismet-hu_HU.po',
-			'akismet-hu_HU.l10n.php',
-			'akismet-hu_HU-0123456789abcdef0123456789abcdef.json'
-		);
+	public function test_it_removes_the_repository_files_and_the_generated_l10n_php(): void {
+		$this->add( 'akismet-hu_HU.mo', 'akismet-hu_HU.po', 'akismet-hu_HU.l10n.php', self::JSON );
 
-		$result = $this->remover()->remove( $this->fs, $this->base, 'akismet', 'hu_HU' );
+		$result = $this->remove( [ 'akismet-hu_HU.mo', 'akismet-hu_HU.po', self::JSON ] );
 
-		$this->assertSame(
-			[
-				'akismet-hu_HU-0123456789abcdef0123456789abcdef.json',
-				'akismet-hu_HU.l10n.php',
-				'akismet-hu_HU.mo',
-				'akismet-hu_HU.po',
-			],
-			$result['deleted']
-		);
+		$this->assertSame( [ self::JSON, 'akismet-hu_HU.l10n.php', 'akismet-hu_HU.mo', 'akismet-hu_HU.po' ], $result['deleted'] );
 		$this->assertSame( [], $result['failed'] );
 		$this->assertSame( [], $this->fs->files );
 	}
 
-	public function test_it_leaves_other_items_and_other_locales_alone(): void {
-		$this->add( 'akismet-hu_HU.mo', 'akismet-de_DE.mo', 'akismet-extra-hu_HU.mo', 'other-hu_HU.mo', 'akismet-hu_HU.txt' );
+	/**
+	 * A translate.wordpress.org language pack puts script translations with
+	 * other hashes next to ours; the plugin never installed them.
+	 */
+	public function test_a_file_the_repository_does_not_list_survives(): void {
+		$this->add( 'akismet-hu_HU.mo', self::CORE_JSON );
 
-		$result = $this->remover()->remove( $this->fs, $this->base, 'akismet', 'hu_HU' );
+		$result = $this->remove( [ 'akismet-hu_HU.mo', self::JSON ] );
 
 		$this->assertSame( [ 'akismet-hu_HU.mo' ], $result['deleted'] );
-		$this->assertCount( 4, $this->fs->files );
+		$this->assertArrayHasKey( $this->base . '/' . self::CORE_JSON, $this->fs->files );
+	}
+
+	public function test_the_l10n_php_stays_when_the_mo_is_not_deleted(): void {
+		$this->add( 'akismet-hu_HU.po', 'akismet-hu_HU.l10n.php', 'akismet-hu_HU.mo' );
+
+		$result = $this->remove( [ 'akismet-hu_HU.po' ] );
+
+		$this->assertSame( [ 'akismet-hu_HU.po' ], $result['deleted'] );
+		$this->assertCount( 2, $this->fs->files );
+	}
+
+	public function test_names_the_file_name_policy_rejects_are_never_deleted(): void {
+		$this->add( 'other-hu_HU.mo', 'akismet-hu_HU.txt' );
+
+		$result = $this->remove( [ 'other-hu_HU.mo', 'akismet-hu_HU.txt', '../akismet-hu_HU.mo' ] );
+
+		$this->assertSame( [], $result['deleted'] );
+		$this->assertCount( 2, $this->fs->files );
 	}
 
 	public function test_nothing_installed_reports_nothing_deleted(): void {
-		$result = $this->remover()->remove( $this->fs, $this->base, 'akismet', 'hu_HU' );
-
 		$this->assertSame(
 			[
 				'deleted' => [],
 				'failed'  => [],
 			],
-			$result
+			$this->remove( [ 'akismet-hu_HU.mo' ] )
 		);
 	}
 
 	public function test_a_file_that_survives_the_delete_is_reported_as_failed(): void {
-		$fs                = new InMemoryFilesystem();
-		$fs->refuse_delete = true;
-		$fs->files[ $this->base . '/akismet-hu_HU.po' ] = 'x';
+		$this->fs->refuse_delete = true;
+		$this->add( 'akismet-hu_HU.po' );
 
-		$result = $this->remover()->remove( $fs, $this->base, 'akismet', 'hu_HU' );
+		$result = $this->remove( [ 'akismet-hu_HU.po' ] );
 
 		$this->assertSame( [], $result['deleted'] );
 		$this->assertSame( [ 'akismet-hu_HU.po' ], $result['failed'] );
@@ -103,9 +113,7 @@ final class TranslationRemoverTest extends TestCase {
 	public function test_an_invalid_slug_removes_nothing(): void {
 		$this->add( 'akismet-hu_HU.mo' );
 
-		$result = $this->remover()->remove( $this->fs, $this->base, '../akismet', 'hu_HU' );
-
-		$this->assertSame( [], $result['deleted'] );
+		$this->assertSame( [], $this->remove( [ 'akismet-hu_HU.mo' ], '../akismet' )['deleted'] );
 		$this->assertCount( 1, $this->fs->files );
 	}
 }

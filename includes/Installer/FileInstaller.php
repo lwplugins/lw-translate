@@ -114,8 +114,9 @@ final class FileInstaller {
 	/**
 	 * Delete translation files for a slug.
 	 *
-	 * The files are found in the language folder (see TranslationRemover),
-	 * so no repository access is needed.
+	 * Only the files the repository lists for the item are deleted (see
+	 * TranslationRemover). Without the listing (GitHub unavailable) nothing
+	 * is deleted, so a language pack's files are never taken by pattern.
 	 *
 	 * @param string $slug Plugin or theme slug.
 	 * @param string $type Type: 'plugin' or 'theme'.
@@ -129,14 +130,25 @@ final class FileInstaller {
 			return $valid;
 		}
 
+		$tree = $this->client->fetch_tree();
+
+		if ( is_wp_error( $tree ) ) {
+			return new WP_Error(
+				'repository_unavailable',
+				/* translators: %s: error message from GitHub */
+				sprintf( __( 'Could not read the repository listing, so nothing was deleted: %s', 'lw-translate' ), $tree->get_error_message() )
+			);
+		}
+
 		$filesystem = $this->get_filesystem();
 
 		if ( is_wp_error( $filesystem ) ) {
 			return $filesystem;
 		}
 
-		$result = ( new TranslationRemover() )
-			->remove( $filesystem, WP_LANG_DIR . '/' . self::type_dir( $type ), $slug, $locale );
+		$selection = TreeSelection::select( $tree, $slug, $type, (string) Options::get( 'tone', 'formal' ), $locale );
+		$result    = ( new TranslationRemover() )
+			->remove( $filesystem, WP_LANG_DIR . '/' . self::type_dir( $type ), $slug, $locale, array_keys( $selection['files'] ) );
 
 		if ( [] !== $result['failed'] ) {
 			return new WP_Error(

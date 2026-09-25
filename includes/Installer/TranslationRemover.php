@@ -14,10 +14,10 @@ use WP_Filesystem_Base;
 /**
  * Deletes an item's translation files from its language folder.
  *
- * The files are taken from the folder itself, not from the repository
- * tree, so a file that was removed upstream can still be deleted. Only
- * names FileNamePolicy allows for the item go, plus the `.l10n.php` that
- * was generated from its .mo.
+ * Only the names the repository lists for the item (and FileNamePolicy
+ * allows) go, plus the `.l10n.php` generated from its .mo when that .mo is
+ * deleted. Same-named files a translate.wordpress.org language pack put
+ * there under other names (other script-translation hashes) are left alone.
  */
 final class TranslationRemover {
 
@@ -28,58 +28,71 @@ final class TranslationRemover {
 	 * @param string             $base_dir   Language folder of the item type.
 	 * @param string             $slug       Plugin or theme slug.
 	 * @param string             $locale     Locale.
+	 * @param array<int, string> $remote     File names the repository lists for the item.
 	 * @return array{deleted: array<int, string>, failed: array<int, string>} File names.
 	 */
-	public function remove( WP_Filesystem_Base $filesystem, string $base_dir, string $slug, string $locale ): array {
+	public function remove( WP_Filesystem_Base $filesystem, string $base_dir, string $slug, string $locale, array $remote ): array {
 		$result = [
 			'deleted' => [],
 			'failed'  => [],
 		];
 
-		foreach ( $this->targets( $filesystem, $base_dir, $slug, $locale ) as $name ) {
+		foreach ( self::targets( $slug, $locale, $remote ) as $name ) {
 			$path = $base_dir . '/' . $name;
 
-			if ( ! PathGuard::is_contained( $base_dir, $path ) ) {
+			if ( ! $filesystem->exists( $path ) || ! PathGuard::is_contained( $base_dir, $path ) ) {
 				continue;
 			}
 
-			$filesystem->delete( $path );
-			$result[ $filesystem->exists( $path ) ? 'failed' : 'deleted' ][] = $name;
+			$result[ self::delete_file( $filesystem, $path ) ? 'deleted' : 'failed' ][] = $name;
 		}
+
+		$mo = $slug . '-' . $locale . '.mo';
+
+		if ( in_array( $mo, $result['deleted'], true ) ) {
+			$php  = basename( L10nPhpGenerator::php_path_for( $mo ) );
+			$path = $base_dir . '/' . $php;
+
+			if ( $filesystem->exists( $path ) && PathGuard::is_contained( $base_dir, $path ) ) {
+				$result[ self::delete_file( $filesystem, $path ) ? 'deleted' : 'failed' ][] = $php;
+			}
+		}
+
+		sort( $result['deleted'], SORT_STRING );
+		sort( $result['failed'], SORT_STRING );
 
 		return $result;
 	}
 
 	/**
-	 * File names in the folder that belong to the item, sorted.
+	 * Delete one file; true when it is gone afterwards.
 	 *
 	 * @param WP_Filesystem_Base $filesystem Filesystem.
-	 * @param string             $base_dir   Language folder.
-	 * @param string             $slug       Plugin or theme slug.
-	 * @param string             $locale     Locale.
+	 * @param string             $path       File path.
+	 * @return bool
+	 */
+	private static function delete_file( WP_Filesystem_Base $filesystem, string $path ): bool {
+		$filesystem->delete( $path );
+
+		return ! $filesystem->exists( $path );
+	}
+
+	/**
+	 * Repository names that FileNamePolicy allows for the item.
+	 *
+	 * @param string             $slug   Plugin or theme slug.
+	 * @param string             $locale Locale.
+	 * @param array<int, string> $remote Repository file names.
 	 * @return array<int, string>
 	 */
-	private function targets( WP_Filesystem_Base $filesystem, string $base_dir, string $slug, string $locale ): array {
-		$list = $filesystem->dirlist( $base_dir, false, false );
-
-		if ( ! is_array( $list ) || ! FileNamePolicy::is_valid_slug( $slug ) || ! FileNamePolicy::is_valid_locale( $locale ) ) {
-			return [];
-		}
-
-		$generated = basename( L10nPhpGenerator::php_path_for( $slug . '-' . $locale . '.mo' ) );
-		$names     = [];
-
-		foreach ( $list as $name => $entry ) {
-			$name = (string) $name;
-
-			if ( 'f' === $entry['type']
-				&& ( $generated === $name || FileNamePolicy::is_allowed_basename( $name, $slug, $locale ) ) ) {
-				$names[] = $name;
-			}
-		}
-
-		sort( $names, SORT_STRING );
-
-		return $names;
+	private static function targets( string $slug, string $locale, array $remote ): array {
+		return array_values(
+			array_unique(
+				array_filter(
+					array_map( 'strval', $remote ),
+					static fn( string $name ): bool => FileNamePolicy::is_allowed_basename( $name, $slug, $locale )
+				)
+			)
+		);
 	}
 }
