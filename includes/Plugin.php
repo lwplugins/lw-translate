@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace LightweightPlugins\Translate;
 
+use LightweightPlugins\Translate\Admin\Hub\Hub;
 use LightweightPlugins\Translate\Admin\SettingsPage;
 use LightweightPlugins\Translate\CLI\Commands as CLICommands;
 use LightweightPlugins\Translate\Rest\Admin\Routes as AdminRoutes;
@@ -25,6 +26,7 @@ final class Plugin {
 	 */
 	public function __construct() {
 		$this->init_hooks();
+		Hub::init( LW_TRANSLATE_FILE );
 		$this->init_site_manager();
 	}
 
