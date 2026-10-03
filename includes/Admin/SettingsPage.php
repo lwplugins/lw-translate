@@ -91,7 +91,7 @@ final class SettingsPage {
 				[
 					'version'   => LW_TRANSLATE_VERSION,
 					'namespace' => Routes::NAMESPACE,
-					'docsUrl'   => SettingsMeta::DOCS_URL,
+					'docsUrl'   => SettingsMeta::docs_url(),
 				]
 			) . ';',
 			'before'

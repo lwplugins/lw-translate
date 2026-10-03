@@ -51,6 +51,7 @@ final class ControllersTest extends MonkeyTestCase {
 		parent::setUp();
 		Options::clear_cache();
 		Functions\stubTranslationFunctions();
+		Functions\when( 'get_user_locale' )->justReturn( 'en_US' );
 
 		$this->stored     = [
 			'tone'      => 'informal',

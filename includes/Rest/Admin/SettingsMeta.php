@@ -22,9 +22,15 @@ use LightweightPlugins\Translate\Settings\SettingsStore;
 final class SettingsMeta {
 
 	/**
-	 * Plugin documentation.
+	 * Plugin page on docs.lwplugins.com, in the admin user's language.
+	 *
+	 * @return string
 	 */
-	public const DOCS_URL = 'https://github.com/lwplugins/lw-translate#readme';
+	public static function docs_url(): string {
+		$lang = str_starts_with( get_user_locale(), 'hu' ) ? 'hu' : 'en';
+
+		return 'https://docs.lwplugins.com/' . $lang . '/plugins/lw-translate';
+	}
 
 	/**
 	 * Build the meta block.
@@ -45,7 +51,7 @@ final class SettingsMeta {
 			],
 			'defaults'    => Options::get_defaults(),
 			'source'      => GitHubClient::source(),
-			'docs_url'    => self::DOCS_URL,
+			'docs_url'    => self::docs_url(),
 			'can_install' => Capability::can_install(),
 		];
 	}
