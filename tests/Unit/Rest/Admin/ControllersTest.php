@@ -253,6 +253,7 @@ final class ControllersTest extends MonkeyTestCase {
 			mkdir( WP_LANG_DIR . '/plugins', 0777, true );
 		}
 
+		Functions\when( 'get_plugins' )->justReturn( [ 'hello-dolly/hello.php' => [ 'Name' => 'Hello Dolly' ] ] );
 		$this->transients['lw_translate_tree_cache']['tree'][] = [
 			'type' => 'blob',
 			'path' => 'informal/plugins/hu_HU/hello-dolly/hello-dolly-hu_HU.mo',
@@ -269,6 +270,45 @@ final class ControllersTest extends MonkeyTestCase {
 		$this->assertTrue( $data['results'][0]['ok'], $data['results'][0]['message'] );
 		$this->assertSame( 'Translation installed successfully.', $data['results'][0]['message'] );
 		$this->assertSame( $content, $fs->files[ WP_LANG_DIR . '/plugins/hello-dolly-hu_HU.mo' ] );
+	}
+
+	/**
+	 * The folder is complianz-gdpr-premium, the text domain complianz-gdpr:
+	 * the domain-named .mo (the one WordPress loads) is installed.
+	 */
+	public function test_install_takes_the_file_named_after_the_text_domain(): void {
+		$content = 'mo-bytes';
+		$sha     = sha1( 'blob ' . strlen( $content ) . "\0" . $content );
+		$fs      = $this->filesystem();
+
+		if ( ! is_dir( WP_LANG_DIR . '/plugins' ) ) {
+			mkdir( WP_LANG_DIR . '/plugins', 0777, true );
+		}
+
+		Functions\when( 'get_plugins' )->justReturn(
+			[
+				'complianz-gdpr-premium/complianz-gpdr-premium.php' => [
+					'Name'       => 'Complianz Premium',
+					'TextDomain' => 'complianz-gdpr',
+				],
+			]
+		);
+		$this->transients['lw_translate_tree_cache']['tree'][] = [
+			'type' => 'blob',
+			'path' => 'informal/plugins/hu_HU/complianz-gdpr-premium/complianz-gdpr-hu_HU.mo',
+			'sha'  => $sha,
+		];
+		Functions\when( 'wp_remote_get' )->justReturn( [ 'body' => $content ] );
+		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
+		Functions\when( 'wp_remote_retrieve_body' )->justReturn( $content );
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'complianz-gdpr-premium' ] ] ] ) )
+			->get_data();
+
+		$this->assertTrue( $data['results'][0]['ok'], $data['results'][0]['message'] );
+		$this->assertSame( [], $data['results'][0]['skipped'] );
+		$this->assertSame( $content, $fs->files[ WP_LANG_DIR . '/plugins/complianz-gdpr-hu_HU.mo' ] );
 	}
 
 	/**

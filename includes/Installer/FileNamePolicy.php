@@ -13,10 +13,12 @@ namespace LightweightPlugins\Translate\Installer;
  * Decides which translation file names may be installed for an item.
  *
  * Only the names WordPress core loads from WP_LANG_DIR/{plugins|themes}
- * are allowed: `{domain}-{locale}.mo`, `{domain}-{locale}.po` and the
- * script translations `{domain}-{locale}-{md5}.json`. Executable
- * `.l10n.php` files are never accepted from the repository; they are
- * generated locally from the .mo (see L10nPhpGenerator).
+ * are allowed: `{prefix}-{locale}.mo`, `{prefix}-{locale}.po` and the
+ * script translations `{prefix}-{locale}-{md5}.json`, where the prefix is
+ * the item's directory name or its text domain (WordPress loads the file
+ * named after the text domain; the two differ e.g. for premium builds).
+ * Executable `.l10n.php` files are never accepted from the repository;
+ * they are generated locally from the .mo (see L10nPhpGenerator).
  */
 final class FileNamePolicy {
 
@@ -51,20 +53,49 @@ final class FileNamePolicy {
 	}
 
 	/**
+	 * File name prefixes allowed for an item: its slug, plus its text domain
+	 * when that is valid and differs from the slug.
+	 *
+	 * @param string $slug        Plugin or theme slug (directory name).
+	 * @param string $text_domain Text domain from the item header, '' for none.
+	 * @return array<int, string> Empty when the slug itself is invalid.
+	 */
+	public static function prefixes( string $slug, string $text_domain = '' ): array {
+		if ( ! self::is_valid_slug( $slug ) ) {
+			return [];
+		}
+
+		$prefixes = [ $slug ];
+
+		if ( '' !== $text_domain && $text_domain !== $slug && self::is_valid_slug( $text_domain ) ) {
+			$prefixes[] = $text_domain;
+		}
+
+		return $prefixes;
+	}
+
+	/**
 	 * Check whether a file name may be installed for the given item.
 	 *
-	 * @param string $basename File name (no directory part).
-	 * @param string $slug     Plugin or theme slug.
-	 * @param string $locale   Locale.
+	 * @param string $basename    File name (no directory part).
+	 * @param string $slug        Plugin or theme slug.
+	 * @param string $locale      Locale.
+	 * @param string $text_domain Text domain of the item, '' for none. Ignored when invalid.
 	 * @return bool
 	 */
-	public static function is_allowed_basename( string $basename, string $slug, string $locale ): bool {
-		if ( ! self::is_valid_slug( $slug ) || ! self::is_valid_locale( $locale ) ) {
+	public static function is_allowed_basename( string $basename, string $slug, string $locale, string $text_domain = '' ): bool {
+		if ( ! self::is_valid_locale( $locale ) ) {
 			return false;
 		}
 
-		$pattern = '/^' . preg_quote( $slug . '-' . $locale, '/' ) . '(?:\.mo|\.po|-[0-9a-f]{32}\.json)$/D';
+		foreach ( self::prefixes( $slug, $text_domain ) as $prefix ) {
+			$pattern = '/^' . preg_quote( $prefix . '-' . $locale, '/' ) . '(?:\.mo|\.po|-[0-9a-f]{32}\.json)$/D';
 
-		return 1 === preg_match( $pattern, $basename );
+			if ( 1 === preg_match( $pattern, $basename ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

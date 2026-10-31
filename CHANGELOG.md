@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- Translation files named after the plugin's or theme's text domain are installed again where it differs from the folder name (e.g. folder `my-plugin-pro`, text domain `my-plugin`). Since 1.1.4 only folder-named files were accepted, so the file WordPress actually loads was skipped. Update, delete, status and the PO revision date handle both names; `.l10n.php` files are still never taken from the repository.
+
 ## [1.2.3] - 2026-10-03
 
 ### Fixed

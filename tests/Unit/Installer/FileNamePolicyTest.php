@@ -153,4 +153,75 @@ final class FileNamePolicyTest extends TestCase {
 			'newline'   => [ "hu_HU\n" ],
 		];
 	}
+
+	/**
+	 * The folder name and the text domain differ for e.g. premium builds;
+	 * WordPress loads the file named after the text domain.
+	 *
+	 * @dataProvider provide_text_domain_names
+	 */
+	public function test_accepts_the_text_domain_as_prefix( string $name ): void {
+		$this->assertTrue( FileNamePolicy::is_allowed_basename( $name, 'complianz-gdpr-premium', 'hu_HU', 'complianz-gdpr' ) );
+		$this->assertTrue( FileNamePolicy::is_allowed_basename( 'complianz-gdpr-premium-hu_HU.mo', 'complianz-gdpr-premium', 'hu_HU', 'complianz-gdpr' ) );
+	}
+
+	/**
+	 * @return array<string, array{0: string}>
+	 */
+	public static function provide_text_domain_names(): array {
+		return [
+			'mo'          => [ 'complianz-gdpr-hu_HU.mo' ],
+			'po'          => [ 'complianz-gdpr-hu_HU.po' ],
+			'script json' => [ 'complianz-gdpr-hu_HU-0123456789abcdef0123456789abcdef.json' ],
+		];
+	}
+
+	/**
+	 * @dataProvider provide_rejected_with_text_domain
+	 */
+	public function test_the_text_domain_opens_no_other_names( string $name ): void {
+		$this->assertFalse( FileNamePolicy::is_allowed_basename( $name, 'complianz-gdpr-premium', 'hu_HU', 'complianz-gdpr' ) );
+	}
+
+	/**
+	 * @return array<string, array{0: string}>
+	 */
+	public static function provide_rejected_with_text_domain(): array {
+		return [
+			'l10n php of the domain' => [ 'complianz-gdpr-hu_HU.l10n.php' ],
+			'l10n php of the slug'   => [ 'complianz-gdpr-premium-hu_HU.l10n.php' ],
+			'foreign prefix'         => [ 'akismet-hu_HU.mo' ],
+			'another locale'         => [ 'complianz-gdpr-de_DE.mo' ],
+			'unix traversal'         => [ '../complianz-gdpr-hu_HU.mo' ],
+			'windows traversal'      => [ '..\\complianz-gdpr-hu_HU.mo' ],
+		];
+	}
+
+	/**
+	 * @dataProvider provide_invalid_text_domains
+	 */
+	public function test_an_invalid_text_domain_is_ignored( string $domain, string $name ): void {
+		$this->assertFalse( FileNamePolicy::is_allowed_basename( $name, 'woocommerce', 'hu_HU', $domain ) );
+		$this->assertTrue( FileNamePolicy::is_allowed_basename( 'woocommerce-hu_HU.mo', 'woocommerce', 'hu_HU', $domain ) );
+		$this->assertSame( [ 'woocommerce' ], FileNamePolicy::prefixes( 'woocommerce', $domain ) );
+	}
+
+	/**
+	 * @return array<string, array{0: string, 1: string}>
+	 */
+	public static function provide_invalid_text_domains(): array {
+		return [
+			'dot dot'     => [ '..', '..-hu_HU.mo' ],
+			'traversal'   => [ '../evil', '../evil-hu_HU.mo' ],
+			'backslash'   => [ 'a\\b', 'a\\b-hu_HU.mo' ],
+			'leading dot' => [ '.hidden', '.hidden-hu_HU.mo' ],
+		];
+	}
+
+	public function test_prefixes_list_the_slug_and_a_differing_text_domain_once(): void {
+		$this->assertSame( [ 'admin-menu-editor-pro', 'admin-menu-editor' ], FileNamePolicy::prefixes( 'admin-menu-editor-pro', 'admin-menu-editor' ) );
+		$this->assertSame( [ 'akismet' ], FileNamePolicy::prefixes( 'akismet', 'akismet' ) );
+		$this->assertSame( [ 'akismet' ], FileNamePolicy::prefixes( 'akismet' ) );
+		$this->assertSame( [], FileNamePolicy::prefixes( '..', 'akismet' ) );
+	}
 }

@@ -18,17 +18,19 @@ final class TreeSelection {
 	 * Select the installable files of an item.
 	 *
 	 * Every blob directly inside `{tone}/{plugins|themes}/{locale}/{slug}/`
-	 * whose name passes FileNamePolicy is selected. Anything else in that
-	 * folder is left out and listed in "skipped".
+	 * whose name passes FileNamePolicy (prefix: the slug or the item's text
+	 * domain) is selected. Anything else in that folder is left out and
+	 * listed in "skipped".
 	 *
-	 * @param array<int, array{type?: string, path?: mixed, sha?: mixed}> $tree   Raw tree. Untrusted remote input.
-	 * @param string                                                      $slug   Plugin or theme slug.
-	 * @param string                                                      $type   Type: 'plugin' or 'theme'.
-	 * @param string                                                      $tone   Translation tone.
-	 * @param string                                                      $locale Locale.
+	 * @param array<int, array{type?: string, path?: mixed, sha?: mixed}> $tree        Raw tree. Untrusted remote input.
+	 * @param string                                                      $slug        Plugin or theme slug.
+	 * @param string                                                      $type        Type: 'plugin' or 'theme'.
+	 * @param string                                                      $tone        Translation tone.
+	 * @param string                                                      $locale      Locale.
+	 * @param string                                                      $text_domain Text domain of the item, '' for none.
 	 * @return array{files: array<string, array{path: string, sha: string}>, skipped: array<int, string>}
 	 */
-	public static function select( array $tree, string $slug, string $type, string $tone, string $locale ): array {
+	public static function select( array $tree, string $slug, string $type, string $tone, string $locale, string $text_domain = '' ): array {
 		$selection = [
 			'files'   => [],
 			'skipped' => [],
@@ -54,7 +56,7 @@ final class TreeSelection {
 
 			$name = substr( $path, strlen( $prefix ) );
 
-			if ( ! FileNamePolicy::is_allowed_basename( $name, $slug, $locale ) ) {
+			if ( ! FileNamePolicy::is_allowed_basename( $name, $slug, $locale, $text_domain ) ) {
 				$selection['skipped'][] = $name;
 				continue;
 			}

@@ -90,10 +90,12 @@ This approach avoids unnecessary downloads - only genuinely changed files trigge
 
 ### File installation
 When you click Install or Update:
-1. The plugin downloads the item's `{slug}-{locale}.mo`, `.po` and `{slug}-{locale}-{md5}.json` files and checks each against its blob SHA; the fast `.l10n.php` file is generated locally from the `.mo` (never downloaded)
-2. Files are saved via `WP_Filesystem` to the standard WordPress language directory:
-   - Plugins: `WP_LANG_DIR/plugins/{slug}-{locale}.mo`
-   - Themes: `WP_LANG_DIR/themes/{slug}-{locale}.mo`
+1. The plugin downloads the item's `{folder|text domain}-{locale}.mo`, `.po` and `{folder|text domain}-{locale}-{md5}.json` files and checks each against its blob SHA; the fast `.l10n.php` file is generated locally from each `.mo` (never downloaded)
+   - `folder` is the plugin's or theme's directory name, `text domain` the `Text Domain` from its header. WordPress loads the file named after the text domain, so where the two differ (e.g. folder `my-plugin-pro`, text domain `my-plugin`) name the files after the text domain
+   - Any other file name in the item's folder is skipped
+2. Files are saved via `WP_Filesystem` to the standard WordPress language directory, under the same name:
+   - Plugins: `WP_LANG_DIR/plugins/{folder|text domain}-{locale}.mo`
+   - Themes: `WP_LANG_DIR/themes/{folder|text domain}-{locale}.mo`
 3. The comparison cache is cleared so the table reflects the new state (also after WP-CLI install/delete)
 
 ### Repository structure
@@ -109,6 +111,9 @@ formal/
       woocommerce/
         woocommerce-hu_HU.mo
         ...
+      my-plugin-pro/          <- folder name (matched against get_plugins())
+        my-plugin-hu_HU.mo    <- file named after the text domain
+        ...
   themes/
     hu_HU/
       flavor/
@@ -119,6 +124,8 @@ informal/
     hu_HU/
       ...
 ```
+
+The folder is always the item's directory name. The files in it are named `{folder|text domain}-{locale}.mo|.po` or `{folder|text domain}-{locale}-{md5}.json`; `.l10n.php` files in the repository are never installed.
 
 ---
 

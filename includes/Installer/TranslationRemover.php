@@ -15,29 +15,31 @@ use WP_Filesystem_Base;
  * Deletes an item's translation files from its language folder.
  *
  * Only the names the repository lists for the item (and FileNamePolicy
- * allows) go, plus the `.l10n.php` generated from its .mo when that .mo is
- * deleted. Same-named files a translate.wordpress.org language pack put
- * there under other names (other script-translation hashes) are left alone.
+ * allows, named after the slug or the text domain) go, plus the
+ * `.l10n.php` generated from each deleted .mo. Same-named files a
+ * translate.wordpress.org language pack put there under other names
+ * (other script-translation hashes) are left alone.
  */
 final class TranslationRemover {
 
 	/**
 	 * Delete the item's files.
 	 *
-	 * @param WP_Filesystem_Base $filesystem Filesystem.
-	 * @param string             $base_dir   Language folder of the item type.
-	 * @param string             $slug       Plugin or theme slug.
-	 * @param string             $locale     Locale.
-	 * @param array<int, string> $remote     File names the repository lists for the item.
+	 * @param WP_Filesystem_Base $filesystem  Filesystem.
+	 * @param string             $base_dir    Language folder of the item type.
+	 * @param string             $slug        Plugin or theme slug.
+	 * @param string             $locale      Locale.
+	 * @param array<int, string> $remote      File names the repository lists for the item.
+	 * @param string             $text_domain Text domain of the item, '' for none.
 	 * @return array{deleted: array<int, string>, failed: array<int, string>} File names.
 	 */
-	public function remove( WP_Filesystem_Base $filesystem, string $base_dir, string $slug, string $locale, array $remote ): array {
+	public function remove( WP_Filesystem_Base $filesystem, string $base_dir, string $slug, string $locale, array $remote, string $text_domain = '' ): array {
 		$result = [
 			'deleted' => [],
 			'failed'  => [],
 		];
 
-		foreach ( self::targets( $slug, $locale, $remote ) as $name ) {
+		foreach ( self::targets( $slug, $locale, $remote, $text_domain ) as $name ) {
 			$path = $base_dir . '/' . $name;
 
 			if ( ! $filesystem->exists( $path ) || ! PathGuard::is_contained( $base_dir, $path ) ) {
@@ -47,9 +49,11 @@ final class TranslationRemover {
 			$result[ self::delete_file( $filesystem, $path ) ? 'deleted' : 'failed' ][] = $name;
 		}
 
-		$mo = $slug . '-' . $locale . '.mo';
+		foreach ( $result['deleted'] as $mo ) {
+			if ( ! str_ends_with( $mo, '.mo' ) ) {
+				continue;
+			}
 
-		if ( in_array( $mo, $result['deleted'], true ) ) {
 			$php  = basename( L10nPhpGenerator::php_path_for( $mo ) );
 			$path = $base_dir . '/' . $php;
 
@@ -80,17 +84,18 @@ final class TranslationRemover {
 	/**
 	 * Repository names that FileNamePolicy allows for the item.
 	 *
-	 * @param string             $slug   Plugin or theme slug.
-	 * @param string             $locale Locale.
-	 * @param array<int, string> $remote Repository file names.
+	 * @param string             $slug        Plugin or theme slug.
+	 * @param string             $locale      Locale.
+	 * @param array<int, string> $remote      Repository file names.
+	 * @param string             $text_domain Text domain of the item, '' for none.
 	 * @return array<int, string>
 	 */
-	private static function targets( string $slug, string $locale, array $remote ): array {
+	private static function targets( string $slug, string $locale, array $remote, string $text_domain ): array {
 		return array_values(
 			array_unique(
 				array_filter(
 					array_map( 'strval', $remote ),
-					static fn( string $name ): bool => FileNamePolicy::is_allowed_basename( $name, $slug, $locale )
+					static fn( string $name ): bool => FileNamePolicy::is_allowed_basename( $name, $slug, $locale, $text_domain )
 				)
 			)
 		);

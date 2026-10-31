@@ -26,15 +26,25 @@ final class TranslationItem {
 	public const STATUS_NOT_INSTALLED = 'not_installed';
 
 	/**
+	 * Text domain from the item header ('' when it has none). Declared with
+	 * a default, not promoted, so items cached by an earlier version still
+	 * read as ''.
+	 *
+	 * @var string
+	 */
+	public string $text_domain = '';
+
+	/**
 	 * Constructor.
 	 *
-	 * @param string               $slug       Plugin or theme slug.
-	 * @param string               $name       Display name.
-	 * @param string               $type       Type: 'plugin' or 'theme'.
-	 * @param string               $status     Status constant.
-	 * @param int                  $file_count Number of available remote files.
-	 * @param string               $local_date PO-Revision-Date from local file.
-	 * @param array<string,string> $files      Remote files with SHA hashes.
+	 * @param string               $slug        Plugin or theme slug.
+	 * @param string               $name        Display name.
+	 * @param string               $type        Type: 'plugin' or 'theme'.
+	 * @param string               $status      Status constant.
+	 * @param int                  $file_count  Number of available remote files.
+	 * @param string               $local_date  PO-Revision-Date from local file.
+	 * @param array<string,string> $files       Remote files with SHA hashes.
+	 * @param string               $text_domain Text domain from the item header.
 	 */
 	public function __construct(
 		public string $slug,
@@ -44,7 +54,9 @@ final class TranslationItem {
 		public int $file_count,
 		public string $local_date,
 		public array $files,
+		string $text_domain = '',
 	) {
+		$this->text_domain = $text_domain;
 	}
 
 	/**

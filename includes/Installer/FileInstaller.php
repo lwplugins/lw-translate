@@ -11,6 +11,7 @@ namespace LightweightPlugins\Translate\Installer;
 
 use LightweightPlugins\Translate\Api\GitHubClient;
 use LightweightPlugins\Translate\Options;
+use LightweightPlugins\Translate\Translation\LocalScanner;
 use WP_Error;
 use WP_Filesystem_Base;
 
@@ -44,11 +45,12 @@ final class FileInstaller {
 	/**
 	 * Install translation files for a slug.
 	 *
-	 * Only `{slug}-{locale}.mo|.po` and `{slug}-{locale}-{md5}.json` are
-	 * installed. Any other file in the item's repository folder is left
-	 * out and listed under "skipped". Every file is checked against its
-	 * blob SHA before any is written. The `.l10n.php` is generated locally
-	 * from the installed .mo.
+	 * Only `{prefix}-{locale}.mo|.po` and `{prefix}-{locale}-{md5}.json`
+	 * are installed, where the prefix is the slug or the item's text
+	 * domain (WordPress loads the text-domain-named file). Any other file
+	 * in the item's repository folder is left out and listed under
+	 * "skipped". Every file is checked against its blob SHA before any is
+	 * written. A `.l10n.php` is generated locally from each installed .mo.
 	 *
 	 * @param string $slug Plugin or theme slug.
 	 * @param string $type Type: 'plugin' or 'theme'.
@@ -68,7 +70,8 @@ final class FileInstaller {
 			return $tree;
 		}
 
-		$selection = TreeSelection::select( $tree, $slug, $type, (string) Options::get( 'tone', 'formal' ), $locale );
+		$domain    = LocalScanner::get_text_domain( $type, $slug );
+		$selection = TreeSelection::select( $tree, $slug, $type, (string) Options::get( 'tone', 'formal' ), $locale, $domain );
 
 		if ( empty( $selection['files'] ) ) {
 			return new WP_Error(
@@ -99,10 +102,10 @@ final class FileInstaller {
 			}
 		}
 
-		$mo_name = $slug . '-' . $locale . '.mo';
-
-		if ( isset( $selection['files'][ $mo_name ] ) ) {
-			$this->generator->generate( $base_dir . '/' . $mo_name, $filesystem );
+		foreach ( array_keys( $selection['files'] ) as $name ) {
+			if ( str_ends_with( (string) $name, '.mo' ) ) {
+				$this->generator->generate( $base_dir . '/' . $name, $filesystem );
+			}
 		}
 
 		return [
@@ -146,9 +149,10 @@ final class FileInstaller {
 			return $filesystem;
 		}
 
-		$selection = TreeSelection::select( $tree, $slug, $type, (string) Options::get( 'tone', 'formal' ), $locale );
+		$domain    = LocalScanner::get_text_domain( $type, $slug );
+		$selection = TreeSelection::select( $tree, $slug, $type, (string) Options::get( 'tone', 'formal' ), $locale, $domain );
 		$result    = ( new TranslationRemover() )
-			->remove( $filesystem, WP_LANG_DIR . '/' . self::type_dir( $type ), $slug, $locale, array_keys( $selection['files'] ) );
+			->remove( $filesystem, WP_LANG_DIR . '/' . self::type_dir( $type ), $slug, $locale, array_keys( $selection['files'] ), $domain );
 
 		if ( [] !== $result['failed'] ) {
 			return new WP_Error(

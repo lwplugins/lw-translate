@@ -47,7 +47,11 @@ final class Comparator {
 			self::match(
 				TreeParser::parse( $tree, $tone, $locale ),
 				LocalScanner::get_installed_plugins(),
-				LocalScanner::get_installed_themes()
+				LocalScanner::get_installed_themes(),
+				[
+					'plugin' => LocalScanner::get_text_domains( 'plugin' ),
+					'theme'  => LocalScanner::get_text_domains( 'theme' ),
+				]
 			),
 			$locale
 		);
@@ -61,8 +65,9 @@ final class Comparator {
 				type: $match['type'],
 				status: StatusResolver::resolve( $files, LocalScanner::get_local_shas( $match['type'], array_keys( $files ) ) ),
 				file_count: count( $files ),
-				local_date: LocalScanner::get_local_date( $match['slug'], $match['type'], $locale ),
+				local_date: LocalScanner::get_local_date( $match['slug'], $match['type'], $locale, $match['text_domain'] ),
 				files: $files,
+				text_domain: $match['text_domain'],
 			);
 		}
 
@@ -77,9 +82,10 @@ final class Comparator {
 	 * @param array{plugin: array<string, array<string, string>>, theme: array<string, array<string, string>>} $remote  Parsed tree (type => slug => files).
 	 * @param array<string, string>                                                                            $plugins Installed plugins (slug => name).
 	 * @param array<string, string>                                                                            $themes  Installed themes (slug => name).
-	 * @return array<int, array{type: string, slug: string, name: string, files: array<string, string>}>
+	 * @param array<string, array<string, string>>                                                             $domains Text domains (type => slug => domain).
+	 * @return array<int, array{type: string, slug: string, name: string, text_domain: string, files: array<string, string>}>
 	 */
-	public static function match( array $remote, array $plugins, array $themes ): array {
+	public static function match( array $remote, array $plugins, array $themes, array $domains = [] ): array {
 		$matches = [];
 
 		foreach ( [
@@ -94,10 +100,11 @@ final class Comparator {
 				}
 
 				$matches[] = [
-					'type'  => $type,
-					'slug'  => $slug,
-					'name'  => (string) $name,
-					'files' => $remote[ $type ][ $slug ],
+					'type'        => $type,
+					'slug'        => $slug,
+					'name'        => (string) $name,
+					'text_domain' => (string) ( $domains[ $type ][ $slug ] ?? '' ),
+					'files'       => $remote[ $type ][ $slug ],
 				];
 			}
 		}
@@ -109,15 +116,16 @@ final class Comparator {
 	 * Keep only the installable files of each match, and drop the matches
 	 * that have none (their Install could only fail).
 	 *
-	 * @param array<int, array{type: string, slug: string, name: string, files: array<string, string>}> $matches Matches.
-	 * @param string                                                                                    $locale  Locale.
-	 * @return array<int, array{type: string, slug: string, name: string, files: array<string, string>}>
+	 * @param array<int, array{type: string, slug: string, name: string, text_domain?: string, files: array<string, string>}> $matches Matches.
+	 * @param string                                                                                                          $locale  Locale.
+	 * @return array<int, array{type: string, slug: string, name: string, text_domain: string, files: array<string, string>}>
 	 */
 	public static function with_installable_files( array $matches, string $locale ): array {
 		$kept = [];
 
 		foreach ( $matches as $match ) {
-			$match['files'] = self::installable( $match['files'], $match['slug'], $locale );
+			$match['text_domain'] = $match['text_domain'] ?? '';
+			$match['files']       = self::installable( $match['files'], $match['slug'], $locale, $match['text_domain'] );
 
 			if ( [] !== $match['files'] ) {
 				$kept[] = $match;
@@ -130,15 +138,16 @@ final class Comparator {
 	/**
 	 * Keep the repository files FileNamePolicy allows for the item.
 	 *
-	 * @param array<string, string> $files  File name => blob SHA.
-	 * @param string                $slug   Plugin or theme slug.
-	 * @param string                $locale Locale.
+	 * @param array<string, string> $files       File name => blob SHA.
+	 * @param string                $slug        Plugin or theme slug.
+	 * @param string                $locale      Locale.
+	 * @param string                $text_domain Text domain of the item, '' for none.
 	 * @return array<string, string>
 	 */
-	public static function installable( array $files, string $slug, string $locale ): array {
+	public static function installable( array $files, string $slug, string $locale, string $text_domain = '' ): array {
 		return array_filter(
 			$files,
-			static fn( $name ): bool => FileNamePolicy::is_allowed_basename( (string) $name, $slug, $locale ),
+			static fn( $name ): bool => FileNamePolicy::is_allowed_basename( (string) $name, $slug, $locale, $text_domain ),
 			ARRAY_FILTER_USE_KEY
 		);
 	}

@@ -45,8 +45,8 @@ final class TranslationRemoverTest extends TestCase {
 	 * @param array<int, string> $remote Repository file names of the item.
 	 * @return array{deleted: array<int, string>, failed: array<int, string>}
 	 */
-	private function remove( array $remote, string $slug = 'akismet' ): array {
-		return ( new TranslationRemover() )->remove( $this->fs, $this->base, $slug, 'hu_HU', $remote );
+	private function remove( array $remote, string $slug = 'akismet', string $domain = '' ): array {
+		return ( new TranslationRemover() )->remove( $this->fs, $this->base, $slug, 'hu_HU', $remote, $domain );
 	}
 
 	public function test_it_removes_the_repository_files_and_the_generated_l10n_php(): void {
@@ -114,6 +114,25 @@ final class TranslationRemoverTest extends TestCase {
 		$this->add( 'akismet-hu_HU.mo' );
 
 		$this->assertSame( [], $this->remove( [ 'akismet-hu_HU.mo' ], '../akismet' )['deleted'] );
+		$this->assertCount( 1, $this->fs->files );
+	}
+
+	public function test_the_files_named_after_the_text_domain_go_too_but_only_listed_ones(): void {
+		$this->add( 'cmplz-hu_HU.mo', 'cmplz-hu_HU.l10n.php', 'cmplz-hu_HU.po', 'akismet-hu_HU.mo', 'akismet-hu_HU.l10n.php' );
+
+		$result = $this->remove( [ 'cmplz-hu_HU.mo', 'akismet-hu_HU.mo', 'other-hu_HU.mo' ], 'akismet', 'cmplz' );
+
+		$this->assertSame(
+			[ 'akismet-hu_HU.l10n.php', 'akismet-hu_HU.mo', 'cmplz-hu_HU.l10n.php', 'cmplz-hu_HU.mo' ],
+			$result['deleted']
+		);
+		$this->assertSame( [ $this->base . '/cmplz-hu_HU.po' ], array_keys( $this->fs->files ) );
+	}
+
+	public function test_without_the_text_domain_its_files_stay(): void {
+		$this->add( 'cmplz-hu_HU.mo' );
+
+		$this->assertSame( [], $this->remove( [ 'cmplz-hu_HU.mo' ] )['deleted'] );
 		$this->assertCount( 1, $this->fs->files );
 	}
 }

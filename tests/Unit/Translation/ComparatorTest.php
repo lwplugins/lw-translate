@@ -66,12 +66,14 @@ final class ComparatorTest extends MonkeyTestCase {
 					'type'  => 'plugin',
 					'slug'  => 'astra',
 					'name'  => 'Astra Addon',
+					'text_domain' => '',
 					'files' => [ 'astra-hu_HU.mo' => 'p' ],
 				],
 				[
 					'type'  => 'theme',
 					'slug'  => 'astra',
 					'name'  => 'Astra',
+					'text_domain' => '',
 					'files' => [ 'astra-hu_HU.mo' => 't' ],
 				],
 			],
@@ -139,5 +141,59 @@ final class ComparatorTest extends MonkeyTestCase {
 		$this->assertCount( 1, $result );
 		$this->assertSame( 'akismet', $result[0]['slug'] );
 		$this->assertSame( [ 'akismet-hu_HU.mo' => 'a' ], $result[0]['files'] );
+	}
+
+	public function test_match_carries_the_text_domain_of_the_item(): void {
+		$remote = [
+			'plugin' => [ 'complianz-gdpr-premium' => [ 'complianz-gdpr-hu_HU.mo' => 'a' ] ],
+			'theme'  => [],
+		];
+
+		$matches = Comparator::match(
+			$remote,
+			[ 'complianz-gdpr-premium' => 'Complianz Premium' ],
+			[],
+			[
+				'plugin' => [ 'complianz-gdpr-premium' => 'complianz-gdpr' ],
+				'theme'  => [],
+			]
+		);
+
+		$this->assertSame( 'complianz-gdpr', $matches[0]['text_domain'] );
+	}
+
+	/**
+	 * Before, the domain-named file was skipped and the item dropped, while
+	 * a folder-named file installed fine but was never loaded by WordPress.
+	 */
+	public function test_the_file_named_after_the_text_domain_is_installable(): void {
+		$files = [
+			'complianz-gdpr-hu_HU.mo'         => 'a',
+			'complianz-gdpr-premium-hu_HU.mo' => 'b',
+			'complianz-gdpr-hu_HU.l10n.php'   => 'c',
+		];
+
+		$this->assertSame(
+			[
+				'complianz-gdpr-hu_HU.mo'         => 'a',
+				'complianz-gdpr-premium-hu_HU.mo' => 'b',
+			],
+			Comparator::installable( $files, 'complianz-gdpr-premium', 'hu_HU', 'complianz-gdpr' )
+		);
+
+		$result = Comparator::with_installable_files(
+			[
+				[
+					'type'        => 'plugin',
+					'slug'        => 'complianz-gdpr-premium',
+					'name'        => 'Complianz Premium',
+					'text_domain' => 'complianz-gdpr',
+					'files'       => [ 'complianz-gdpr-hu_HU.mo' => 'a' ],
+				],
+			],
+			'hu_HU'
+		);
+
+		$this->assertSame( [ 'complianz-gdpr-hu_HU.mo' => 'a' ], $result[0]['files'] );
 	}
 }

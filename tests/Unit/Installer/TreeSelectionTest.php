@@ -123,4 +123,26 @@ final class TreeSelectionTest extends TestCase {
 
 		$this->assertSame( [], $selection['files'] );
 	}
+
+	public function test_selects_the_files_named_after_the_text_domain(): void {
+		$prefix = 'formal/plugins/hu_HU/complianz-gdpr-premium/';
+		$tree   = [];
+
+		foreach ( [ 'complianz-gdpr-hu_HU.mo', 'complianz-gdpr-hu_HU.po', 'complianz-gdpr-hu_HU.l10n.php', 'other-hu_HU.mo' ] as $name ) {
+			$tree[] = [
+				'type' => 'blob',
+				'path' => $prefix . $name,
+				'sha'  => 'sha-' . $name,
+			];
+		}
+
+		$selection = TreeSelection::select( $tree, 'complianz-gdpr-premium', 'plugin', 'formal', 'hu_HU', 'complianz-gdpr' );
+
+		$this->assertSame( [ 'complianz-gdpr-hu_HU.mo', 'complianz-gdpr-hu_HU.po' ], array_keys( $selection['files'] ) );
+		$this->assertSame( [ 'complianz-gdpr-hu_HU.l10n.php', 'other-hu_HU.mo' ], $selection['skipped'] );
+
+		$without = TreeSelection::select( $tree, 'complianz-gdpr-premium', 'plugin', 'formal', 'hu_HU' );
+
+		$this->assertSame( [], $without['files'] );
+	}
 }
