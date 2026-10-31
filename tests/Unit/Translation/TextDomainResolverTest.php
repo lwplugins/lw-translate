@@ -52,6 +52,67 @@ final class TextDomainResolverTest extends MonkeyTestCase {
 		$this->assertSame( '', TextDomainResolver::resolve( 'woo-addon', '', [ 'wc-hu_HU.mo' ], 'hu_HU', [ 'woo-addon', 'wc' ] ) );
 	}
 
+	/**
+	 * On a case-insensitive filesystem (APFS, NTFS) WooCommerce-hu_HU.mo is
+	 * the same file as woocommerce-hu_HU.mo.
+	 */
+	public function test_a_reserved_name_is_refused_in_any_letter_case(): void {
+		$this->assertSame( '', $this->resolve( [ 'WooCommerce-hu_HU.mo' ], 'woo-addon' ) );
+		$this->assertSame( '', TextDomainResolver::resolve( 'woo-addon', '', [ 'wc-hu_HU.mo' ], 'hu_HU', [ 'woo-addon', 'WC' ] ) );
+		$this->assertSame( '', $this->resolve( [ 'Admin-Menu-Editor-Pro-hu_HU.mo' ] ), 'Its own folder name in other case is not a domain either.' );
+	}
+
+	/**
+	 * One prefix can belong to one item only: when two header-less items
+	 * would both take it, neither does.
+	 */
+	public function test_a_prefix_two_items_would_take_goes_to_neither(): void {
+		$item = static fn ( string $slug, string $file ): array => [
+			'type'        => 'plugin',
+			'slug'        => $slug,
+			'name'        => $slug,
+			'text_domain' => '',
+			'files'       => [ $file => 'x' ],
+		];
+
+		$matches = TextDomainResolver::resolve_matches(
+			[
+				$item( 'shared-pro', 'shared-hu_HU.mo' ),
+				$item( 'shared-lite', 'Shared-hu_HU.mo' ),
+				$item( 'admin-menu-editor-pro', 'admin-menu-editor-hu_HU.mo' ),
+			],
+			'hu_HU',
+			self::RESERVED
+		);
+
+		$this->assertSame( [ '', '', 'admin-menu-editor' ], array_column( $matches, 'text_domain' ) );
+	}
+
+	public function test_a_header_domain_shared_with_another_item_still_wins(): void {
+		$matches = TextDomainResolver::resolve_matches(
+			[
+				[
+					'type'        => 'plugin',
+					'slug'        => 'a',
+					'name'        => 'A',
+					'text_domain' => 'shared',
+					'files'       => [ 'shared-hu_HU.mo' => 'x' ],
+				],
+				[
+					'type'        => 'theme',
+					'slug'        => 'b',
+					'name'        => 'B',
+					'text_domain' => 'shared',
+					'files'       => [ 'shared-hu_HU.mo' => 'y' ],
+				],
+			],
+			'hu_HU',
+			[ 'a', 'b', 'shared' ]
+		);
+
+		$this->assertSame( [ 'shared', 'shared' ], array_column( $matches, 'text_domain' ) );
+	}
+
 	public function test_a_valid_header_wins_over_the_repository_prefix(): void {
 		$this->assertSame( 'ame', $this->resolve( [ 'admin-menu-editor-hu_HU.mo' ], 'admin-menu-editor-pro', 'ame' ) );
 		$this->assertSame( 'woocommerce', $this->resolve( [ 'other-hu_HU.mo' ], 'woocommerce', 'woocommerce' ) );

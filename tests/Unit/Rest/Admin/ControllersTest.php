@@ -424,6 +424,59 @@ final class ControllersTest extends MonkeyTestCase {
 	}
 
 	/**
+	 * Two header-less plugins whose folders both offer shared-hu_HU.mo:
+	 * the prefix belongs to neither, so neither installs it.
+	 */
+	public function test_a_prefix_two_installed_plugins_would_take_is_installed_for_neither(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'shared-hu_HU.mo' ], 'shared-pro' );
+		$this->headerless_plugin_with_files( [ 'shared-hu_HU.mo' ], 'shared-lite' );
+		Functions\when( 'get_plugins' )->justReturn(
+			[
+				'shared-pro/shared-pro.php'   => [ 'Name' => 'Shared Pro' ],
+				'shared-lite/shared-lite.php' => [ 'Name' => 'Shared Lite' ],
+			]
+		);
+
+		$data = ( new TranslationsController() )
+			->install(
+				new WP_REST_Request(
+					[
+						'items' => [
+							[ 'type' => 'plugin', 'slug' => 'shared-pro' ],
+							[ 'type' => 'plugin', 'slug' => 'shared-lite' ],
+						],
+					]
+				)
+			)
+			->get_data();
+
+		$this->assertFalse( $data['results'][0]['ok'] );
+		$this->assertFalse( $data['results'][1]['ok'] );
+		$this->assertSame( [], $fs->files );
+	}
+
+	/**
+	 * The add-on's WooCommerce-hu_HU.mo is woocommerce-hu_HU.mo on a
+	 * case-insensitive filesystem.
+	 */
+	public function test_a_prefix_differing_from_another_plugin_only_in_case_is_never_installed(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'WooCommerce-hu_HU.mo' ], 'woo-addon' );
+		Functions\when( 'get_plugins' )->justReturn(
+			[
+				'woo-addon/woo-addon.php'     => [ 'Name' => 'Woo Addon' ],
+				'woocommerce/woocommerce.php' => [ 'Name' => 'WooCommerce' ],
+			]
+		);
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'woo-addon' ] ] ] ) )
+			->get_data();
+
+		$this->assertFalse( $data['results'][0]['ok'] );
+		$this->assertSame( [], $fs->files );
+	}
+
+	/**
 	 * With a header domain the repository prefix does not count.
 	 */
 	public function test_with_a_header_domain_the_repository_prefix_is_ignored(): void {

@@ -94,9 +94,13 @@ When you click Install or Update:
    - `folder` is the plugin's or theme's directory name, `text domain` the `Text Domain` from its header. WordPress loads the file named after the text domain, so where the two differ (e.g. folder `my-plugin-pro`, text domain `my-plugin`) name the files after the text domain
    - Many plugins have no `Text Domain` line in their header (the domain is only in their code, e.g. folder `admin-menu-editor-pro`, domain `admin-menu-editor`). When the header is missing or invalid, the text domain is read from the repository folder instead: the prefix the folder's `.mo`, `.po` and `-{md5}.json` files share. This is used only when
      - apart from the folder-named files there is exactly one such prefix (two different ones: only the folder-named files are installed),
-     - the prefix is a valid directory-style name, and
-     - it is not the folder name or text domain of another installed plugin or theme (so an add-on's folder can never overwrite e.g. `woocommerce-hu_HU.mo`)
+     - the prefix is a valid directory-style name,
+     - it is not the folder name or text domain of another installed plugin or theme, in any letter case (so an add-on's folder can never overwrite e.g. `woocommerce-hu_HU.mo`, not even as `WooCommerce-hu_HU.mo` on a case-insensitive filesystem such as macOS or Windows), and
+     - no other installed item's repository folder offers the same prefix (then neither gets it)
    - A text domain from the header always wins; then the repository prefix does not count
+   - Known limits of reading the domain from the repository folder:
+     - it cannot see text domains that other plugins set only in their code (without a header), nor mu-plugins, drop-ins or plugins that are not installed yet. The repository's maintainers are responsible for keeping only files named after the item's own text domain in each folder
+     - if a plugin installed later takes the prefix (as its folder name or text domain), the files installed earlier under that prefix are no longer recognised as the item's: they stay in the language folder, orphaned, and are not updated or deleted by this plugin
    - Any other file name in the item's folder is skipped
 2. Files are saved via `WP_Filesystem` to the standard WordPress language directory, under the same name:
    - Plugins: `WP_LANG_DIR/plugins/{folder|text domain}-{locale}.mo`

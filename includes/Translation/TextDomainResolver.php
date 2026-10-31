@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace LightweightPlugins\Translate\Translation;
 
+use LightweightPlugins\Translate\Api\TreeParser;
 use LightweightPlugins\Translate\Installer\FileNamePolicy;
-use LightweightPlugins\Translate\Installer\TreeSelection;
 
 /**
  * Decides which text domain an item's translation files are named after.
@@ -22,7 +22,12 @@ use LightweightPlugins\Translate\Installer\TreeSelection;
  * taken instead, when it is safe: exactly one prefix besides the folder
  * name, a valid slug, and not the folder name or text domain of another
  * installed plugin or theme (an add-on's folder must not ship, say,
- * woocommerce-hu_HU.mo).
+ * woocommerce-hu_HU.mo), compared in lower case, and not taken by a second
+ * installed item's folder too (then neither gets it).
+ *
+ * Known limits: it cannot see domains set only in code by other items,
+ * mu-plugins and drop-ins, or plugins not installed yet; keeping each
+ * repository folder to the item's own domain is the repository's job.
  *
  * Every caller (install, delete, the comparison and its status, the local
  * date) gets the domain from here, so they all agree.
@@ -46,15 +51,29 @@ final class TextDomainResolver {
 			return $header;
 		}
 
-		$folder = TreeSelection::select( $tree, $slug, $type, $tone, $locale );
-
-		return self::resolve(
-			$slug,
-			$header,
-			array_merge( array_map( 'strval', array_keys( $folder['files'] ) ), $folder['skipped'] ),
+		// Every installed item is resolved, so a prefix that two of them
+		// would take is refused here exactly as in the comparison.
+		$matches = self::resolve_matches(
+			Comparator::match(
+				TreeParser::parse( $tree, $tone, $locale ),
+				LocalScanner::get_installed_plugins(),
+				LocalScanner::get_installed_themes(),
+				[
+					'plugin' => LocalScanner::get_text_domains( 'plugin' ),
+					'theme'  => LocalScanner::get_text_domains( 'theme' ),
+				]
+			),
 			$locale,
 			self::reserved_names()
 		);
+
+		foreach ( $matches as $match ) {
+			if ( $match['type'] === $type && $match['slug'] === $slug ) {
+				return $match['text_domain'];
+			}
+		}
+
+		return '';
 	}
 
 	/**
@@ -84,7 +103,11 @@ final class TextDomainResolver {
 
 		$prefix = $prefixes[0];
 
-		if ( ! FileNamePolicy::is_valid_slug( $prefix ) || in_array( $prefix, $reserved, true ) ) {
+		// Compared in lower case: on a case-insensitive filesystem (APFS,
+		// NTFS) WooCommerce-hu_HU.mo is woocommerce-hu_HU.mo.
+		$reserved = array_map( static fn( $name ): string => strtolower( (string) $name ), $reserved );
+
+		if ( ! FileNamePolicy::is_valid_slug( $prefix ) || in_array( strtolower( $prefix ), $reserved, true ) ) {
 			return '';
 		}
 
@@ -100,14 +123,31 @@ final class TextDomainResolver {
 	 * @return array<int, array{type: string, slug: string, name: string, text_domain: string, files: array<string, string>}>
 	 */
 	public static function resolve_matches( array $matches, string $locale, array $reserved ): array {
+		$from_folder = [];
+		$claims      = [];
+
 		foreach ( $matches as $i => $match ) {
+			$header                       = $match['text_domain'] ?? '';
 			$matches[ $i ]['text_domain'] = self::resolve(
 				$match['slug'],
-				$match['text_domain'] ?? '',
+				$header,
 				array_map( 'strval', array_keys( $match['files'] ) ),
 				$locale,
 				$reserved
 			);
+
+			if ( '' !== $matches[ $i ]['text_domain'] && ! FileNamePolicy::is_valid_slug( $header ) ) {
+				$key               = strtolower( $matches[ $i ]['text_domain'] );
+				$from_folder[ $i ] = $key;
+				$claims[ $key ]    = ( $claims[ $key ] ?? 0 ) + 1;
+			}
+		}
+
+		// A prefix from the repository belongs to one item only.
+		foreach ( $from_folder as $i => $key ) {
+			if ( $claims[ $key ] > 1 ) {
+				$matches[ $i ]['text_domain'] = '';
+			}
 		}
 
 		return $matches;
