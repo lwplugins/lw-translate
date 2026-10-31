@@ -205,6 +205,32 @@ final class TextDomainResolverTest extends MonkeyTestCase {
 		$this->assertSame( '', $this->resolve( [ 'a..b-hu_HU.mo' ] ) );
 	}
 
+	/**
+	 * WebinarPress (folder wpwebinarsystem) declares and uses `_wswebinar`.
+	 */
+	public function test_a_text_domain_starting_with_an_underscore_is_accepted(): void {
+		$names = [ '_wswebinar-hu_HU.mo', '_wswebinar-hu_HU.po' ];
+
+		$this->assertSame( '_wswebinar', $this->resolve( $names, 'wpwebinarsystem' ) );
+
+		$matches = TextDomainResolver::resolve_matches(
+			[
+				[
+					'type'        => 'plugin',
+					'slug'        => 'wpwebinarsystem',
+					'name'        => 'WebinarPress',
+					'text_domain' => '_wswebinar',
+					'files'       => array_fill_keys( $names, 'sha' ),
+				],
+			],
+			'hu_HU',
+			[ 'wpwebinarsystem', '_wswebinar' ]
+		);
+
+		$this->assertSame( [ '_wswebinar' ], $matches[0]['text_domains'] );
+		$this->assertSame( '_wswebinar', $matches[0]['text_domain'] );
+	}
+
 	public function test_nothing_but_the_folder_named_files_gives_no_domain(): void {
 		$this->assertSame( '', $this->resolve( [ 'admin-menu-editor-pro-hu_HU.mo' ] ) );
 		$this->assertSame( '', $this->resolve( [] ) );

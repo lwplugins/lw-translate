@@ -23,7 +23,7 @@ use LightweightPlugins\Translate\Installer\FileNamePolicy;
  * admin-menu-editor), and WordPress loads the file named after the one in
  * the code. The repository prefix is taken only when it is safe: leaving
  * out the folder-named and header-named files there is exactly one prefix,
- * it is a valid slug, it is not the folder name or header text domain of
+ * it is a valid text domain, it is not the folder name or header text domain of
  * another installed plugin or theme (an add-on's folder must not ship,
  * say, woocommerce-hu_HU.mo), compared in lower case, and no other
  * installed item's folder offers it too (then neither gets it).
@@ -73,7 +73,7 @@ final class TextDomainResolver {
 
 		$header = LocalScanner::get_text_domain( $type, $slug );
 
-		return FileNamePolicy::is_valid_slug( $header ) ? [ $header ] : [];
+		return FileNamePolicy::is_valid_text_domain( $header ) ? [ $header ] : [];
 	}
 
 	/**
@@ -94,7 +94,7 @@ final class TextDomainResolver {
 			return '';
 		}
 
-		$own      = FileNamePolicy::is_valid_slug( $header ) ? [ $slug, $header ] : [ $slug ];
+		$own      = FileNamePolicy::is_valid_text_domain( $header ) ? [ $slug, $header ] : [ $slug ];
 		$prefixes = self::prefixes( $names, $own, $locale );
 
 		if ( 1 !== count( $prefixes ) ) {
@@ -107,7 +107,7 @@ final class TextDomainResolver {
 		// NTFS) WooCommerce-hu_HU.mo is woocommerce-hu_HU.mo.
 		$reserved = array_map( static fn( $name ): string => strtolower( (string) $name ), $reserved );
 
-		if ( ! FileNamePolicy::is_valid_slug( $prefix ) || in_array( strtolower( $prefix ), $reserved, true ) ) {
+		if ( ! FileNamePolicy::is_valid_text_domain( $prefix ) || in_array( strtolower( $prefix ), $reserved, true ) ) {
 			return '';
 		}
 
@@ -133,7 +133,7 @@ final class TextDomainResolver {
 
 		foreach ( $matches as $i => $match ) {
 			$header        = $match['text_domain'] ?? '';
-			$headers[ $i ] = FileNamePolicy::is_valid_slug( $header ) ? $header : '';
+			$headers[ $i ] = FileNamePolicy::is_valid_text_domain( $header ) ? $header : '';
 			$prefix        = self::folder_prefix(
 				$match['slug'],
 				$headers[ $i ],

@@ -29,6 +29,13 @@ final class FileNamePolicy {
 	private const SLUG_PATTERN = '/^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$/D';
 
 	/**
+	 * Text domain used as a file name prefix. Like a slug, but it may start
+	 * with an underscore: WordPress loads `_wswebinar-hu_HU.mo` for the
+	 * `_wswebinar` domain (WebinarPress). Never a leading dot or separator.
+	 */
+	private const TEXT_DOMAIN_PATTERN = '/^[A-Za-z0-9_][A-Za-z0-9._-]{0,199}$/D';
+
+	/**
 	 * WordPress locale code, e.g. hu_HU, es, de_DE_formal, pt_PT_ao90.
 	 */
 	private const LOCALE_PATTERN = '/^[a-z]{2,3}(?:_[A-Z]{2}|_[0-9]{3})?(?:_[a-z0-9]+)?$/D';
@@ -41,6 +48,16 @@ final class FileNamePolicy {
 	 */
 	public static function is_valid_slug( string $slug ): bool {
 		return 1 === preg_match( self::SLUG_PATTERN, $slug ) && ! str_contains( $slug, '..' );
+	}
+
+	/**
+	 * Check a text domain that may become a file name prefix.
+	 *
+	 * @param string $domain Text domain.
+	 * @return bool
+	 */
+	public static function is_valid_text_domain( string $domain ): bool {
+		return 1 === preg_match( self::TEXT_DOMAIN_PATTERN, $domain ) && ! str_contains( $domain, '..' );
 	}
 
 	/**
@@ -71,7 +88,7 @@ final class FileNamePolicy {
 		foreach ( (array) $text_domain as $domain ) {
 			$domain = (string) $domain;
 
-			if ( '' !== $domain && ! in_array( $domain, $prefixes, true ) && self::is_valid_slug( $domain ) ) {
+			if ( '' !== $domain && ! in_array( $domain, $prefixes, true ) && self::is_valid_text_domain( $domain ) ) {
 				$prefixes[] = $domain;
 			}
 		}

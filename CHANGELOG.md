@@ -4,6 +4,7 @@
 
 ### Fixed
 - Plugins whose header declares a different text domain than their code uses get their translations: Admin Menu Editor Pro's header says `admin-menu-editor-pro`, its code loads `admin-menu-editor`, and in 1.2.5 the header domain shut out the repository's `admin-menu-editor-hu_HU.mo`. The allowed file name prefixes are now the folder name, the header's text domain and the repository folder's single shared prefix (with the same safety checks as in 1.2.5; the folder-named and header-named files are left out when counting).
+- Text domains starting with an underscore are accepted as file name prefixes: WebinarPress declares and loads `_wswebinar`, and its `_wswebinar-hu_HU.mo` was skipped because text domains were checked like folder names. Folder names still may not start with an underscore, and a text domain still may not contain a separator, a leading dot or `..`.
 
 ## [1.2.5] - 2026-10-31
 

@@ -218,6 +218,48 @@ final class FileNamePolicyTest extends TestCase {
 		];
 	}
 
+	/**
+	 * WordPress loads any text domain, also one starting with an underscore
+	 * (WebinarPress: `_wswebinar`, file `_wswebinar-hu_HU.mo`).
+	 */
+	public function test_a_text_domain_may_start_with_an_underscore(): void {
+		$this->assertTrue( FileNamePolicy::is_valid_text_domain( '_wswebinar' ) );
+		$this->assertSame( [ 'wpwebinarsystem', '_wswebinar' ], FileNamePolicy::prefixes( 'wpwebinarsystem', '_wswebinar' ) );
+		$this->assertTrue( FileNamePolicy::is_allowed_basename( '_wswebinar-hu_HU.mo', 'wpwebinarsystem', 'hu_HU', '_wswebinar' ) );
+		$this->assertFalse( FileNamePolicy::is_allowed_basename( '_wswebinar-hu_HU.l10n.php', 'wpwebinarsystem', 'hu_HU', '_wswebinar' ) );
+	}
+
+	/**
+	 * Only the leading underscore is new: a text domain still may not leave
+	 * the file name.
+	 *
+	 * @dataProvider provide_invalid_text_domain_names
+	 */
+	public function test_text_domains_that_could_leave_the_file_name_are_refused( string $domain ): void {
+		$this->assertFalse( FileNamePolicy::is_valid_text_domain( $domain ) );
+	}
+
+	/**
+	 * @return array<string, array{0: string}>
+	 */
+	public static function provide_invalid_text_domain_names(): array {
+		return [
+			'empty'       => [ '' ],
+			'leading dot' => [ '.hidden' ],
+			'dot dot'     => [ '_..' ],
+			'slash'       => [ '_a/b' ],
+			'backslash'   => [ '_a\\b' ],
+			'space'       => [ '_a b' ],
+			'nul'         => [ "_a\0" ],
+			'too long'    => [ '_' . str_repeat( 'a', 200 ) ],
+		];
+	}
+
+	public function test_a_slug_still_may_not_start_with_an_underscore(): void {
+		$this->assertFalse( FileNamePolicy::is_valid_slug( '_wswebinar' ) );
+		$this->assertSame( [], FileNamePolicy::prefixes( '_wswebinar' ) );
+	}
+
 	public function test_prefixes_list_the_slug_and_a_differing_text_domain_once(): void {
 		$this->assertSame( [ 'admin-menu-editor-pro', 'admin-menu-editor' ], FileNamePolicy::prefixes( 'admin-menu-editor-pro', 'admin-menu-editor' ) );
 		$this->assertSame( [ 'akismet' ], FileNamePolicy::prefixes( 'akismet', 'akismet' ) );
