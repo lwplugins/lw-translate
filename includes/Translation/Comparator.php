@@ -69,7 +69,7 @@ final class Comparator {
 				type: $match['type'],
 				status: StatusResolver::resolve( $files, LocalScanner::get_local_shas( $match['type'], array_keys( $files ) ) ),
 				file_count: count( $files ),
-				local_date: LocalScanner::get_local_date( $match['slug'], $match['type'], $locale, $match['text_domain'] ),
+				local_date: LocalScanner::get_local_date( $match['slug'], $match['type'], $locale, $match['text_domains'] ?? $match['text_domain'] ),
 				files: $files,
 				text_domain: $match['text_domain'],
 			);
@@ -120,16 +120,16 @@ final class Comparator {
 	 * Keep only the installable files of each match, and drop the matches
 	 * that have none (their Install could only fail).
 	 *
-	 * @param array<int, array{type: string, slug: string, name: string, text_domain?: string, files: array<string, string>}> $matches Matches.
-	 * @param string                                                                                                          $locale  Locale.
-	 * @return array<int, array{type: string, slug: string, name: string, text_domain: string, files: array<string, string>}>
+	 * @param array<int, array{type: string, slug: string, name: string, text_domain?: string, text_domains?: array<int, string>, files: array<string, string>}> $matches Matches.
+	 * @param string                                                                                                                                             $locale  Locale.
+	 * @return array<int, array{type: string, slug: string, name: string, text_domain: string, text_domains?: array<int, string>, files: array<string, string>}>
 	 */
 	public static function with_installable_files( array $matches, string $locale ): array {
 		$kept = [];
 
 		foreach ( $matches as $match ) {
 			$match['text_domain'] = $match['text_domain'] ?? '';
-			$match['files']       = self::installable( $match['files'], $match['slug'], $locale, $match['text_domain'] );
+			$match['files']       = self::installable( $match['files'], $match['slug'], $locale, $match['text_domains'] ?? $match['text_domain'] );
 
 			if ( [] !== $match['files'] ) {
 				$kept[] = $match;
@@ -142,13 +142,13 @@ final class Comparator {
 	/**
 	 * Keep the repository files FileNamePolicy allows for the item.
 	 *
-	 * @param array<string, string> $files       File name => blob SHA.
-	 * @param string                $slug        Plugin or theme slug.
-	 * @param string                $locale      Locale.
-	 * @param string                $text_domain Text domain of the item, '' for none.
+	 * @param array<string, string>     $files       File name => blob SHA.
+	 * @param string                    $slug        Plugin or theme slug.
+	 * @param string                    $locale      Locale.
+	 * @param string|array<int, string> $text_domain Text domain(s) of the item, '' for none.
 	 * @return array<string, string>
 	 */
-	public static function installable( array $files, string $slug, string $locale, string $text_domain = '' ): array {
+	public static function installable( array $files, string $slug, string $locale, string|array $text_domain = '' ): array {
 		return array_filter(
 			$files,
 			static fn( $name ): bool => FileNamePolicy::is_allowed_basename( (string) $name, $slug, $locale, $text_domain ),

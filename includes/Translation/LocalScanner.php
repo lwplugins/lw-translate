@@ -141,13 +141,13 @@ final class LocalScanner {
 	 * The .po named after the text domain (the one WordPress loads) is
 	 * preferred; the one named after the slug is the fallback.
 	 *
-	 * @param string $slug        Plugin or theme slug.
-	 * @param string $type        Type: 'plugin' or 'theme'.
-	 * @param string $locale      Locale code.
-	 * @param string $text_domain Text domain of the item, '' for none.
+	 * @param string                    $slug        Plugin or theme slug.
+	 * @param string                    $type        Type: 'plugin' or 'theme'.
+	 * @param string                    $locale      Locale code.
+	 * @param string|array<int, string> $text_domain Text domain(s) of the item, '' for none.
 	 * @return string Date string or empty.
 	 */
-	public static function get_local_date( string $slug, string $type, string $locale, string $text_domain = '' ): string {
+	public static function get_local_date( string $slug, string $type, string $locale, string|array $text_domain = '' ): string {
 		$dir  = WP_LANG_DIR . '/' . ( 'theme' === $type ? 'themes' : 'plugins' );
 		$path = '';
 

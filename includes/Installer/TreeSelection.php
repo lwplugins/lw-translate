@@ -27,10 +27,10 @@ final class TreeSelection {
 	 * @param string                                                      $type        Type: 'plugin' or 'theme'.
 	 * @param string                                                      $tone        Translation tone.
 	 * @param string                                                      $locale      Locale.
-	 * @param string                                                      $text_domain Text domain of the item, '' for none.
+	 * @param string|array<int, string>                                   $text_domain Text domain(s) of the item, '' for none.
 	 * @return array{files: array<string, array{path: string, sha: string}>, skipped: array<int, string>}
 	 */
-	public static function select( array $tree, string $slug, string $type, string $tone, string $locale, string $text_domain = '' ): array {
+	public static function select( array $tree, string $slug, string $type, string $tone, string $locale, string|array $text_domain = '' ): array {
 		$selection = [
 			'files'   => [],
 			'skipped' => [],

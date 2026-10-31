@@ -25,15 +25,15 @@ final class TranslationRemover {
 	/**
 	 * Delete the item's files.
 	 *
-	 * @param WP_Filesystem_Base $filesystem  Filesystem.
-	 * @param string             $base_dir    Language folder of the item type.
-	 * @param string             $slug        Plugin or theme slug.
-	 * @param string             $locale      Locale.
-	 * @param array<int, string> $remote      File names the repository lists for the item.
-	 * @param string             $text_domain Text domain of the item, '' for none.
+	 * @param WP_Filesystem_Base        $filesystem  Filesystem.
+	 * @param string                    $base_dir    Language folder of the item type.
+	 * @param string                    $slug        Plugin or theme slug.
+	 * @param string                    $locale      Locale.
+	 * @param array<int, string>        $remote      File names the repository lists for the item.
+	 * @param string|array<int, string> $text_domain Text domain(s) of the item, '' for none.
 	 * @return array{deleted: array<int, string>, failed: array<int, string>} File names.
 	 */
-	public function remove( WP_Filesystem_Base $filesystem, string $base_dir, string $slug, string $locale, array $remote, string $text_domain = '' ): array {
+	public function remove( WP_Filesystem_Base $filesystem, string $base_dir, string $slug, string $locale, array $remote, string|array $text_domain = '' ): array {
 		$result = [
 			'deleted' => [],
 			'failed'  => [],
@@ -84,13 +84,13 @@ final class TranslationRemover {
 	/**
 	 * Repository names that FileNamePolicy allows for the item.
 	 *
-	 * @param string             $slug        Plugin or theme slug.
-	 * @param string             $locale      Locale.
-	 * @param array<int, string> $remote      Repository file names.
-	 * @param string             $text_domain Text domain of the item, '' for none.
+	 * @param string                    $slug        Plugin or theme slug.
+	 * @param string                    $locale      Locale.
+	 * @param array<int, string>        $remote      Repository file names.
+	 * @param string|array<int, string> $text_domain Text domain(s) of the item, '' for none.
 	 * @return array<int, string>
 	 */
-	private static function targets( string $slug, string $locale, array $remote, string $text_domain ): array {
+	private static function targets( string $slug, string $locale, array $remote, string|array $text_domain ): array {
 		return array_values(
 			array_unique(
 				array_filter(

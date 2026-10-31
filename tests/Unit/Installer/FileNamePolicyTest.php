@@ -224,4 +224,18 @@ final class FileNamePolicyTest extends TestCase {
 		$this->assertSame( [ 'akismet' ], FileNamePolicy::prefixes( 'akismet' ) );
 		$this->assertSame( [], FileNamePolicy::prefixes( '..', 'akismet' ) );
 	}
+
+	/**
+	 * The header domain and the repository folder's prefix can both be
+	 * allowed (Admin Menu Editor Pro: header admin-menu-editor-pro, code
+	 * admin-menu-editor).
+	 */
+	public function test_several_text_domains_are_all_allowed_once(): void {
+		$this->assertSame(
+			[ 'ame-pro', 'admin-menu-editor-pro', 'admin-menu-editor' ],
+			FileNamePolicy::prefixes( 'ame-pro', [ 'admin-menu-editor-pro', 'admin-menu-editor', 'ame-pro', 'admin-menu-editor', '', '../x' ] )
+		);
+		$this->assertTrue( FileNamePolicy::is_allowed_basename( 'admin-menu-editor-hu_HU.mo', 'admin-menu-editor-pro', 'hu_HU', [ 'admin-menu-editor-pro', 'admin-menu-editor' ] ) );
+		$this->assertFalse( FileNamePolicy::is_allowed_basename( 'other-hu_HU.mo', 'admin-menu-editor-pro', 'hu_HU', [ 'admin-menu-editor-pro', 'admin-menu-editor' ] ) );
+	}
 }

@@ -92,12 +92,12 @@ This approach avoids unnecessary downloads - only genuinely changed files trigge
 When you click Install or Update:
 1. The plugin downloads the item's `{folder|text domain}-{locale}.mo`, `.po` and `{folder|text domain}-{locale}-{md5}.json` files and checks each against its blob SHA; the fast `.l10n.php` file is generated locally from each `.mo` (never downloaded)
    - `folder` is the plugin's or theme's directory name, `text domain` the `Text Domain` from its header. WordPress loads the file named after the text domain, so where the two differ (e.g. folder `my-plugin-pro`, text domain `my-plugin`) name the files after the text domain
-   - Many plugins have no `Text Domain` line in their header (the domain is only in their code, e.g. folder `admin-menu-editor-pro`, domain `admin-menu-editor`). When the header is missing or invalid, the text domain is read from the repository folder instead: the prefix the folder's `.mo`, `.po` and `-{md5}.json` files share. This is used only when
-     - apart from the folder-named files there is exactly one such prefix (two different ones: only the folder-named files are installed),
+   - The header is not always right: many plugins have no `Text Domain` line, and some declare one domain in the header and use another in their code (Admin Menu Editor Pro: header `admin-menu-editor-pro`, code `admin-menu-editor`). So besides the folder name and the header's text domain, a third prefix is allowed: the one the repository folder's `.mo`, `.po` and `-{md5}.json` files share. This is used only when
+     - leaving out the files named after the folder and after the header's text domain, there is exactly one such prefix (two different ones: only the folder-named and header-named files are installed),
      - the prefix is a valid directory-style name,
      - it is not the folder name or text domain of another installed plugin or theme, in any letter case (so an add-on's folder can never overwrite e.g. `woocommerce-hu_HU.mo`, not even as `WooCommerce-hu_HU.mo` on a case-insensitive filesystem such as macOS or Windows), and
      - no other installed item's repository folder offers the same prefix (then neither gets it)
-   - A text domain from the header always wins; then the repository prefix does not count
+   - A text domain in the header does not shut the repository prefix out; files named after either are installed
    - Known limits of reading the domain from the repository folder:
      - it cannot see text domains that other plugins set only in their code (without a header), nor mu-plugins, drop-ins or plugins that are not installed yet. The repository's maintainers are responsible for keeping only files named after the item's own text domain in each folder
      - if a plugin installed later takes the prefix (as its folder name or text domain), the files installed earlier under that prefix are no longer recognised as the item's: they stay in the language folder, orphaned, and are not updated or deleted by this plugin
@@ -134,7 +134,7 @@ informal/
       ...
 ```
 
-The folder is always the item's directory name. The files in it are named `{folder|text domain}-{locale}.mo|.po` or `{folder|text domain}-{locale}-{md5}.json` (text domain: from the header, else the single prefix of the folder, see above); `.l10n.php` files in the repository are never installed.
+The folder is always the item's directory name. The files in it are named `{folder|text domain}-{locale}.mo|.po` or `{folder|text domain}-{locale}-{md5}.json` (text domain: the header's and the single prefix of the folder, see above); `.l10n.php` files in the repository are never installed.
 
 ---
 

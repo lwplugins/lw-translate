@@ -25,7 +25,7 @@ final class TextDomainResolverTest extends MonkeyTestCase {
 	 * @param array<int, string> $names Repository file names.
 	 */
 	private function resolve( array $names, string $slug = 'admin-menu-editor-pro', string $header = '' ): string {
-		return TextDomainResolver::resolve( $slug, $header, $names, 'hu_HU', self::RESERVED );
+		return TextDomainResolver::folder_prefix( $slug, $header, $names, 'hu_HU', self::RESERVED );
 	}
 
 	/**
@@ -49,7 +49,7 @@ final class TextDomainResolverTest extends MonkeyTestCase {
 
 	public function test_a_prefix_that_is_another_installed_items_folder_or_domain_is_refused(): void {
 		$this->assertSame( '', $this->resolve( [ 'woocommerce-hu_HU.mo' ], 'woo-addon' ) );
-		$this->assertSame( '', TextDomainResolver::resolve( 'woo-addon', '', [ 'wc-hu_HU.mo' ], 'hu_HU', [ 'woo-addon', 'wc' ] ) );
+		$this->assertSame( '', TextDomainResolver::folder_prefix( 'woo-addon', '', [ 'wc-hu_HU.mo' ], 'hu_HU', [ 'woo-addon', 'wc' ] ) );
 	}
 
 	/**
@@ -58,7 +58,7 @@ final class TextDomainResolverTest extends MonkeyTestCase {
 	 */
 	public function test_a_reserved_name_is_refused_in_any_letter_case(): void {
 		$this->assertSame( '', $this->resolve( [ 'WooCommerce-hu_HU.mo' ], 'woo-addon' ) );
-		$this->assertSame( '', TextDomainResolver::resolve( 'woo-addon', '', [ 'wc-hu_HU.mo' ], 'hu_HU', [ 'woo-addon', 'WC' ] ) );
+		$this->assertSame( '', TextDomainResolver::folder_prefix( 'woo-addon', '', [ 'wc-hu_HU.mo' ], 'hu_HU', [ 'woo-addon', 'WC' ] ) );
 		$this->assertSame( '', $this->resolve( [ 'Admin-Menu-Editor-Pro-hu_HU.mo' ] ), 'Its own folder name in other case is not a domain either.' );
 	}
 
@@ -113,9 +113,78 @@ final class TextDomainResolverTest extends MonkeyTestCase {
 		$this->assertSame( [ 'shared', 'shared' ], array_column( $matches, 'text_domain' ) );
 	}
 
-	public function test_a_valid_header_wins_over_the_repository_prefix(): void {
-		$this->assertSame( 'ame', $this->resolve( [ 'admin-menu-editor-hu_HU.mo' ], 'admin-menu-editor-pro', 'ame' ) );
-		$this->assertSame( 'woocommerce', $this->resolve( [ 'other-hu_HU.mo' ], 'woocommerce', 'woocommerce' ) );
+	/**
+	 * Admin Menu Editor Pro's header says admin-menu-editor-pro, its code
+	 * loads admin-menu-editor: the header does not shut the repository
+	 * prefix out.
+	 */
+	public function test_with_a_header_the_folder_prefix_still_counts(): void {
+		$this->assertSame( 'admin-menu-editor', $this->resolve( [ 'admin-menu-editor-hu_HU.mo' ], 'admin-menu-editor-pro', 'admin-menu-editor-pro' ) );
+		$this->assertSame(
+			'admin-menu-editor',
+			$this->resolve( [ 'ame-hu_HU.mo', 'admin-menu-editor-hu_HU.mo', 'admin-menu-editor-pro-hu_HU.po' ], 'admin-menu-editor-pro', 'ame' ),
+			'The header-named and folder-named files are left out of the count.'
+		);
+	}
+
+	public function test_with_a_header_and_two_foreign_prefixes_there_is_no_folder_prefix(): void {
+		$this->assertSame( '', $this->resolve( [ 'ame-hu_HU.mo', 'one-hu_HU.mo', 'two-hu_HU.mo' ], 'admin-menu-editor-pro', 'ame' ) );
+	}
+
+	public function test_resolve_matches_lists_the_header_and_the_folder_prefix(): void {
+		$matches = TextDomainResolver::resolve_matches(
+			[
+				[
+					'type'        => 'plugin',
+					'slug'        => 'admin-menu-editor-pro',
+					'name'        => 'AME Pro',
+					'text_domain' => 'admin-menu-editor-pro',
+					'files'       => [ 'admin-menu-editor-hu_HU.mo' => 'a' ],
+				],
+				[
+					'type'        => 'plugin',
+					'slug'        => 'akismet',
+					'name'        => 'Akismet',
+					'text_domain' => 'akismet-td',
+					'files'       => [ 'akismet-td-hu_HU.mo' => 'b' ],
+				],
+			],
+			'hu_HU',
+			array_merge( self::RESERVED, [ 'akismet-td' ] )
+		);
+
+		$this->assertSame( [ 'admin-menu-editor-pro', 'admin-menu-editor' ], $matches[0]['text_domains'] );
+		$this->assertSame( 'admin-menu-editor', $matches[0]['text_domain'], 'The domain WordPress loads, from the repository.' );
+		$this->assertSame( [ 'akismet-td' ], $matches[1]['text_domains'] );
+		$this->assertSame( 'akismet-td', $matches[1]['text_domain'] );
+	}
+
+	/**
+	 * The one-item rule holds for items with a header as well.
+	 */
+	public function test_a_prefix_a_header_item_and_a_headerless_item_would_take_goes_to_neither(): void {
+		$matches = TextDomainResolver::resolve_matches(
+			[
+				[
+					'type'        => 'plugin',
+					'slug'        => 'shared-pro',
+					'name'        => 'Pro',
+					'text_domain' => 'shared-pro',
+					'files'       => [ 'shared-hu_HU.mo' => 'a' ],
+				],
+				[
+					'type'        => 'plugin',
+					'slug'        => 'shared-lite',
+					'name'        => 'Lite',
+					'text_domain' => '',
+					'files'       => [ 'shared-hu_HU.mo' => 'b' ],
+				],
+			],
+			'hu_HU',
+			[ 'shared-pro', 'shared-lite' ]
+		);
+
+		$this->assertSame( [ [ 'shared-pro' ], [] ], array_column( $matches, 'text_domains' ) );
 	}
 
 	public function test_an_invalid_header_counts_as_none(): void {

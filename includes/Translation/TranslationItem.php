@@ -26,8 +26,8 @@ final class TranslationItem {
 	public const STATUS_NOT_INSTALLED = 'not_installed';
 
 	/**
-	 * Text domain of the item, as TextDomainResolver decided it (the header,
-	 * else the repository folder's single prefix; '' for none). Declared with
+	 * Text domain of the item, as TextDomainResolver decided it (the
+	 * repository folder's single prefix, else the header; '' for none). Declared with
 	 * a default, not promoted, so items cached by an earlier version still
 	 * read as ''.
 	 *

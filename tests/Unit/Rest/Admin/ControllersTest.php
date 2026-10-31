@@ -477,10 +477,36 @@ final class ControllersTest extends MonkeyTestCase {
 	}
 
 	/**
-	 * With a header domain the repository prefix does not count.
+	 * Admin Menu Editor Pro as it really is: the header says
+	 * admin-menu-editor-pro, the code loads admin-menu-editor, and the
+	 * repository ships admin-menu-editor-hu_HU.mo|.po.
 	 */
-	public function test_with_a_header_domain_the_repository_prefix_is_ignored(): void {
-		$fs = $this->headerless_plugin_with_files( [ 'admin-menu-editor-hu_HU.mo' ] );
+	public function test_with_a_header_domain_the_repository_prefix_still_installs(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'admin-menu-editor-hu_HU.mo', 'admin-menu-editor-hu_HU.po' ] );
+		Functions\when( 'get_plugins' )->justReturn(
+			[
+				'admin-menu-editor-pro/menu-editor.php' => [
+					'Name'       => 'Admin Menu Editor Pro',
+					'TextDomain' => 'admin-menu-editor-pro',
+				],
+			]
+		);
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'admin-menu-editor-pro' ] ] ] ) )
+			->get_data();
+
+		$this->assertTrue( $data['results'][0]['ok'], $data['results'][0]['message'] );
+		$this->assertSame( 'mo-bytes', $fs->files[ WP_LANG_DIR . '/plugins/admin-menu-editor-hu_HU.mo' ] );
+		$this->assertSame( 'mo-bytes', $fs->files[ WP_LANG_DIR . '/plugins/admin-menu-editor-hu_HU.po' ] );
+	}
+
+	/**
+	 * Header domain plus two foreign prefixes: only the header-named and
+	 * folder-named files are installed.
+	 */
+	public function test_with_a_header_and_two_foreign_prefixes_only_the_header_and_folder_files_install(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'ame-hu_HU.mo', 'admin-menu-editor-pro-hu_HU.po', 'one-hu_HU.mo', 'two-hu_HU.mo' ] );
 		Functions\when( 'get_plugins' )->justReturn(
 			[
 				'admin-menu-editor-pro/menu-editor.php' => [
@@ -494,8 +520,33 @@ final class ControllersTest extends MonkeyTestCase {
 			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'admin-menu-editor-pro' ] ] ] ) )
 			->get_data();
 
-		$this->assertFalse( $data['results'][0]['ok'] );
-		$this->assertSame( [], $fs->files );
+		$this->assertTrue( $data['results'][0]['ok'], $data['results'][0]['message'] );
+		$this->assertSame( [ 'one-hu_HU.mo', 'two-hu_HU.mo' ], $data['results'][0]['skipped'] );
+		$installed = array_values( array_filter( array_keys( $fs->files ), static fn ( string $p ): bool => ! str_ends_with( $p, '.l10n.php' ) ) );
+		sort( $installed );
+		$this->assertSame( [ WP_LANG_DIR . '/plugins/admin-menu-editor-pro-hu_HU.po', WP_LANG_DIR . '/plugins/ame-hu_HU.mo' ], $installed );
+	}
+
+	/**
+	 * The list offers the header item with its repository-named files too.
+	 */
+	public function test_the_list_counts_the_repository_named_files_of_a_header_item(): void {
+		$this->headerless_plugin_with_files( [ 'admin-menu-editor-hu_HU.mo', 'admin-menu-editor-hu_HU.po' ] );
+		Functions\when( 'get_plugins' )->justReturn(
+			[
+				'admin-menu-editor-pro/menu-editor.php' => [
+					'Name'       => 'Admin Menu Editor Pro',
+					'TextDomain' => 'admin-menu-editor-pro',
+				],
+			]
+		);
+		unset( $this->transients['lw_translate_compare_hu_HU_informal'] );
+
+		$rows = ( new TranslationsController() )->get_list()->get_data()['rows'];
+		$ids  = array_column( $rows, 'id' );
+
+		$this->assertContains( 'plugin:admin-menu-editor-pro', $ids );
+		$this->assertSame( 2, $rows[ array_search( 'plugin:admin-menu-editor-pro', $ids, true ) ]['files'] );
 	}
 
 	/**

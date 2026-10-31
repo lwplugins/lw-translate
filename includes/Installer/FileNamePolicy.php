@@ -15,8 +15,9 @@ namespace LightweightPlugins\Translate\Installer;
  * Only the names WordPress core loads from WP_LANG_DIR/{plugins|themes}
  * are allowed: `{prefix}-{locale}.mo`, `{prefix}-{locale}.po` and the
  * script translations `{prefix}-{locale}-{md5}.json`, where the prefix is
- * the item's directory name or its text domain (WordPress loads the file
- * named after the text domain; the two differ e.g. for premium builds).
+ * the item's directory name or one of its text domains: the header's and
+ * the repository folder's (WordPress loads the file named after the text
+ * domain the code uses; it can differ from both, see TextDomainResolver).
  * Executable `.l10n.php` files are never accepted from the repository;
  * they are generated locally from the .mo (see L10nPhpGenerator).
  */
@@ -53,22 +54,26 @@ final class FileNamePolicy {
 	}
 
 	/**
-	 * File name prefixes allowed for an item: its slug, plus its text domain
-	 * when that is valid and differs from the slug.
+	 * File name prefixes allowed for an item: its slug, plus each of its
+	 * text domains that is valid and differs from the slug, once.
 	 *
-	 * @param string $slug        Plugin or theme slug (directory name).
-	 * @param string $text_domain Text domain from the item header, '' for none.
+	 * @param string                    $slug        Plugin or theme slug (directory name).
+	 * @param string|array<int, string> $text_domain Text domain(s) of the item (see TextDomainResolver), '' for none.
 	 * @return array<int, string> Empty when the slug itself is invalid.
 	 */
-	public static function prefixes( string $slug, string $text_domain = '' ): array {
+	public static function prefixes( string $slug, string|array $text_domain = '' ): array {
 		if ( ! self::is_valid_slug( $slug ) ) {
 			return [];
 		}
 
 		$prefixes = [ $slug ];
 
-		if ( '' !== $text_domain && $text_domain !== $slug && self::is_valid_slug( $text_domain ) ) {
-			$prefixes[] = $text_domain;
+		foreach ( (array) $text_domain as $domain ) {
+			$domain = (string) $domain;
+
+			if ( '' !== $domain && ! in_array( $domain, $prefixes, true ) && self::is_valid_slug( $domain ) ) {
+				$prefixes[] = $domain;
+			}
 		}
 
 		return $prefixes;
@@ -77,13 +82,13 @@ final class FileNamePolicy {
 	/**
 	 * Check whether a file name may be installed for the given item.
 	 *
-	 * @param string $basename    File name (no directory part).
-	 * @param string $slug        Plugin or theme slug.
-	 * @param string $locale      Locale.
-	 * @param string $text_domain Text domain of the item, '' for none. Ignored when invalid.
+	 * @param string                    $basename    File name (no directory part).
+	 * @param string                    $slug        Plugin or theme slug.
+	 * @param string                    $locale      Locale.
+	 * @param string|array<int, string> $text_domain Text domain(s) of the item, '' for none. Invalid ones are ignored.
 	 * @return bool
 	 */
-	public static function is_allowed_basename( string $basename, string $slug, string $locale, string $text_domain = '' ): bool {
+	public static function is_allowed_basename( string $basename, string $slug, string $locale, string|array $text_domain = '' ): bool {
 		if ( ! self::is_valid_locale( $locale ) ) {
 			return false;
 		}
