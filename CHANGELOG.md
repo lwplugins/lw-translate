@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.5] - 2026-10-31
 
 ### Fixed
 - Plugins and themes without a `Text Domain` header (e.g. Admin Menu Editor Pro, WPML) get their translations again: when the header is missing or invalid, the text domain is taken from the file names in the item's repository folder, if they share exactly one prefix besides the folder name and that prefix is not the folder name or text domain of another installed plugin or theme (compared in any letter case, for case-insensitive filesystems) nor offered by a second installed item's folder. A header domain still wins. Install, update, delete, status and the PO revision date all use the same domain.
