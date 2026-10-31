@@ -4,7 +4,7 @@ Tags: translation, locale, language, i18n, community
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,9 @@ Some translation repositories provide both formal and informal variants. Formal 
 The plugin calculates git blob SHA hashes of your local .mo files and compares them with the remote repository. Only genuinely changed files trigger an update notification.
 
 == Changelog ==
+
+= 1.2.4 =
+* Fix: Translation files named after the plugin's or theme's text domain are installed again where it differs from the folder name (e.g. folder `my-plugin-pro`, text domain `my-plugin`). Since 1.1.4 only folder-named files were accepted, so the file WordPress actually loads was skipped. Update, delete, status and the PO revision date handle both names; `.l10n.php` files are still never taken from the repository.
 
 = 1.2.3 =
 * Fix: The admin Docs link now opens the plugin's page on docs.lwplugins.com, in Hungarian for Hungarian admin users.
