@@ -44,14 +44,18 @@ final class Comparator {
 		}
 
 		$matches = self::with_installable_files(
-			self::match(
-				TreeParser::parse( $tree, $tone, $locale ),
-				LocalScanner::get_installed_plugins(),
-				LocalScanner::get_installed_themes(),
-				[
-					'plugin' => LocalScanner::get_text_domains( 'plugin' ),
-					'theme'  => LocalScanner::get_text_domains( 'theme' ),
-				]
+			TextDomainResolver::resolve_matches(
+				self::match(
+					TreeParser::parse( $tree, $tone, $locale ),
+					LocalScanner::get_installed_plugins(),
+					LocalScanner::get_installed_themes(),
+					[
+						'plugin' => LocalScanner::get_text_domains( 'plugin' ),
+						'theme'  => LocalScanner::get_text_domains( 'theme' ),
+					]
+				),
+				$locale,
+				TextDomainResolver::reserved_names()
 			),
 			$locale
 		);

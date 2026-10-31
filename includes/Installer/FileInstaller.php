@@ -11,7 +11,7 @@ namespace LightweightPlugins\Translate\Installer;
 
 use LightweightPlugins\Translate\Api\GitHubClient;
 use LightweightPlugins\Translate\Options;
-use LightweightPlugins\Translate\Translation\LocalScanner;
+use LightweightPlugins\Translate\Translation\TextDomainResolver;
 use WP_Error;
 use WP_Filesystem_Base;
 
@@ -47,7 +47,9 @@ final class FileInstaller {
 	 *
 	 * Only `{prefix}-{locale}.mo|.po` and `{prefix}-{locale}-{md5}.json`
 	 * are installed, where the prefix is the slug or the item's text
-	 * domain (WordPress loads the text-domain-named file). Any other file
+	 * domain (WordPress loads the text-domain-named file). The domain comes
+	 * from TextDomainResolver: the header, else the single file name prefix
+	 * of the repository folder. Any other file
 	 * in the item's repository folder is left out and listed under
 	 * "skipped". Every file is checked against its blob SHA before any is
 	 * written. A `.l10n.php` is generated locally from each installed .mo.
@@ -70,8 +72,9 @@ final class FileInstaller {
 			return $tree;
 		}
 
-		$domain    = LocalScanner::get_text_domain( $type, $slug );
-		$selection = TreeSelection::select( $tree, $slug, $type, (string) Options::get( 'tone', 'formal' ), $locale, $domain );
+		$tone      = (string) Options::get( 'tone', 'formal' );
+		$domain    = TextDomainResolver::for_item( $tree, $slug, $type, $tone, $locale );
+		$selection = TreeSelection::select( $tree, $slug, $type, $tone, $locale, $domain );
 
 		if ( empty( $selection['files'] ) ) {
 			return new WP_Error(
@@ -149,8 +152,9 @@ final class FileInstaller {
 			return $filesystem;
 		}
 
-		$domain    = LocalScanner::get_text_domain( $type, $slug );
-		$selection = TreeSelection::select( $tree, $slug, $type, (string) Options::get( 'tone', 'formal' ), $locale, $domain );
+		$tone      = (string) Options::get( 'tone', 'formal' );
+		$domain    = TextDomainResolver::for_item( $tree, $slug, $type, $tone, $locale );
+		$selection = TreeSelection::select( $tree, $slug, $type, $tone, $locale, $domain );
 		$result    = ( new TranslationRemover() )
 			->remove( $filesystem, WP_LANG_DIR . '/' . self::type_dir( $type ), $slug, $locale, array_keys( $selection['files'] ), $domain );
 

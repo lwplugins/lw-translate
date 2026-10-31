@@ -312,6 +312,201 @@ final class ControllersTest extends MonkeyTestCase {
 	}
 
 	/**
+	 * Admin Menu Editor Pro has no Text Domain header: the single prefix of
+	 * its repository folder (admin-menu-editor) is the domain.
+	 */
+	public function test_install_without_a_header_takes_the_single_prefix_of_the_folder(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'admin-menu-editor-hu_HU.mo', 'admin-menu-editor-hu_HU.po', 'readme.txt' ] );
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'admin-menu-editor-pro' ] ] ] ) )
+			->get_data();
+
+		$this->assertTrue( $data['results'][0]['ok'], $data['results'][0]['message'] );
+		$this->assertSame( [ 'readme.txt' ], $data['results'][0]['skipped'] );
+		$this->assertSame( 'mo-bytes', $fs->files[ WP_LANG_DIR . '/plugins/admin-menu-editor-hu_HU.mo' ] );
+		$this->assertSame( 'mo-bytes', $fs->files[ WP_LANG_DIR . '/plugins/admin-menu-editor-hu_HU.po' ] );
+	}
+
+	/**
+	 * The list uses the same domain: the row is there, with the
+	 * domain-named files counted, and a refused add-on folder is not.
+	 */
+	public function test_the_list_offers_the_headerless_item_with_its_resolved_domain_files(): void {
+		$this->headerless_plugin_with_files( [ 'admin-menu-editor-hu_HU.mo', 'admin-menu-editor-hu_HU.po', 'readme.txt' ] );
+		$this->transients['lw_translate_tree_cache']['tree'][] = [
+			'type' => 'blob',
+			'path' => 'informal/plugins/hu_HU/woo-addon/akismet-hu_HU.mo',
+			'sha'  => 'y',
+		];
+		Functions\when( 'get_plugins' )->justReturn(
+			[
+				'admin-menu-editor-pro/menu-editor.php' => [ 'Name' => 'Admin Menu Editor Pro' ],
+				'woo-addon/woo-addon.php'               => [ 'Name' => 'Woo Addon' ],
+				'akismet/akismet.php'                   => [ 'Name' => 'Akismet' ],
+			]
+		);
+		unset( $this->transients['lw_translate_compare_hu_HU_informal'] );
+
+		$rows = ( new TranslationsController() )->get_list()->get_data()['rows'];
+		$ids  = array_column( $rows, 'id' );
+
+		$this->assertContains( 'plugin:admin-menu-editor-pro', $ids );
+		$this->assertNotContains( 'plugin:woo-addon', $ids );
+		$this->assertSame( 2, $rows[ array_search( 'plugin:admin-menu-editor-pro', $ids, true ) ]['files'] );
+		$this->assertSame( 'not_installed', $rows[ array_search( 'plugin:admin-menu-editor-pro', $ids, true ) ]['status'] );
+	}
+
+	public function test_install_without_a_header_takes_nothing_from_a_folder_with_two_prefixes(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'admin-menu-editor-hu_HU.mo', 'ame-hu_HU.mo' ] );
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'admin-menu-editor-pro' ] ] ] ) )
+			->get_data();
+
+		$this->assertFalse( $data['results'][0]['ok'] );
+		$this->assertSame( 'No translation files found for this item.', $data['results'][0]['message'] );
+		$this->assertSame( [], $fs->files );
+	}
+
+	public function test_with_two_prefixes_only_the_folder_named_file_is_installed(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'admin-menu-editor-hu_HU.mo', 'ame-hu_HU.mo', 'admin-menu-editor-pro-hu_HU.mo' ] );
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'admin-menu-editor-pro' ] ] ] ) )
+			->get_data();
+
+		$this->assertTrue( $data['results'][0]['ok'], $data['results'][0]['message'] );
+		$this->assertSame( [ 'admin-menu-editor-hu_HU.mo', 'ame-hu_HU.mo' ], $data['results'][0]['skipped'] );
+		$this->assertArrayHasKey( WP_LANG_DIR . '/plugins/admin-menu-editor-pro-hu_HU.mo', $fs->files );
+		$this->assertArrayNotHasKey( WP_LANG_DIR . '/plugins/admin-menu-editor-hu_HU.mo', $fs->files );
+		$this->assertArrayNotHasKey( WP_LANG_DIR . '/plugins/ame-hu_HU.mo', $fs->files );
+	}
+
+	/**
+	 * An add-on folder must not overwrite another installed plugin's file.
+	 */
+	public function test_a_prefix_that_is_another_installed_plugin_is_never_installed(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'woocommerce-hu_HU.mo' ], 'woo-addon' );
+		Functions\when( 'get_plugins' )->justReturn(
+			[
+				'woo-addon/woo-addon.php'     => [ 'Name' => 'Woo Addon' ],
+				'woocommerce/woocommerce.php' => [ 'Name' => 'WooCommerce' ],
+			]
+		);
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'woo-addon' ] ] ] ) )
+			->get_data();
+
+		$this->assertFalse( $data['results'][0]['ok'] );
+		$this->assertSame( [], $fs->files );
+	}
+
+	public function test_a_prefix_that_is_another_installed_plugins_text_domain_is_never_installed(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'wc-hu_HU.mo' ], 'woo-addon' );
+		Functions\when( 'get_plugins' )->justReturn(
+			[
+				'woo-addon/woo-addon.php'     => [ 'Name' => 'Woo Addon' ],
+				'woocommerce/woocommerce.php' => [
+					'Name'       => 'WooCommerce',
+					'TextDomain' => 'wc',
+				],
+			]
+		);
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'woo-addon' ] ] ] ) )
+			->get_data();
+
+		$this->assertFalse( $data['results'][0]['ok'] );
+		$this->assertSame( [], $fs->files );
+	}
+
+	/**
+	 * With a header domain the repository prefix does not count.
+	 */
+	public function test_with_a_header_domain_the_repository_prefix_is_ignored(): void {
+		$fs = $this->headerless_plugin_with_files( [ 'admin-menu-editor-hu_HU.mo' ] );
+		Functions\when( 'get_plugins' )->justReturn(
+			[
+				'admin-menu-editor-pro/menu-editor.php' => [
+					'Name'       => 'Admin Menu Editor Pro',
+					'TextDomain' => 'ame',
+				],
+			]
+		);
+
+		$data = ( new TranslationsController() )
+			->install( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'admin-menu-editor-pro' ] ] ] ) )
+			->get_data();
+
+		$this->assertFalse( $data['results'][0]['ok'] );
+		$this->assertSame( [], $fs->files );
+	}
+
+	/**
+	 * Delete takes the listed, allowed names of the resolved domain and the
+	 * .l10n.php generated from the .mo; nothing else.
+	 */
+	public function test_delete_without_a_header_removes_the_listed_domain_files_and_the_l10n_php(): void {
+		$fs  = $this->headerless_plugin_with_files( [ 'admin-menu-editor-hu_HU.mo', 'admin-menu-editor-hu_HU.po' ] );
+		$dir = WP_LANG_DIR . '/plugins/';
+
+		foreach ( [ 'admin-menu-editor-hu_HU.mo', 'admin-menu-editor-hu_HU.l10n.php', 'admin-menu-editor-hu_HU.po', 'admin-menu-editor-hu_HU-ffffffffffffffffffffffffffffffff.json', 'woocommerce-hu_HU.mo' ] as $name ) {
+			$fs->files[ $dir . $name ] = 'x';
+		}
+
+		$data = ( new TranslationsController() )
+			->delete( new WP_REST_Request( [ 'items' => [ [ 'type' => 'plugin', 'slug' => 'admin-menu-editor-pro' ] ] ] ) )
+			->get_data();
+
+		$this->assertTrue( $data['results'][0]['ok'], $data['results'][0]['message'] );
+		$this->assertSame(
+			[ 'admin-menu-editor-hu_HU.l10n.php', 'admin-menu-editor-hu_HU.mo', 'admin-menu-editor-hu_HU.po' ],
+			$data['results'][0]['deleted']
+		);
+		$this->assertSame(
+			[ $dir . 'admin-menu-editor-hu_HU-ffffffffffffffffffffffffffffffff.json', $dir . 'woocommerce-hu_HU.mo' ],
+			array_keys( $fs->files )
+		);
+	}
+
+	/**
+	 * An installed plugin without a TextDomain header, whose repository
+	 * folder holds the given files (each with the content "mo-bytes").
+	 *
+	 * @param array<int, string> $names File names in the repository folder.
+	 * @param string             $slug  Plugin folder.
+	 * @return InMemoryFilesystem
+	 */
+	private function headerless_plugin_with_files( array $names, string $slug = 'admin-menu-editor-pro' ): InMemoryFilesystem {
+		$content = 'mo-bytes';
+		$sha     = sha1( 'blob ' . strlen( $content ) . "\0" . $content );
+		$fs      = $this->filesystem();
+
+		if ( ! is_dir( WP_LANG_DIR . '/plugins' ) ) {
+			mkdir( WP_LANG_DIR . '/plugins', 0777, true );
+		}
+
+		Functions\when( 'get_plugins' )->justReturn( [ $slug . '/' . $slug . '.php' => [ 'Name' => $slug ] ] );
+
+		foreach ( $names as $name ) {
+			$this->transients['lw_translate_tree_cache']['tree'][] = [
+				'type' => 'blob',
+				'path' => 'informal/plugins/hu_HU/' . $slug . '/' . $name,
+				'sha'  => $sha,
+			];
+		}
+
+		Functions\when( 'wp_remote_get' )->justReturn( [ 'body' => $content ] );
+		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
+		Functions\when( 'wp_remote_retrieve_body' )->justReturn( $content );
+
+		return $fs;
+	}
+
+	/**
 	 * Put an in-memory filesystem behind WP_Filesystem().
 	 *
 	 * @return InMemoryFilesystem

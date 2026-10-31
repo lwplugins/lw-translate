@@ -26,7 +26,8 @@ final class TranslationItem {
 	public const STATUS_NOT_INSTALLED = 'not_installed';
 
 	/**
-	 * Text domain from the item header ('' when it has none). Declared with
+	 * Text domain of the item, as TextDomainResolver decided it (the header,
+	 * else the repository folder's single prefix; '' for none). Declared with
 	 * a default, not promoted, so items cached by an earlier version still
 	 * read as ''.
 	 *
@@ -44,7 +45,7 @@ final class TranslationItem {
 	 * @param int                  $file_count  Number of available remote files.
 	 * @param string               $local_date  PO-Revision-Date from local file.
 	 * @param array<string,string> $files       Remote files with SHA hashes.
-	 * @param string               $text_domain Text domain from the item header.
+	 * @param string               $text_domain Text domain of the item (TextDomainResolver).
 	 */
 	public function __construct(
 		public string $slug,

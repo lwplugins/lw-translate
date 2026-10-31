@@ -92,6 +92,11 @@ This approach avoids unnecessary downloads - only genuinely changed files trigge
 When you click Install or Update:
 1. The plugin downloads the item's `{folder|text domain}-{locale}.mo`, `.po` and `{folder|text domain}-{locale}-{md5}.json` files and checks each against its blob SHA; the fast `.l10n.php` file is generated locally from each `.mo` (never downloaded)
    - `folder` is the plugin's or theme's directory name, `text domain` the `Text Domain` from its header. WordPress loads the file named after the text domain, so where the two differ (e.g. folder `my-plugin-pro`, text domain `my-plugin`) name the files after the text domain
+   - Many plugins have no `Text Domain` line in their header (the domain is only in their code, e.g. folder `admin-menu-editor-pro`, domain `admin-menu-editor`). When the header is missing or invalid, the text domain is read from the repository folder instead: the prefix the folder's `.mo`, `.po` and `-{md5}.json` files share. This is used only when
+     - apart from the folder-named files there is exactly one such prefix (two different ones: only the folder-named files are installed),
+     - the prefix is a valid directory-style name, and
+     - it is not the folder name or text domain of another installed plugin or theme (so an add-on's folder can never overwrite e.g. `woocommerce-hu_HU.mo`)
+   - A text domain from the header always wins; then the repository prefix does not count
    - Any other file name in the item's folder is skipped
 2. Files are saved via `WP_Filesystem` to the standard WordPress language directory, under the same name:
    - Plugins: `WP_LANG_DIR/plugins/{folder|text domain}-{locale}.mo`
@@ -125,7 +130,7 @@ informal/
       ...
 ```
 
-The folder is always the item's directory name. The files in it are named `{folder|text domain}-{locale}.mo|.po` or `{folder|text domain}-{locale}-{md5}.json`; `.l10n.php` files in the repository are never installed.
+The folder is always the item's directory name. The files in it are named `{folder|text domain}-{locale}.mo|.po` or `{folder|text domain}-{locale}-{md5}.json` (text domain: from the header, else the single prefix of the folder, see above); `.l10n.php` files in the repository are never installed.
 
 ---
 
