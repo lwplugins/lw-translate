@@ -4,7 +4,7 @@ Tags: translation, locale, language, i18n, community
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,10 @@ Some translation repositories provide both formal and informal variants. Formal 
 The plugin calculates git blob SHA hashes of your local .mo files and compares them with the remote repository. Only genuinely changed files trigger an update notification.
 
 == Changelog ==
+
+= 1.2.6 =
+* Fix: Plugins whose header declares a different text domain than their code uses get their translations: Admin Menu Editor Pro's header says `admin-menu-editor-pro`, its code loads `admin-menu-editor`, and in 1.2.5 the header domain shut out the repository's `admin-menu-editor-hu_HU.mo`. The allowed file name prefixes are now the folder name, the header's text domain and the repository folder's single shared prefix (with the same safety checks as in 1.2.5; the folder-named and header-named files are left out when counting).
+* Fix: Text domains starting with an underscore are accepted as file name prefixes: WebinarPress declares and loads `_wswebinar`, and its `_wswebinar-hu_HU.mo` was skipped because text domains were checked like folder names. Folder names still may not start with an underscore, and a text domain still may not contain a separator, a leading dot or `..`.
 
 = 1.2.5 =
 * Fix: Plugins and themes without a `Text Domain` header (e.g. Admin Menu Editor Pro, WPML) get their translations again: when the header is missing or invalid, the text domain is taken from the file names in the item's repository folder, if they share exactly one prefix besides the folder name and that prefix is not the folder name or text domain of another installed plugin or theme (compared in any letter case, for case-insensitive filesystems) nor offered by a second installed item's folder. A header domain still wins. Install, update, delete, status and the PO revision date all use the same domain.

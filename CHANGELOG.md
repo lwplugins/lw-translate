@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.6] - 2026-11-01
 
 ### Fixed
 - Plugins whose header declares a different text domain than their code uses get their translations: Admin Menu Editor Pro's header says `admin-menu-editor-pro`, its code loads `admin-menu-editor`, and in 1.2.5 the header domain shut out the repository's `admin-menu-editor-hu_HU.mo`. The allowed file name prefixes are now the folder name, the header's text domain and the repository folder's single shared prefix (with the same safety checks as in 1.2.5; the folder-named and header-named files are left out when counting).
